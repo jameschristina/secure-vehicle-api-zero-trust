@@ -1,0 +1,128 @@
+{
+    "generated_at": "2026-05-26T21:48:26.683423",
+    "total_logs": 10,
+    "identities": {
+        "developer": {
+            "risk_score": 250,
+            "vehicles_targeted": [
+                "CAR456",
+                "CAR123"
+            ],
+            "event_count": 8,
+            "events": [
+                {
+                    "action": "authorization_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": "unauthorized_vehicle_access",
+                    "role": "developer",
+                    "success": false,
+                    "timestamp": "2026-05-22T22:57:59.960130+00:00",
+                    "vehicle_id": "CAR456"
+                },
+                {
+                    "action": "authorization_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": "unauthorized_vehicle_access",
+                    "role": "developer",
+                    "success": false,
+                    "timestamp": "2026-05-25T17:07:22.660743+00:00",
+                    "vehicle_id": "CAR456"
+                },
+                {
+                    "action": "authorization_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": "unauthorized_vehicle_access",
+                    "role": "developer",
+                    "success": false,
+                    "timestamp": "2026-05-25T17:10:39.003068+00:00",
+                    "vehicle_id": "CAR456"
+                },
+                {
+                    "action": "status_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": null,
+                    "role": "developer",
+                    "success": true,
+                    "timestamp": "2026-05-25T17:23:54.948687+00:00",
+                    "vehicle_id": "CAR123"
+                },
+                {
+                    "action": "status_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": null,
+                    "role": "developer",
+                    "success": true,
+                    "timestamp": "2026-05-25T22:39:38.520299+00:00",
+                    "vehicle_id": "CAR123"
+                },
+                {
+                    "action": "authorization_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": "unauthorized_vehicle_access",
+                    "role": "developer",
+                    "success": false,
+                    "timestamp": "2026-05-25T22:39:47.882764+00:00",
+                    "vehicle_id": "CAR456"
+                },
+                {
+                    "action": "status_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": null,
+                    "role": "developer",
+                    "success": true,
+                    "timestamp": "2026-05-25T22:41:50.354698+00:00",
+                    "vehicle_id": "CAR123"
+                },
+                {
+                    "action": "authorization_check",
+                    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+                    "endpoint": "/status",
+                    "reason": "unauthorized_vehicle_access",
+                    "role": "developer",
+                    "success": false,
+                    "timestamp": "2026-05-25T22:41:58.105656+00:00",
+                    "vehicle_id": "CAR456"
+                }
+            ]
+        },
+        "support": {
+            "risk_score": 0,
+            "vehicles_targeted": [
+                "CAR456"
+            ],
+            "event_count": 2,
+            "events": [
+                {
+                    "action": "status_check",
+                    "client": "127.0.0.1|df9eba2867e4c44575848ac3a77041156191359f0afce7fe5d0d267f3c73e17c",
+                    "endpoint": "/status",
+                    "reason": null,
+                    "role": "support",
+                    "success": true,
+                    "timestamp": "2026-05-25T17:11:12.653615+00:00",
+                    "vehicle_id": "CAR456"
+                },
+                {
+                    "action": "status_check",
+                    "client": "127.0.0.1|df9eba2867e4c44575848ac3a77041156191359f0afce7fe5d0d267f3c73e17c",
+                    "endpoint": "/status",
+                    "reason": null,
+                    "role": "support",
+                    "success": true,
+                    "timestamp": "2026-05-25T17:24:10.017338+00:00",
+                    "vehicle_id": "CAR456"
+                }
+            ]
+        }
+    },
+    "mitre_summary": {
+        "T1210": 5
+    }
+}

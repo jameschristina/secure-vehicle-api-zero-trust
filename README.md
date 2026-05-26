@@ -73,6 +73,32 @@ The project progressively evolves from a deliberately vulnerable API into a Zero
 - Risk aggregation
 - SIEM/UEBA-style observability
 
+## Sample Security Events
+
+- Unauthorized vehicle access attempts
+- Invalid API key detection
+- Missing API key detection
+- Identity-centric behavioral monitoring
+- Risk-scored SIEM alerts
+
+## Generated Security Visualizations
+
+See `/screenshots` for:
+- Request distribution charts
+- Vehicle access activity
+- Security failure analytics
+
+## Security Concepts Demonstrated
+
+- Zero Trust Architecture
+- Authentication
+- Authorization
+- Least Privilege
+- SIEM Monitoring
+- UEBA-style Detection
+- Risk Scoring
+- Behavioral Analytics
+
 ---
 
 # Visualization Layer

@@ -4,120 +4,233 @@
 
 This project is a multi-phase cybersecurity simulation demonstrating how weak identity validation, broken access control, and limited observability can create cyber-physical risk in connected vehicle systems.
 
-The project progressively evolves from a deliberately vulnerable API into a Zero Trust-oriented architecture with SIEM/UEBA-style behavioral detection and risk scoring.
+The project progressively evolves from a deliberately vulnerable API into a Zero Trust-oriented architecture with SIEM/UEBA-style behavioral detection, detection engineering, threat hunting, incident response automation, and threat intelligence correlation.
 
 ---
 
 # Project Phases
 
 ## Phase 1 — Vulnerable Baseline
-- Flask API with unrestricted access
-- Endpoints:
-  - /status
-  - /unlock
-  - /start
-- Access controlled only by vehicle identifiers
-- No authentication
-- No authorization
-- No rate limiting
+
+* Flask API with unrestricted access
+* Endpoints:
+
+  * `/status`
+  * `/unlock`
+  * `/start`
+* Access controlled only by vehicle identifiers
+* No authentication
+* No authorization
+* No rate limiting
 
 ### Security Weaknesses Demonstrated
-- Broken access control
-- Predictable identifiers
-- Unauthenticated API access
-- Lack of observability
+
+* Broken access control
+* Predictable identifiers
+* Unauthenticated API access
+* Lack of observability
 
 ---
 
 ## Phase 2 — Authentication + Rate Limiting
-- Added API key authentication
-- Added request rate limiting
-- Added structured security logging
-- Added security response headers
+
+* Added API key authentication
+* Added request rate limiting
+* Added structured security logging
+* Added security response headers
 
 ### Security Concepts
-- Identity validation
-- API hardening
-- Abuse prevention
-- Request attribution
+
+* Identity validation
+* API hardening
+* Abuse prevention
+* Request attribution
 
 ---
 
 ## Phase 3 — Authorization + Least Privilege
-- Added entitlement enforcement
-- Mapped identities to authorized vehicles
-- Blocked unauthorized cross-vehicle access
-- Added authorization-aware logging
+
+* Added entitlement enforcement
+* Mapped identities to authorized vehicles
+* Blocked unauthorized cross-vehicle access
+* Added authorization-aware logging
 
 ### Security Concepts
-- Authentication vs authorization
-- Least privilege
-- Entitlement enforcement
-- Zero Trust architecture
+
+* Authentication vs authorization
+* Least privilege
+* Entitlement enforcement
+* Zero Trust architecture
 
 ---
 
 ## Phase 4 — SIEM / UEBA-Style Detection
-- Added live SIEM-style polling engine
-- Added weighted risk scoring
-- Added cumulative identity risk tracking
-- Added alert classification
-- Added behavioral anomaly detection
-- Added live SIEM snapshots
-- Added alert suppression cooldown logic
+
+* Added live SIEM-style polling engine
+* Added weighted risk scoring
+* Added cumulative identity risk tracking
+* Added alert classification
+* Added behavioral anomaly detection
+* Added live SIEM snapshots
+* Added alert suppression cooldown logic
 
 ### Detection Concepts
-- Behavioral analytics
-- Identity-centric monitoring
-- Security event correlation
-- Risk aggregation
-- SIEM/UEBA-style observability
 
-## Sample Security Events
+* Behavioral analytics
+* Identity-centric monitoring
+* Security event correlation
+* Risk aggregation
+* SIEM/UEBA-style observability
 
-- Unauthorized vehicle access attempts
-- Invalid API key detection
-- Missing API key detection
-- Identity-centric behavioral monitoring
-- Risk-scored SIEM alerts
+### Sample Security Events
 
-## Generated Security Visualizations
+* Unauthorized vehicle access attempts
+* Invalid API key detection
+* Missing API key detection
+* Identity-centric behavioral monitoring
+* Risk-scored SIEM alerts
+
+### Generated Security Visualizations
 
 See `/screenshots` for:
-- Request distribution charts
-- Vehicle access activity
-- Security failure analytics
 
-## Security Concepts Demonstrated
+* Request distribution charts
+* Vehicle access activity
+* Security failure analytics
 
-- Zero Trust Architecture
-- Authentication
-- Authorization
-- Least Privilege
-- SIEM Monitoring
-- UEBA-style Detection
-- Risk Scoring
-- Behavioral Analytics
+---
+
+## Phase 5 — Detection Engineering + MITRE ATT&CK Correlation
+
+* Added detection engineering workflows
+* Added MITRE ATT&CK tactic mapping
+* Added event correlation logic
+* Added severity-based alert prioritization
+* Added structured detection analytics
+
+### Detection Engineering Concepts
+
+* MITRE ATT&CK framework mapping
+* Detection logic engineering
+* Threat classification
+* Alert prioritization
+* Correlation analytics
+
+---
+
+## Phase 6 — Threat Hunting
+
+* Added proactive threat hunting workflows
+* Added suspicious identity analysis
+* Added anomalous behavioral pattern discovery
+* Added historical event analysis
+* Added IOC-style hunting logic
+
+### Threat Hunting Concepts
+
+* Proactive security analysis
+* IOC discovery
+* Behavioral hunting
+* Threat pattern analysis
+* Adversary detection workflows
+
+---
+
+## Phase 7 — SOC Incident Response Automation
+
+* Added automated incident response workflows
+* Added alert triage workflows
+* Added incident severity scoring
+* Added automated containment recommendations
+* Added incident response reporting
+
+### Incident Response Concepts
+
+* SOC workflows
+* Alert triage
+* Incident classification
+* Response orchestration
+* Security operations automation
+
+---
+
+## Phase 8 — Threat Intelligence Correlations
+
+* Added threat intelligence correlation engine
+* Added IOC matching workflows
+* Added suspicious IP reputation analysis
+* Added threat feed enrichment logic
+* Added behavioral-to-threat correlation
+* Added intelligence-based severity scoring
+
+### Threat Intelligence Concepts
+
+* Threat intelligence integration
+* IOC correlation
+* Threat enrichment
+* Intelligence-driven detection
+* Adversary infrastructure analysis
+* Security event correlation
 
 ---
 
 # Visualization Layer
 
 ## visualizations.py
+
 Original visualization implementation.
 
 ## visualizations_v2.py
+
 Updated visualization implementation with PNG export support.
 
 ---
 
 # Technologies Used
 
-- Python
-- Flask
-- requests
-- pandas
-- matplotlib
+* Python
+* Flask
+* requests
+* pandas
+* matplotlib
+
+---
+
+# Security Concepts Demonstrated
+
+* Zero Trust Architecture
+* Authentication
+* Authorization
+* Least Privilege
+* SIEM Monitoring
+* UEBA-style Detection
+* Detection Engineering
+* MITRE ATT&CK Mapping
+* Threat Hunting
+* Incident Response Automation
+* Threat Intelligence Correlation
+* Risk Scoring
+* Behavioral Analytics
+* Security Event Correlation
+
+---
+
+# Repository Structure
+
+```text
+phase1_vulnerable_api.py
+phase2_authenticated_api.py
+phase3_authorization_api.py
+phase4_siem_detection.py
+phase5_detection_engineering.py
+phase6_threat_hunting.py
+phase7_incident_response.py
+phase8_threat_intelligence_correlations.py
+
+visualizations.py
+visualizations_v2.py
+analyze_logs.py
+```
 
 ---
 
@@ -127,3 +240,62 @@ Updated visualization implementation with PNG export support.
 
 ```bash
 pip install -r requirements.txt
+```
+
+---
+
+## Run Individual Phases
+
+### Phase 1
+
+```bash
+python phase1_vulnerable_api.py
+```
+
+### Phase 2
+
+```bash
+python phase2_authenticated_api.py
+```
+
+### Phase 3
+
+```bash
+python phase3_authorization_api.py
+```
+
+### Phase 4
+
+```bash
+python phase4_siem_detection.py
+```
+
+### Phase 5
+
+```bash
+python phase5_detection_engineering.py
+```
+
+### Phase 6
+
+```bash
+python phase6_threat_hunting.py
+```
+
+### Phase 7
+
+```bash
+python phase7_incident_response.py
+```
+
+### Phase 8
+
+```bash
+python phase8_threat_intelligence_correlations.py
+```
+
+---
+
+# About
+
+Zero Trust Vehicle API Security Project with Authentication, Authorization, SIEM Monitoring, Detection Engineering, Threat Hunting, Incident Response Automation, and Threat Intelligence Correlation.

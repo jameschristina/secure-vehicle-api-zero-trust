@@ -174,6 +174,22 @@ See `/screenshots` for:
 
 ---
 
+# Screenshots
+
+Security monitoring and analytics visualizations are available in the `/screenshots` directory, including:
+
+- SIEM-style alert dashboards
+- Request activity distributions
+- Security failure analytics
+- Threat detection visualizations
+- Behavioral anomaly charts
+- Risk scoring analytics
+- Threat hunting activity
+- Incident response workflows
+- Threat intelligence correlation dashboards
+
+---
+
 # Visualization Layer
 
 ## visualizations.py

@@ -10,7 +10,7 @@ The project progressively evolves from a deliberately vulnerable API into a Zero
 
 ## Architecture Diagram
 
-![Architecture Diagram](docs/architecture_diagram.png)
+![Architecture Diagram](architecture_diagram.png)
 
 ---
 

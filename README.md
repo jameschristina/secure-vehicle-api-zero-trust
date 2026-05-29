@@ -489,6 +489,40 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
+# 🔥 Sample Detection Scenarios
+
+This platform includes simulations for modern SOC detection workflows such as:
+
+* Unauthorized vehicle unlock attempts
+* API abuse and brute-force detection
+* Identity-based anomaly detection
+* Impossible travel scenarios
+* Suspicious JWT token reuse
+* Session hijacking behavior
+* Kubernetes RBAC escalation attempts
+* Service account abuse
+* PowerShell persistence activity
+* Malware execution telemetry
+* Threat intelligence IOC correlation
+* AI-prioritized incident scoring
+
+---
+
+# 🧠 Real-World Technology Alignment
+
+| Security Domain     | Real-World Technology Alignment              |
+| ------------------- | -------------------------------------------- |
+| SIEM Analytics      | Splunk, Microsoft Sentinel                   |
+| Identity Federation | Okta, Microsoft Entra ID, Ping Identity      |
+| SOAR Automation     | Cortex XSOAR, Splunk SOAR                    |
+| Endpoint Security   | CrowdStrike, SentinelOne, Microsoft Defender |
+| Kubernetes Security | Falco, Prisma Cloud                          |
+| Threat Intelligence | MISP, Recorded Future                        |
+| Cloud Security      | AWS GuardDuty, Azure Defender                |
+| UEBA Analytics      | Exabeam, Securonix                           |
+
+---
+
 # 📸 Screenshots
 
 ## SOC Dashboard
@@ -542,6 +576,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 ```text
 docs/
 screenshots/
+.github/workflows/
 
 phase1_vulnerable_api.py
 phase2_authenticated_api.py
@@ -568,6 +603,7 @@ visualizations.py
 visualizations_v2.py
 analyze_logs.py
 requirements.txt
+README.md
 ```
 
 ---
@@ -628,6 +664,26 @@ python phase11_ml_anomaly_detection.py
 python phase12_cloud_security.py
 python phase14_attack_heatmap.py
 python phase15_executive_reporting.py
+python phase16_identity_federation.py
+python phase17_kubernetes_security.py
+python phase18_edr_simulation.py
+```
+
+---
+
+# 🚀 CI/CD Pipeline
+
+This repository includes GitHub Actions workflow automation for:
+
+* Dependency installation
+* Python linting
+* Automated testing
+* CI validation workflows
+
+Workflow file:
+
+```text
+.github/workflows/python-app.yml
 ```
 
 ---
@@ -644,6 +700,10 @@ This platform demonstrates practical SOC engineering capability across multiple 
 * Cloud monitoring
 * Machine learning security analytics
 * Executive security reporting
+* Kubernetes security monitoring
+* EDR simulation
+* Purple team operations
+* AI-assisted SOC workflows
 
 The project simulates how modern Security Operations Centers evolve from vulnerable infrastructure into layered, intelligence-driven security ecosystems.
 
@@ -651,13 +711,14 @@ The project simulates how modern Security Operations Centers evolve from vulnera
 
 # 🎥 Planned Enhancements
 
-* GitHub Actions CI/CD pipelines
-* Automated security testing
 * Dockerized deployment
 * Kubernetes deployment simulation
-* AI-assisted analyst dashboards
 * Interactive SOC web interface
-* Purple team attack replay engine
+* AI-assisted analyst dashboards
+* Real-time attack replay engine
+* Threat intelligence enrichment APIs
+* Advanced ATT&CK coverage analytics
+* Full SOC orchestration dashboard
 
 ---
 
@@ -669,4 +730,33 @@ This project is licensed under the MIT License.
 
 # 👤 Author
 
-Developed independently as a cybersecurity engineering and SOC simulation platform focused on Zero Trust architecture, detection engineering, SIEM analytics, threat hunting, SOAR automation, and AI-assisted security operations.
+Developed independently as a cybersecurity engineering and SOC simulation platform focused on:
+
+* Zero Trust Architecture
+* Detection Engineering
+* SIEM Analytics
+* Threat Hunting
+* SOAR Automation
+* Cloud Security
+* Identity Security
+* Kubernetes Security
+* EDR Simulation
+* Purple Team Operations
+* AI-Assisted Security Operations
+
+---
+
+# ⭐ Repository Goals
+
+This repository was designed to demonstrate:
+
+* Practical SOC engineering workflows
+* Detection engineering capability
+* Security operations automation
+* Threat intelligence integration
+* Modern cybersecurity architecture concepts
+* Security analytics engineering
+* Zero Trust implementation concepts
+* AI-assisted SOC workflows
+
+---

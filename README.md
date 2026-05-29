@@ -174,6 +174,31 @@ See `/screenshots` for:
 
 ---
 
+## Phase 9 — SOAR Automation + Automated Containment
+
+Added SOAR-style automation workflows
+
+Added automated containment engine
+
+Added automated response playbooks
+
+Added identity quarantine simulation
+
+Added automated API key disablement
+
+Added containment event reporting
+
+### SOAR Concepts
+
+- Security orchestration
+- Automated response
+- Playbook execution
+- Identity containment
+- Automated remediation
+- Security operations automation
+
+--- 
+
 # Screenshots
 
 Security monitoring and analytics visualizations are available in the `/screenshots` directory, including:

@@ -331,6 +331,16 @@ All SOC analytics dashboards and security visualizations are available in `/scre
 - Threat intelligence views
 - Executive security reports
 
+## SOC Dashboard Example
+
+![SOC Dashboard](screenshots/phase10_soc_dashboard.png)
+
+---
+
+## ATT&CK Heatmap
+
+![ATTACK Heatmap](screenshots/phase14_attack_heatmap.png)
+
 ---
 
 # Visualization Layer

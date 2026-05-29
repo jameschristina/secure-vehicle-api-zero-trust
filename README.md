@@ -1,442 +1,367 @@
-# Secure Vehicle API: Zero Trust + Behavioral Detection Simulation
+# Secure Vehicle API: Zero Trust + SOC Simulation Platform
 
 ## Overview
 
-This project is a multi-phase cybersecurity simulation demonstrating how weak identity validation, broken access control, and limited observability can create cyber-physical risk in connected vehicle systems.
+This project is a multi-phase cybersecurity simulation that demonstrates how a vulnerable system evolves into a full Security Operations Center (SOC) pipeline.
 
-The project progressively evolves from a deliberately vulnerable API into a Zero Trust-oriented architecture with SIEM/UEBA-style behavioral detection, detection engineering, threat hunting, incident response automation, and threat intelligence correlation.
+It models real-world security engineering domains including:
+- SIEM-based detection engineering
+- UEBA behavioral analytics
+- Threat intelligence correlation
+- SOAR automation and response
+- Machine learning anomaly detection
+- Cloud security monitoring
+- Identity attack path analysis
+- Executive security reporting
 
 ---
 
-# Architecture Diagram (Interactive SOC Flow)
+## Project Type
 
-[![SOC Architecture](architecture_diagram.png)](#architecture-flow)
+✔ SOC Simulation Platform  
+✔ Detection Engineering Lab  
+✔ Threat Intelligence Pipeline  
+✔ SOAR Automation System  
+✔ Security Analytics Engine  
 
-## Architecture Flow
+---
 
-### 1. API Layer
-- Flask API receives vehicle requests
+## TL;DR Architecture
 
-### 2. Detection Layer
-- SIEM engine processes logs
-- UEBA behavioral analysis
+This system simulates a full SOC pipeline:
 
-### 3. Intelligence Layer
-- Threat intelligence correlation
-- IOC matching
+- API Layer → Vehicle telemetry ingestion
+- Detection Layer → SIEM + UEBA analytics
+- Intelligence Layer → Threat feeds + IOC correlation
+- Response Layer → SOAR automation + containment
+- Analytics Layer → Dashboards + ML anomaly detection
+- Reporting Layer → Executive security metrics
 
-### 4. Response Layer (SOAR)
-- Automated containment
-- Identity blocking
-- Incident creation
+---
 
-### 5. Visualization Layer
-- SOC dashboard
-- Heatmaps
-- Attack timelines
+# Architecture Diagram
 
-### 6. Reporting Layer
-- Executive reports
-- KPI metrics
+![SOC Architecture](architecture_diagram.png)
+
 ---
 
 # Project Phases
 
+---
+
 ## Phase 1 — Vulnerable Baseline
 
-* Flask API with unrestricted access
-* Endpoints:
+### Implementation
+- Flask API with unrestricted access
+- Endpoints:
+  - `/status`
+  - `/unlock`
+  - `/start`
+- No authentication
+- No authorization
+- No rate limiting
 
-  * `/status`
-  * `/unlock`
-  * `/start`
-* Access controlled only by vehicle identifiers
-* No authentication
-* No authorization
-* No rate limiting
+### Security Weaknesses
+- Broken access control
+- Predictable identifiers
+- Unauthenticated API access
+- Lack of observability
 
-### Security Weaknesses Demonstrated
-
-* Broken access control
-* Predictable identifiers
-* Unauthenticated API access
-* Lack of observability
+### Security Concepts
+- Attack surface exposure
+- Identity absence risk
+- API security fundamentals
+- Access control failure patterns
 
 ---
 
 ## Phase 2 — Authentication + Rate Limiting
 
-* Added API key authentication
-* Added request rate limiting
-* Added structured security logging
-* Added security response headers
+### Implementation
+- API key authentication
+- Rate limiting protection
+- Structured logging
+- Security headers
 
 ### Security Concepts
-
-* Identity validation
-* API hardening
-* Abuse prevention
-* Request attribution
+- Identity verification
+- API hardening techniques
+- Abuse prevention mechanisms
+- Request attribution tracking
+- Basic defensive controls
 
 ---
 
 ## Phase 3 — Authorization + Least Privilege
 
-* Added entitlement enforcement
-* Mapped identities to authorized vehicles
-* Blocked unauthorized cross-vehicle access
-* Added authorization-aware logging
+### Implementation
+- Identity-to-vehicle mapping
+- Access control enforcement
+- Cross-vehicle access blocking
+- Authorization-aware logging
 
 ### Security Concepts
-
-* Authentication vs authorization
-* Least privilege
-* Entitlement enforcement
-* Zero Trust architecture
-
----
-
-## Phase 4 — SIEM / UEBA-Style Detection
-
-* Added live SIEM-style polling engine
-* Added weighted risk scoring
-* Added cumulative identity risk tracking
-* Added alert classification
-* Added behavioral anomaly detection
-* Added live SIEM snapshots
-* Added alert suppression cooldown logic
-
-### Detection Concepts
-
-* Behavioral analytics
-* Identity-centric monitoring
-* Security event correlation
-* Risk aggregation
-* SIEM/UEBA-style observability
-
-### Sample Security Events
-
-* Unauthorized vehicle access attempts
-* Invalid API key detection
-* Missing API key detection
-* Identity-centric behavioral monitoring
-* Risk-scored SIEM alerts
-
-### Generated Security Visualizations
-
-See `/screenshots` for:
-
-* Request distribution charts
-* Vehicle access activity
-* Security failure analytics
+- Authentication vs Authorization
+- Least privilege principle
+- Zero Trust architecture foundation
+- Entitlement enforcement
+- Access control policy design
 
 ---
 
-## Phase 5 — Detection Engineering + MITRE ATT&CK Correlation
+## Phase 4 — SIEM / UEBA Detection
 
-* Added detection engineering workflows
-* Added MITRE ATT&CK tactic mapping
-* Added event correlation logic
-* Added severity-based alert prioritization
-* Added structured detection analytics
+### Implementation
+- Live SIEM-style event engine
+- Behavioral anomaly detection
+- Risk scoring per identity
+- Alert classification system
+- Identity-based monitoring
 
-### Detection Engineering Concepts
+### Security Concepts
+- SIEM (Security Information and Event Management)
+- UEBA (User & Entity Behavior Analytics)
+- Behavioral baselining
+- Security event correlation
+- Risk aggregation modeling
+- Real-time detection logic
 
-* MITRE ATT&CK framework mapping
-* Detection logic engineering
-* Threat classification
-* Alert prioritization
-* Correlation analytics
+---
+
+## Phase 5 — Detection Engineering + MITRE ATT&CK
+
+### Implementation
+- MITRE ATT&CK mapping
+- Detection rule creation
+- Event correlation logic
+- Severity-based alerting
+
+### Security Concepts
+- MITRE ATT&CK framework usage
+- Detection engineering lifecycle
+- Threat classification models
+- Security rule tuning
+- Attack technique mapping
 
 ---
 
 ## Phase 6 — Threat Hunting
 
-* Added proactive threat hunting workflows
-* Added suspicious identity analysis
-* Added anomalous behavioral pattern discovery
-* Added historical event analysis
-* Added IOC-style hunting logic
+### Implementation
+- IOC discovery workflows
+- Behavioral anomaly investigation
+- Historical event analysis
+- Suspicious pattern detection
 
-### Threat Hunting Concepts
-
-* Proactive security analysis
-* IOC discovery
-* Behavioral hunting
-* Threat pattern analysis
-* Adversary detection workflows
+### Security Concepts
+- Proactive threat hunting
+- Hypothesis-driven investigation
+- IOC-based detection
+- Behavioral analytics
+- Adversary tracking techniques
 
 ---
 
 ## Phase 7 — SOC Incident Response Automation
 
-* Added automated incident response workflows
-* Added alert triage workflows
-* Added incident severity scoring
-* Added automated containment recommendations
-* Added incident response reporting
+### Implementation
+- Automated alert triage
+- Incident classification engine
+- Response recommendations
+- Severity scoring system
 
-### Incident Response Concepts
-
-* SOC workflows
-* Alert triage
-* Incident classification
-* Response orchestration
-* Security operations automation
-
----
-
-## Phase 8 — Threat Intelligence Correlations
-
-* Added threat intelligence correlation engine
-* Added IOC matching workflows
-* Added suspicious IP reputation analysis
-* Added threat feed enrichment logic
-* Added behavioral-to-threat correlation
-* Added intelligence-based severity scoring
-
-### Threat Intelligence Concepts
-
-* Threat intelligence integration
-* IOC correlation
-* Threat enrichment
-* Intelligence-driven detection
-* Adversary infrastructure analysis
-* Security event correlation
-
----
-
-## Phase 9 — SOAR Automation + Automated Containment
-
-* Added SOAR-style automation workflows
-
-* Added automated containment engine
-
-* Added automated response playbooks
-
-* Added identity quarantine simulation
-
-* Added automated API key disablement
-
-* Added containment event reporting
-
-### SOAR Concepts
-
-- Security orchestration
-- Automated response
-- Playbook execution
-- Identity containment
-- Automated remediation
+### Security Concepts
+- SOC workflows
+- Incident lifecycle management
+- Alert triage processes
+- Response orchestration
 - Security operations automation
 
---- 
+---
+
+## Phase 8 — Threat Intelligence Correlation
+
+### Implementation
+- IOC matching engine
+- Threat feed enrichment
+- IP reputation analysis
+- Behavioral-to-threat mapping
+
+### Security Concepts
+- Threat intelligence integration
+- IOC correlation techniques
+- Adversary infrastructure analysis
+- Enrichment pipelines
+- Intelligence-driven detection
+
+---
+
+## Phase 9 — SOAR Automation
+
+### Implementation
+- Automated containment engine
+- Identity quarantine simulation
+- API key disablement
+- Response playbooks
+
+### Security Concepts
+- SOAR (Security Orchestration Automation Response)
+- Automated remediation
+- Incident containment strategies
+- Playbook execution
+- Security automation workflows
+
+---
 
 ## Phase 10 — SOC Dashboarding
 
-* Added Splunk-style dashboard visualizations
-* Added SOC activity monitoring
-* Added endpoint activity analytics
-* Added security event aggregation
-* Added operational dashboard reporting
-* Added visualization-driven SOC monitoring
+### Implementation
+- Security dashboards
+- Event aggregation views
+- SOC monitoring interface
+- Trend visualization
 
-### Dashboarding Concepts
-
-* SIEM dashboard design
-* Security data visualization
-* SOC operational monitoring
-* Alert trend analysis
-* Security telemetry analytics
-* Analyst workflow visibility
+### Security Concepts
+- SOC visualization design
+- Security telemetry analysis
+- Operational monitoring
+- Alert trend analysis
+- Security observability
 
 ---
 
 ## Phase 11 — Machine Learning Anomaly Detection
 
-* Added Isolation Forest anomaly detection
-* Added behavioral anomaly scoring
-* Added suspicious event classification
-* Added machine learning-based event analysis
-* Added anomaly confidence scoring
-* Added behavioral deviation detection
+### Implementation
+- Isolation Forest detection model
+- Behavioral anomaly scoring
+- Outlier classification
+- Confidence scoring
 
-### Machine Learning Security Concepts
-
-* Behavioral baselining
-* Unsupervised anomaly detection
-* Outlier analysis
-* Security-focused machine learning
-* Statistical anomaly scoring
-* Adversarial behavior detection
+### Security Concepts
+- Unsupervised anomaly detection
+- Behavioral baselining
+- Statistical deviation analysis
+- ML-driven security analytics
+- Adversarial behavior detection
 
 ---
 
 ## Phase 12 — Cloud Security Simulation
 
-* Added simulated cloud IAM security events
-* Added cloud audit monitoring
-* Added cloud identity risk scenarios
-* Added simulated cloud privilege escalation events
-* Added cloud administrative abuse detection
-* Added cloud control plane monitoring
+### Implementation
+- IAM abuse simulation
+- Cloud audit logs
+- Privilege escalation scenarios
+- Cloud monitoring events
 
-### Cloud Security Concepts
-
-* Cloud IAM security
-* Cloud audit logging
-* Identity-centric cloud monitoring
-* Cloud privilege abuse
-* Cloud attack surface analysis
-* Cloud security observability
+### Security Concepts
+- Cloud security posture
+- IAM risk analysis
+- Cloud audit logging
+- Identity-based cloud attacks
+- Cloud threat detection
 
 ---
 
 ## Phase 13 — Identity Attack Path Analysis
 
-* Added attack chain simulation
-* Added identity relationship analysis
-* Added privilege escalation path modeling
-* Added lateral movement simulation
-* Added trust relationship analysis
-* Added identity attack graph workflows
+### Implementation
+- Attack chain modeling
+- Identity relationship mapping
+- Lateral movement simulation
+- Privilege escalation paths
 
-### Identity Security Concepts
-
-* Identity attack path analysis
-* Privilege escalation modeling
-* Lateral movement analysis
-* Identity trust relationships
-* Adversary path simulation
-* Identity-centric security analytics
+### Security Concepts
+- Identity attack graph modeling
+- Lateral movement analysis
+- Trust relationship exploitation
+- Attack path discovery
+- Identity-centric security
 
 ---
 
 ## Phase 14 — ATT&CK Heatmap Visualization
 
-* Added MITRE ATT&CK coverage mapping
-* Added heatmap-style analytics
-* Added technique coverage scoring
-* Added ATT&CK tactic visualization
-* Added detection coverage analysis
-* Added ATT&CK-based reporting
+### Implementation
+- MITRE ATT&CK coverage heatmap
+- Technique scoring system
+- Detection coverage visualization
 
-### ATT&CK Visualization Concepts
-
-* ATT&CK framework analysis
-* Threat coverage visualization
-* Detection maturity analysis
-* Tactic and technique correlation
-* ATT&CK heatmap generation
-* Detection coverage analytics
+### Security Concepts
+- ATT&CK framework mapping
+- Detection coverage analysis
+- Threat modeling visualization
+- Security maturity assessment
 
 ---
 
 ## Phase 15 — Executive Reporting
 
-* Added executive security reporting
-* Added SOC KPI reporting
-* Added incident trend reporting
-* Added security posture analytics
-* Added executive-level operational summaries
-* Added strategic cybersecurity metrics
+### Implementation
+- SOC KPI dashboards
+- Incident trend analysis
+- Security posture summaries
+- Executive reporting layer
 
-### Executive Reporting Concepts
+### Security Concepts
+- Security metrics reporting
+- Executive-level SOC visibility
+- Risk communication
+- Operational security KPIs
+- Strategic security analytics
 
-* SOC metrics reporting
-* Security KPI analysis
-* Executive cybersecurity communication
-* Incident trend analysis
-* Security posture measurement
-* Operational risk reporting
- 
 ---
 
 # Screenshots
 
-Security monitoring and analytics visualizations are available in the `/screenshots` directory, including:
+All security visualizations are available in `/screenshots`:
 
-- SIEM-style alert dashboards
-- Request activity distributions
-- Security failure analytics
-- Threat detection visualizations
-- Behavioral anomaly charts
-- Risk scoring analytics
-- Threat hunting activity
-- Incident response workflows
-- Threat intelligence correlation dashboards
-
-## Advanced Security Analytics Screenshots
-
-### Phase 10 — SOC Dashboarding
-- SOC operational dashboards
-- Security event visualizations
-- Endpoint activity monitoring
-
-### Phase 11 — ML Anomaly Detection
-- Isolation Forest anomaly scoring
-- Behavioral anomaly analytics
-- Outlier detection visualizations
-
-### Phase 12 — Cloud Security
-- IAM security monitoring
-- Cloud privilege escalation alerts
-- Cloud audit event analytics
-
-### Phase 13 — Attack Path Analysis
-- Identity attack chain visualization
-- Privilege escalation path mapping
-- Lateral movement analysis
-
-### Phase 14 — ATT&CK Heatmaps
-- ATT&CK tactic coverage
-- Detection heatmaps
-- Technique correlation analytics
-
-### Phase 15 — Executive Reporting
-- SOC KPI summaries
-- Executive security metrics
-- Operational risk reporting
+- SIEM dashboards
+- Threat detection charts
+- SOC heatmaps
+- ML anomaly graphs
+- Incident response flows
+- Threat intelligence views
+- Executive security reports
 
 ---
 
 # Visualization Layer
 
 ## visualizations.py
-
-Original visualization implementation.
+Original visualization engine
 
 ## visualizations_v2.py
-
-Updated visualization implementation with PNG export support.
+Enhanced version with PNG export support
 
 ---
 
 # Technologies Used
 
-* Python
-* Flask
-* requests
-* pandas
-* matplotlib
+- Python
+- Flask
+- pandas
+- matplotlib
+- requests
 
 ---
 
 # Security Concepts Demonstrated
 
-* Zero Trust Architecture
-* Authentication
-* Authorization
-* Least Privilege
-* SIEM Monitoring
-* UEBA-style Detection
-* Detection Engineering
-* MITRE ATT&CK Mapping
-* Threat Hunting
-* Incident Response Automation
-* Threat Intelligence Correlation
-* Risk Scoring
-* Behavioral Analytics
-* Security Event Correlation
+- Zero Trust Architecture
+- SIEM Monitoring
+- UEBA Behavioral Analytics
+- Detection Engineering
+- MITRE ATT&CK Mapping
+- Threat Hunting
+- Incident Response Automation
+- Threat Intelligence Correlation
+- SOAR Automation
+- Machine Learning Security Analytics
+- Cloud Security Simulation
+- Identity Attack Path Analysis
+- Executive SOC Reporting
 
 ---
 
@@ -451,11 +376,17 @@ phase5_detection_engineering.py
 phase6_threat_hunting.py
 phase7_incident_response.py
 phase8_threat_intelligence_correlations.py
+phase9_soar_automation.py
+phase10_soc_dashboard.py
+phase11_ml_anomaly_detection.py
+phase12_cloud_security.py
+phase13_attack_path_analysis.py
+phase14_attack_heatmap.py
+phase15_executive_reporting.py
 
 visualizations.py
 visualizations_v2.py
 analyze_logs.py
-```
 
 ---
 

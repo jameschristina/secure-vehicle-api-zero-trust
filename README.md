@@ -8,6 +8,12 @@ The project progressively evolves from a deliberately vulnerable API into a Zero
 
 ---
 
+## Architecture Diagram
+
+![Architecture Diagram](docs/architecture_diagram.png)
+
+---
+
 # Project Phases
 
 ## Phase 1 — Vulnerable Baseline

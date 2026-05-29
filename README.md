@@ -1,4 +1,8 @@
-# Secure Vehicle API: Zero Trust + SOC Simulation Platform
+# 🚗 Secure Vehicle API: Zero Trust SOC Simulation Platform
+
+<p align="center">
+  <img src="docs/architecture_diagram.png" width="800"/>
+</p>
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![SOC Simulation](https://img.shields.io/badge/SOC-Simulation-red)
@@ -19,6 +23,20 @@ It models real-world security engineering domains including:
 - Executive security reporting
 
 ---
+
+## 🧭 System Design Philosophy
+
+This project simulates a real-world Security Operations Center (SOC) pipeline:
+
+- Telemetry ingestion (API layer)
+- Detection engineering (SIEM + UEBA)
+- Threat intelligence correlation
+- SOAR automation + response
+- Machine learning anomaly detection
+- Cloud + identity security simulation
+- Executive reporting and KPIs
+
+--- 
 
 ## Project Type
 

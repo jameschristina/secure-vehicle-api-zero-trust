@@ -202,63 +202,120 @@ See `/screenshots` for:
 ## Phase 10 — SOC Dashboarding
 
 * Added Splunk-style dashboard visualizations
-
 * Added SOC activity monitoring
-
 * Added endpoint activity analytics
+* Added security event aggregation
+* Added operational dashboard reporting
+* Added visualization-driven SOC monitoring
+
+### Dashboarding Concepts
+
+* SIEM dashboard design
+* Security data visualization
+* SOC operational monitoring
+* Alert trend analysis
+* Security telemetry analytics
+* Analyst workflow visibility
 
 ---
 
 ## Phase 11 — Machine Learning Anomaly Detection
 
 * Added Isolation Forest anomaly detection
-
 * Added behavioral anomaly scoring
-
 * Added suspicious event classification
+* Added machine learning-based event analysis
+* Added anomaly confidence scoring
+* Added behavioral deviation detection
+
+### Machine Learning Security Concepts
+
+* Behavioral baselining
+* Unsupervised anomaly detection
+* Outlier analysis
+* Security-focused machine learning
+* Statistical anomaly scoring
+* Adversarial behavior detection
 
 ---
 
 ## Phase 12 — Cloud Security Simulation
 
 * Added simulated cloud IAM security events
-
 * Added cloud audit monitoring
-
 * Added cloud identity risk scenarios
+* Added simulated cloud privilege escalation events
+* Added cloud administrative abuse detection
+* Added cloud control plane monitoring
+
+### Cloud Security Concepts
+
+* Cloud IAM security
+* Cloud audit logging
+* Identity-centric cloud monitoring
+* Cloud privilege abuse
+* Cloud attack surface analysis
+* Cloud security observability
 
 ---
 
 ## Phase 13 — Identity Attack Path Analysis
 
 * Added attack chain simulation
-
 * Added identity relationship analysis
-
 * Added privilege escalation path modeling
+* Added lateral movement simulation
+* Added trust relationship analysis
+* Added identity attack graph workflows
+
+### Identity Security Concepts
+
+* Identity attack path analysis
+* Privilege escalation modeling
+* Lateral movement analysis
+* Identity trust relationships
+* Adversary path simulation
+* Identity-centric security analytics
 
 ---
 
 ## Phase 14 — ATT&CK Heatmap Visualization
 
 * Added MITRE ATT&CK coverage mapping
-
 * Added heatmap-style analytics
-
 * Added technique coverage scoring
+* Added ATT&CK tactic visualization
+* Added detection coverage analysis
+* Added ATT&CK-based reporting
 
+### ATT&CK Visualization Concepts
+
+* ATT&CK framework analysis
+* Threat coverage visualization
+* Detection maturity analysis
+* Tactic and technique correlation
+* ATT&CK heatmap generation
+* Detection coverage analytics
 
 ---
 
 ## Phase 15 — Executive Reporting
 
 * Added executive security reporting
-
 * Added SOC KPI reporting
-
 * Added incident trend reporting
-
 * Added security posture analytics
+* Added executive-level operational summaries
+* Added strategic cybersecurity metrics
+
+### Executive Reporting Concepts
+
+* SOC metrics reporting
+* Security KPI analysis
+* Executive cybersecurity communication
+* Incident trend analysis
+* Security posture measurement
+* Operational risk reporting
  
 ---
 

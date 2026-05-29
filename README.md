@@ -1,5 +1,9 @@
 # Secure Vehicle API: Zero Trust + SOC Simulation Platform
 
+![Python](https://img.shields.io/badge/Python-3.10-blue)
+![SOC Simulation](https://img.shields.io/badge/SOC-Simulation-red)
+![Zero Trust](https://img.shields.io/badge/Zero%20Trust-Architecture-green)
+
 ## Overview
 
 This project is a multi-phase cybersecurity simulation that demonstrates how a vulnerable system evolves into a full Security Operations Center (SOC) pipeline.
@@ -39,7 +43,7 @@ This system simulates a full SOC pipeline:
 
 ---
 
-# Architecture Diagram
+## Architecture Overview
 
 ![SOC Architecture](architecture_diagram.png)
 
@@ -384,8 +388,17 @@ phase13_attack_path_analysis.py
 phase14_attack_heatmap.py
 phase15_executive_reporting.py
 
-visualizations.py
-visualizations_v2.py
+---
+
+## Visualization Layer
+
+- visualizations.py — Original visualization engine  
+- visualizations_v2.py — Enhanced version with PNG export support
+
+---
+
+## Logs
+
 analyze_logs.py
 
 ---

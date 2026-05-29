@@ -333,6 +333,38 @@ Security monitoring and analytics visualizations are available in the `/screensh
 - Incident response workflows
 - Threat intelligence correlation dashboards
 
+## Advanced Security Analytics Screenshots
+
+### Phase 10 — SOC Dashboarding
+- SOC operational dashboards
+- Security event visualizations
+- Endpoint activity monitoring
+
+### Phase 11 — ML Anomaly Detection
+- Isolation Forest anomaly scoring
+- Behavioral anomaly analytics
+- Outlier detection visualizations
+
+### Phase 12 — Cloud Security
+- IAM security monitoring
+- Cloud privilege escalation alerts
+- Cloud audit event analytics
+
+### Phase 13 — Attack Path Analysis
+- Identity attack chain visualization
+- Privilege escalation path mapping
+- Lateral movement analysis
+
+### Phase 14 — ATT&CK Heatmaps
+- ATT&CK tactic coverage
+- Detection heatmaps
+- Technique correlation analytics
+
+### Phase 15 — Executive Reporting
+- SOC KPI summaries
+- Executive security metrics
+- Operational risk reporting
+
 ---
 
 # Visualization Layer

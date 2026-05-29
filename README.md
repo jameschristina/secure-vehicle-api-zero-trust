@@ -1,9 +1,5 @@
 # 🚗 Secure Vehicle API: Zero Trust SOC Simulation Platform
 
-<p align="center">
-  <img src="docs/architecture_diagram.png" width="800"/>
-</p>
-
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![SOC Simulation](https://img.shields.io/badge/SOC-Simulation-red)
 ![Zero Trust](https://img.shields.io/badge/Zero%20Trust-Architecture-green)

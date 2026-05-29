@@ -8,10 +8,36 @@ The project progressively evolves from a deliberately vulnerable API into a Zero
 
 ---
 
-## Architecture Diagram
+# Architecture Diagram (Interactive SOC Flow)
 
-![Architecture Diagram](architecture_diagram.png)
+[![SOC Architecture](architecture_diagram.png)](#architecture-flow)
 
+## Architecture Flow
+
+### 1. API Layer
+- Flask API receives vehicle requests
+
+### 2. Detection Layer
+- SIEM engine processes logs
+- UEBA behavioral analysis
+
+### 3. Intelligence Layer
+- Threat intelligence correlation
+- IOC matching
+
+### 4. Response Layer (SOAR)
+- Automated containment
+- Identity blocking
+- Incident creation
+
+### 5. Visualization Layer
+- SOC dashboard
+- Heatmaps
+- Attack timelines
+
+### 6. Reporting Layer
+- Executive reports
+- KPI metrics
 ---
 
 # Project Phases

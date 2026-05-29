@@ -3,350 +3,409 @@
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![SOC Simulation](https://img.shields.io/badge/SOC-Simulation-red)
 ![Zero Trust](https://img.shields.io/badge/Zero%20Trust-Architecture-green)
-
-## Overview
-
-This project is a multi-phase cybersecurity simulation that demonstrates how a vulnerable system evolves into a full Security Operations Center (SOC) pipeline.
-
-It models real-world security engineering domains including:
-- SIEM-based detection engineering
-- UEBA behavioral analytics
-- Threat intelligence correlation
-- SOAR automation and response
-- Machine learning anomaly detection
-- Cloud security monitoring
-- Identity attack path analysis
-- Executive security reporting
+![MITRE ATT\&CK](https://img.shields.io/badge/MITRE-ATT%26CK-darkred)
+![Machine Learning](https://img.shields.io/badge/ML-Anomaly%20Detection-orange)
+![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ---
 
-## 🧭 System Design Philosophy
+# 🚀 Overview
 
-This project simulates a real-world Security Operations Center (SOC) pipeline:
+Secure Vehicle API is a multi-phase cybersecurity simulation platform that demonstrates how a vulnerable API environment evolves into a mature Security Operations Center (SOC) ecosystem using Zero Trust security principles.
 
-- Telemetry ingestion (API layer)
-- Detection engineering (SIEM + UEBA)
-- Threat intelligence correlation
-- SOAR automation + response
-- Machine learning anomaly detection
-- Cloud + identity security simulation
-- Executive reporting and KPIs
+This project models real-world cybersecurity engineering workflows including:
 
---- 
-
-## Project Type
-
-✔ SOC Simulation Platform  
-✔ Detection Engineering Lab  
-✔ Threat Intelligence Pipeline  
-✔ SOAR Automation System  
-✔ Security Analytics Engine  
-
----
-
-## TL;DR Architecture
-
-This system simulates a full SOC pipeline:
-
-- API Layer → Vehicle telemetry ingestion
-- Detection Layer → SIEM + UEBA analytics
-- Intelligence Layer → Threat feeds + IOC correlation
-- Response Layer → SOAR automation + containment
-- Analytics Layer → Dashboards + ML anomaly detection
-- Reporting Layer → Executive security metrics
+* API security hardening
+* Authentication and authorization
+* SIEM detection engineering
+* UEBA behavioral analytics
+* Threat hunting
+* SOAR automation
+* Threat intelligence correlation
+* Machine learning anomaly detection
+* Cloud security monitoring
+* Identity attack path analysis
+* MITRE ATT&CK heatmapping
+* Executive security reporting
+* Identity federation and SSO
+* Kubernetes security monitoring
+* Endpoint Detection & Response (EDR)
+* Purple team automation
+* AI-assisted SOC workflows
 
 ---
 
-## Architecture Overview
+# 🧭 System Design Philosophy
+
+This project simulates how modern Security Operations Centers evolve from vulnerable infrastructure into layered security ecosystems.
+
+The architecture progressively introduces:
+
+* Telemetry ingestion
+* Detection engineering
+* Threat intelligence correlation
+* SOAR automation
+* Behavioral analytics
+* Machine learning detection
+* Identity security
+* Cloud security monitoring
+* Endpoint monitoring
+* Purple team validation
+* AI-assisted analyst workflows
+
+---
+
+# 🏗️ Architecture Overview
 
 ![SOC Architecture](docs/architecture_diagram.png)
 
 ---
 
-# Project Phases
+# 🔄 End-to-End SOC Pipeline
+
+```text
+Vehicle API
+    ↓
+Authentication
+    ↓
+Authorization
+    ↓
+Security Logging
+    ↓
+SIEM Analytics
+    ↓
+Detection Engineering
+    ↓
+Threat Hunting
+    ↓
+SOAR Automation
+    ↓
+Threat Intelligence Correlation
+    ↓
+Machine Learning Anomaly Detection
+    ↓
+Executive Security Reporting
+```
+
+---
+
+# 🎯 Project Objectives
+
+This repository demonstrates practical cybersecurity engineering concepts across multiple domains:
+
+* Zero Trust Architecture
+* Detection Engineering
+* SIEM Analytics
+* UEBA Behavioral Analytics
+* Threat Hunting
+* SOAR Automation
+* Threat Intelligence Correlation
+* Cloud Security Monitoring
+* Identity Security
+* Endpoint Detection & Response
+* Kubernetes Security
+* Purple Team Operations
+* AI-Assisted SOC Operations
+
+---
+
+# 🛡️ Project Phases
 
 ---
 
 ## Phase 1 — Vulnerable Baseline
 
 ### Implementation
-- Flask API with unrestricted access
-- Endpoints:
-  - `/status`
-  - `/unlock`
-  - `/start`
-- No authentication
-- No authorization
-- No rate limiting
 
-### Security Weaknesses
-- Broken access control
-- Predictable identifiers
-- Unauthenticated API access
-- Lack of observability
+* Flask API with unrestricted access
+* Public vehicle control endpoints
+* No authentication
+* No authorization
+* No rate limiting
 
 ### Security Concepts
-- Attack surface exposure
-- Identity absence risk
-- API security fundamentals
-- Access control failure patterns
+
+* Broken access control
+* API exposure risks
+* Attack surface analysis
+* Identity absence risks
 
 ---
 
 ## Phase 2 — Authentication + Rate Limiting
 
 ### Implementation
-- API key authentication
-- Rate limiting protection
-- Structured logging
-- Security headers
+
+* API key authentication
+* Request rate limiting
+* Structured security logging
+* Security header enforcement
 
 ### Security Concepts
-- Identity verification
-- API hardening techniques
-- Abuse prevention mechanisms
-- Request attribution tracking
-- Basic defensive controls
+
+* Authentication workflows
+* API hardening
+* Abuse prevention
+* Request attribution
 
 ---
 
 ## Phase 3 — Authorization + Least Privilege
 
 ### Implementation
-- Identity-to-vehicle mapping
-- Access control enforcement
-- Cross-vehicle access blocking
-- Authorization-aware logging
+
+* Identity-to-vehicle mapping
+* Access policy enforcement
+* Cross-vehicle access prevention
+* Authorization-aware telemetry
 
 ### Security Concepts
-- Authentication vs Authorization
-- Least privilege principle
-- Zero Trust architecture foundation
-- Entitlement enforcement
-- Access control policy design
+
+* Authorization models
+* Least privilege
+* Zero Trust enforcement
+* Identity segmentation
 
 ---
 
 ## Phase 4 — SIEM / UEBA Detection
 
 ### Implementation
-- Live SIEM-style event engine
-- Behavioral anomaly detection
-- Risk scoring per identity
-- Alert classification system
-- Identity-based monitoring
+
+* SIEM-style telemetry aggregation
+* UEBA behavioral analytics
+* Identity risk scoring
+* Alert classification engine
 
 ### Security Concepts
-- SIEM (Security Information and Event Management)
-- UEBA (User & Entity Behavior Analytics)
-- Behavioral baselining
-- Security event correlation
-- Risk aggregation modeling
-- Real-time detection logic
+
+* SIEM analytics
+* UEBA monitoring
+* Behavioral baselining
+* Event correlation
 
 ---
 
 ## Phase 5 — Detection Engineering + MITRE ATT&CK
 
 ### Implementation
-- MITRE ATT&CK mapping
-- Detection rule creation
-- Event correlation logic
-- Severity-based alerting
+
+* ATT&CK technique mapping
+* Detection rule logic
+* Event correlation workflows
+* Severity-based detections
 
 ### Security Concepts
-- MITRE ATT&CK framework usage
-- Detection engineering lifecycle
-- Threat classification models
-- Security rule tuning
-- Attack technique mapping
+
+* Detection engineering
+* MITRE ATT&CK alignment
+* Threat modeling
+* Detection lifecycle management
 
 ---
 
 ## Phase 6 — Threat Hunting
 
 ### Implementation
-- IOC discovery workflows
-- Behavioral anomaly investigation
-- Historical event analysis
-- Suspicious pattern detection
+
+* IOC investigation workflows
+* Historical telemetry analysis
+* Behavioral anomaly discovery
+* Threat pattern analysis
 
 ### Security Concepts
-- Proactive threat hunting
-- Hypothesis-driven investigation
-- IOC-based detection
-- Behavioral analytics
-- Adversary tracking techniques
+
+* Threat hunting methodologies
+* IOC-based investigations
+* Behavioral analytics
+* Adversary tracking
 
 ---
 
 ## Phase 7 — SOC Incident Response Automation
 
 ### Implementation
-- Automated alert triage
-- Incident classification engine
-- Response recommendations
-- Severity scoring system
+
+* Automated alert triage
+* Incident severity scoring
+* Response recommendation engine
+* Workflow automation
 
 ### Security Concepts
-- SOC workflows
-- Incident lifecycle management
-- Alert triage processes
-- Response orchestration
-- Security operations automation
+
+* Incident response lifecycle
+* SOC orchestration
+* Alert prioritization
+* Security operations automation
 
 ---
 
 ## Phase 8 — Threat Intelligence Correlation
 
 ### Implementation
-- IOC matching engine
-- Threat feed enrichment
-- IP reputation analysis
-- Behavioral-to-threat mapping
+
+* IOC matching engine
+* Threat feed enrichment
+* Reputation analysis
+* Intelligence-driven detections
 
 ### Security Concepts
-- Threat intelligence integration
-- IOC correlation techniques
-- Adversary infrastructure analysis
-- Enrichment pipelines
-- Intelligence-driven detection
+
+* Threat intelligence pipelines
+* IOC enrichment
+* Adversary infrastructure analysis
+* Intelligence correlation
 
 ---
 
 ## Phase 9 — SOAR Automation
 
 ### Implementation
-- Automated containment engine
-- Identity quarantine simulation
-- API key disablement
-- Response playbooks
+
+* Automated containment logic
+* Identity quarantine simulation
+* API key disablement
+* Response playbook execution
 
 ### Security Concepts
-- SOAR (Security Orchestration Automation Response)
-- Automated remediation
-- Incident containment strategies
-- Playbook execution
-- Security automation workflows
+
+* SOAR workflows
+* Automated remediation
+* Containment strategies
+* Security orchestration
 
 ---
 
 ## Phase 10 — SOC Dashboarding
 
 ### Implementation
-- Security dashboards
-- Event aggregation views
-- SOC monitoring interface
-- Trend visualization
+
+* SOC analytics dashboards
+* Event trend visualization
+* Alert aggregation views
+* Monitoring interfaces
 
 ### Security Concepts
-- SOC visualization design
-- Security telemetry analysis
-- Operational monitoring
-- Alert trend analysis
-- Security observability
+
+* Security visualization
+* Telemetry analytics
+* Operational monitoring
+* SOC observability
 
 ---
 
 ## Phase 11 — Machine Learning Anomaly Detection
 
 ### Implementation
-- Isolation Forest detection model
-- Behavioral anomaly scoring
-- Outlier classification
-- Confidence scoring
+
+* Isolation Forest anomaly detection
+* Behavioral outlier scoring
+* Risk confidence analysis
+* Statistical anomaly modeling
 
 ### Security Concepts
-- Unsupervised anomaly detection
-- Behavioral baselining
-- Statistical deviation analysis
-- ML-driven security analytics
-- Adversarial behavior detection
+
+* Machine learning security analytics
+* Behavioral anomaly detection
+* Statistical deviation analysis
+* ML-driven detection workflows
 
 ---
 
 ## Phase 12 — Cloud Security Simulation
 
 ### Implementation
-- IAM abuse simulation
-- Cloud audit logs
-- Privilege escalation scenarios
-- Cloud monitoring events
+
+* IAM abuse simulation
+* Cloud audit event logging
+* Privilege escalation scenarios
+* Cloud monitoring telemetry
 
 ### Security Concepts
-- Cloud security posture
-- IAM risk analysis
-- Cloud audit logging
-- Identity-based cloud attacks
-- Cloud threat detection
+
+* Cloud security posture
+* IAM monitoring
+* Identity-based cloud attacks
+* Cloud threat detection
 
 ---
 
 ## Phase 13 — Identity Attack Path Analysis
 
 ### Implementation
-- Attack chain modeling
-- Identity relationship mapping
-- Lateral movement simulation
-- Privilege escalation paths
+
+* Identity attack graph simulation
+* Privilege escalation path analysis
+* Lateral movement mapping
+* Trust relationship modeling
 
 ### Security Concepts
-- Identity attack graph modeling
-- Lateral movement analysis
-- Trust relationship exploitation
-- Attack path discovery
-- Identity-centric security
+
+* Identity attack paths
+* Lateral movement analysis
+* Trust exploitation
+* Identity-centric defense
 
 ---
 
-## Phase 14 — ATT&CK Heatmap Visualization
+## Phase 14 — MITRE ATT&CK Heatmap Visualization
 
 ### Implementation
-- MITRE ATT&CK coverage heatmap
-- Technique scoring system
-- Detection coverage visualization
+
+* ATT&CK coverage heatmaps
+* Technique scoring
+* Detection visualization
+* Threat coverage analysis
 
 ### Security Concepts
-- ATT&CK framework mapping
-- Detection coverage analysis
-- Threat modeling visualization
-- Security maturity assessment
+
+* ATT&CK coverage analysis
+* Detection visibility
+* Threat modeling visualization
+* Security maturity assessment
 
 ---
 
-## Phase 15 — Executive Reporting
+## Phase 15 — Executive Security Reporting
 
 ### Implementation
-- SOC KPI dashboards
-- Incident trend analysis
-- Security posture summaries
-- Executive reporting layer
+
+* SOC KPI reporting
+* Incident trend summaries
+* Executive dashboards
+* Security posture reporting
 
 ### Security Concepts
-- Security metrics reporting
-- Executive-level SOC visibility
-- Risk communication
-- Operational security KPIs
-- Strategic security analytics
+
+* Executive reporting
+* Risk communication
+* SOC metrics
+* Strategic security analytics
 
 ---
+
+# 🚀 Advanced Expansion Phases
+
+---
+
 ## Phase 16 — Identity Federation + SSO
 
 ### Implementation
 
-* JWT identity federation
-* Token validation workflows
+* JWT token federation
+* OAuth-style identity workflows
 * MFA simulation
-* Session identity verification
-* Identity trust modeling
+* Session validation
+* Token expiration analysis
+* Session hijacking detection
 
 ### Security Concepts
 
 * Identity federation
-* OAuth-style authentication
 * SSO trust boundaries
-* Token abuse detection
 * Session security
+* Token abuse detection
+* Identity attack prevention
 
 ---
 
@@ -354,17 +413,18 @@ This system simulates a full SOC pipeline:
 
 ### Implementation
 
-* Kubernetes audit event simulation
-* RBAC privilege escalation detection
+* Kubernetes audit logging
+* RBAC misconfiguration detection
 * Container runtime monitoring
 * Service account abuse detection
+* Cluster event telemetry
 
 ### Security Concepts
 
 * Container security
 * Kubernetes RBAC
+* Runtime security monitoring
 * Cloud-native security
-* Runtime monitoring
 * Cluster attack analysis
 
 ---
@@ -373,18 +433,19 @@ This system simulates a full SOC pipeline:
 
 ### Implementation
 
-* Endpoint telemetry simulation
+* Endpoint telemetry generation
 * Process execution monitoring
 * Registry persistence detection
-* Malware execution simulation
+* Simulated malware execution
+* Host alert scoring
 
 ### Security Concepts
 
-* Endpoint Detection and Response
-* Host telemetry analytics
+* Endpoint Detection & Response
 * Behavioral monitoring
 * Persistence analysis
-* Threat correlation
+* Threat telemetry correlation
+* Host-based detections
 
 ---
 
@@ -394,16 +455,17 @@ This system simulates a full SOC pipeline:
 
 * ATT&CK adversary emulation
 * Detection validation workflows
-* Technique replay simulation
-* Detection coverage analysis
+* Automated technique replay
+* Detection coverage scoring
+* ATT&CK testing automation
 
 ### Security Concepts
 
 * Purple teaming
 * Adversary emulation
 * Detection validation
-* ATT&CK testing
-* SOC readiness analysis
+* SOC readiness testing
+* ATT&CK-based assessments
 
 ---
 
@@ -413,34 +475,23 @@ This system simulates a full SOC pipeline:
 
 * AI alert summarization
 * Automated triage recommendations
-* Threat prioritization
-* AI-assisted investigation workflows
+* Threat prioritization engine
+* Investigation assistance workflows
+* AI-assisted incident analysis
 
 ### Security Concepts
 
-* AI security operations
-* LLM-assisted SOC workflows
+* AI-assisted SOC operations
+* LLM-powered security workflows
 * Security automation
 * Analyst augmentation
-* AI-assisted threat analysis
+* AI-driven investigation support
 
 ---
 
-# Screenshots
+# 📸 Screenshots
 
-## Security Visualization Layer
-
-All SOC analytics dashboards and security visualizations are available in `/screenshots`:
-
-- SIEM dashboards
-- Threat detection charts
-- SOC heatmaps
-- ML anomaly graphs
-- Incident response flows
-- Threat intelligence views
-- Executive security reports
-
-## SOC Dashboard Example
+## SOC Dashboard
 
 ![SOC Dashboard](screenshots/phase10_soc_dashboard.png)
 
@@ -452,47 +503,46 @@ All SOC analytics dashboards and security visualizations are available in `/scre
 
 ---
 
-# Visualization Layer
+# 🧰 Technologies Used
 
-## visualizations.py
-Original visualization engine
-
-## visualizations_v2.py
-Enhanced version with PNG export support
-
----
-
-# Technologies Used
-
-- Python
-- Flask
-- pandas
-- matplotlib
-- requests
+* Python
+* Flask
+* pandas
+* matplotlib
+* scikit-learn
+* requests
+* JSON
+* REST APIs
 
 ---
 
-# Security Concepts Demonstrated
+# 🔍 Security Domains Demonstrated
 
-- Zero Trust Architecture
-- SIEM Monitoring
-- UEBA Behavioral Analytics
-- Detection Engineering
-- MITRE ATT&CK Mapping
-- Threat Hunting
-- Incident Response Automation
-- Threat Intelligence Correlation
-- SOAR Automation
-- Machine Learning Security Analytics
-- Cloud Security Simulation
-- Identity Attack Path Analysis
-- Executive SOC Reporting
+* Zero Trust Architecture
+* SIEM Monitoring
+* UEBA Analytics
+* Detection Engineering
+* MITRE ATT&CK Mapping
+* Threat Hunting
+* Incident Response
+* SOAR Automation
+* Threat Intelligence
+* Cloud Security
+* Identity Security
+* Machine Learning Security Analytics
+* Kubernetes Security
+* Endpoint Detection & Response
+* Purple Team Operations
+* AI-Assisted SOC Workflows
 
 ---
 
-# Repository Structure
+# 📂 Repository Structure
 
 ```text
+docs/
+screenshots/
+
 phase1_vulnerable_api.py
 phase2_authenticated_api.py
 phase3_authorization_api.py
@@ -508,24 +558,50 @@ phase12_cloud_security.py
 phase13_attack_path_analysis.py
 phase14_attack_heatmap.py
 phase15_executive_reporting.py
+phase16_identity_federation.py
+phase17_kubernetes_security.py
+phase18_edr_simulation.py
+phase19_purple_team.py
+phase20_ai_soc_analyst.py
+
+visualizations.py
+visualizations_v2.py
+analyze_logs.py
+requirements.txt
 ```
 
 ---
 
-## Visualization Layer
+# ⚙️ Installation
 
-- visualizations.py — Original visualization engine
-- visualizations_v2.py — Enhanced version with PNG export support
+## Clone Repository
 
----
-
-## Logs
-
-analyze_logs.py
+```bash
+git clone https://github.com/switice/secure-vehicle-api-zero-trust.git
+cd secure-vehicle-api-zero-trust
+```
 
 ---
 
-# How To Run
+## Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+---
 
 ## Install Dependencies
 
@@ -535,73 +611,62 @@ pip install -r requirements.txt
 
 ---
 
-## Run Individual Phases
+# ▶️ Running Project Phases
 
-### Phase 1
-
-```bash
-python phase1_vulnerable_api.py
-```
-
-### Phase 2
+## Example
 
 ```bash
-python phase2_authenticated_api.py
-```
-
-### Phase 3
-
-```bash
-python phase3_authorization_api.py
-```
-
-### Phase 4
-
-```bash
-python phase4_siem_detection.py
-```
-
-### Phase 5
-
-```bash
-python phase5_detection_engineering.py
-```
-
-### Phase 6
-
-```bash
-python phase6_threat_hunting.py
-```
-
-### Phase 7
-
-```bash
-python phase7_incident_response.py
-```
-
-### Phase 8
-
-```bash
-python phase8_threat_intelligence_correlations.py
+python phase10_soc_dashboard.py
 ```
 
 ---
 
-# Project Impact
+## Additional Examples
 
-This project demonstrates end-to-end SOC engineering capability, including:
+```bash
+python phase11_ml_anomaly_detection.py
+python phase12_cloud_security.py
+python phase14_attack_heatmap.py
+python phase15_executive_reporting.py
+```
 
-- Detection engineering pipeline design
-- Threat intelligence integration workflows
-- Behavioral analytics (UEBA-style detection)
-- SOAR automation and incident response logic
-- Cloud and identity security modeling
-- Executive SOC reporting and KPI tracking
+---
 
-It simulates how modern Security Operations Centers evolve from raw telemetry ingestion to automated threat detection and response systems.
+# 📊 Project Impact
 
---- 
+This platform demonstrates practical SOC engineering capability across multiple cybersecurity domains, including:
 
-# About
+* Detection engineering
+* Threat intelligence correlation
+* UEBA analytics
+* SOAR automation
+* Identity security
+* Cloud monitoring
+* Machine learning security analytics
+* Executive security reporting
 
-Zero Trust Vehicle API Security Project with Authentication, Authorization, SIEM Monitoring, Detection Engineering, Threat Hunting, Incident Response Automation, and Threat Intelligence Correlation.
+The project simulates how modern Security Operations Centers evolve from vulnerable infrastructure into layered, intelligence-driven security ecosystems.
+
+---
+
+# 🎥 Planned Enhancements
+
+* GitHub Actions CI/CD pipelines
+* Automated security testing
+* Dockerized deployment
+* Kubernetes deployment simulation
+* AI-assisted analyst dashboards
+* Interactive SOC web interface
+* Purple team attack replay engine
+
+---
+
+# 📜 License
+
+This project is licensed under the MIT License.
+
+---
+
+# 👤 Author
+
+Developed independently as a cybersecurity engineering and SOC simulation platform focused on Zero Trust architecture, detection engineering, SIEM analytics, threat hunting, SOAR automation, and AI-assisted security operations.

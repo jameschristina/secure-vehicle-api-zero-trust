@@ -45,7 +45,7 @@ This system simulates a full SOC pipeline:
 
 ## Architecture Overview
 
-![SOC Architecture](architecture_diagram.png)
+![SOC Architecture](docs/architecture_diagram.png)
 
 ---
 

@@ -319,7 +319,9 @@ This system simulates a full SOC pipeline:
 
 # Screenshots
 
-All security visualizations are available in `/screenshots`:
+## Security Visualization Layer
+
+All SOC analytics dashboards and security visualizations are available in `/screenshots`:
 
 - SIEM dashboards
 - Threat detection charts
@@ -387,7 +389,6 @@ phase12_cloud_security.py
 phase13_attack_path_analysis.py
 phase14_attack_heatmap.py
 phase15_executive_reporting.py
-
 ---
 
 ## Visualization Layer
@@ -464,6 +465,21 @@ python phase8_threat_intelligence_correlations.py
 ```
 
 ---
+
+# Project Impact
+
+This project demonstrates end-to-end SOC engineering capability, including:
+
+- Detection engineering pipeline design
+- Threat intelligence integration workflows
+- Behavioral analytics (UEBA-style detection)
+- SOAR automation and incident response logic
+- Cloud and identity security modeling
+- Executive SOC reporting and KPI tracking
+
+It simulates how modern Security Operations Centers evolve from raw telemetry ingestion to automated threat detection and response systems.
+
+--- 
 
 # About
 

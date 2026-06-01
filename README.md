@@ -9,6 +9,9 @@
 
 ---
 
+A cybersecurity engineering project that demonstrates the evolution of a vulnerable API into a modern Security Operations Center (SOC) ecosystem through Zero Trust architecture, detection engineering, UEBA analytics, threat intelligence correlation, SOAR automation, cloud security monitoring, and AI-assisted security operations.
+
+---
 # 🚀 Overview
 
 Secure Vehicle API is a multi-phase cybersecurity simulation platform that demonstrates how a vulnerable API environment evolves into a mature Security Operations Center (SOC) ecosystem using Zero Trust security principles.
@@ -107,6 +110,27 @@ This repository demonstrates practical cybersecurity engineering concepts across
 * Purple Team Operations
 * AI-Assisted SOC Operations
 
+---
+
+# 💼 Cybersecurity Skills Demonstrated
+
+* Security Operations Center (SOC)
+* SIEM Engineering
+* UEBA Analytics
+* Detection Engineering
+* Threat Hunting
+* Threat Intelligence Correlation
+* Incident Response
+* SOAR Automation
+* MITRE ATT&CK Mapping
+* Cloud Security Monitoring
+* Identity Security
+* Kubernetes Security
+* Endpoint Detection & Response (EDR)
+* Machine Learning Security Analytics
+* Security Visualization & Reporting
+* AI-Assisted Security Operations
+  
 ---
 
 # 🛡️ Project Phases
@@ -730,33 +754,40 @@ This project is licensed under the MIT License.
 
 # 👤 Author
 
-Developed independently as a cybersecurity engineering and SOC simulation platform focused on:
+## Chukwuemeke Ikpeasonim
+
+Cybersecurity Engineer | SOC Analyst | Detection Engineering Enthusiast
+
+LinkedIn:
+https://www.linkedin.com/in/chukwuemeke-ikpeasonim/
+
+This project was developed independently as a cybersecurity engineering and SOC simulation platform focused on:
 
 * Zero Trust Architecture
 * Detection Engineering
-* SIEM Analytics
+* SIEM & UEBA Analytics
 * Threat Hunting
 * SOAR Automation
 * Cloud Security
 * Identity Security
 * Kubernetes Security
 * EDR Simulation
-* Purple Team Operations
 * AI-Assisted Security Operations
-
+  
 ---
 
-# ⭐ Repository Goals
+# ⭐ Security Engineering Outcomes
 
-This repository was designed to demonstrate:
+This project demonstrates the ability to:
 
-* Practical SOC engineering workflows
-* Detection engineering capability
-* Security operations automation
-* Threat intelligence integration
-* Modern cybersecurity architecture concepts
-* Security analytics engineering
-* Zero Trust implementation concepts
-* AI-assisted SOC workflows
-
+* Design and secure API-driven systems
+* Build detection engineering workflows
+* Develop SIEM and UEBA analytics pipelines
+* Automate SOC response actions using SOAR principles
+* Correlate threat intelligence with behavioral telemetry
+* Simulate cloud and identity-based attack scenarios
+* Visualize security metrics and executive KPIs
+* Apply MITRE ATT&CK techniques for detection coverage analysis
+* Explore AI-assisted SOC workflows
+* Build end-to-end cybersecurity monitoring solutions
 ---

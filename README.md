@@ -757,12 +757,14 @@ This project is licensed under the MIT License. See the LICENSE.txt file for add
 ## Chukwuemeke Ikpeasonim
 
 Cybersecurity Engineer | SOC Operations | Detection Engineering | Zero Trust Security
+
 LinkedIn: www.linkedin.com/in/chukwuemeke-ikpeasonim
 GitHub: github.com/switice
 
 ## Christina James
 
 Cybersecurity Professional | Security Architecture | Identity & Access Management
+
 LinkedIn: www.linkedin.com/in/christinanjames
 
 ## Collaboration Acknowledgment

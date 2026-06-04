@@ -749,7 +749,7 @@ The project simulates how modern Security Operations Centers evolve from vulnera
 
 # 📜 License
 
-This project is licensed under the MIT License. See the LICENSE.txt file for additional details.
+This project is licensed under the MIT License. See the LICENSE file for details.
 
 ---
 

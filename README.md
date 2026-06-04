@@ -763,6 +763,8 @@ LinkedIn: https://www.linkedin.com/in/chukwuemeke-ikpeasonim
 
 GitHub: https://github.com/switice
 
+---
+
 ## Christina James
 
 Cybersecurity Professional | Security Architecture | Identity & Access Management
@@ -771,26 +773,30 @@ LinkedIn: https://www.linkedin.com/in/christinanjames
 
 GitHub: https://github.com/phoenyxcipher
 
+---
+
 ## Collaboration Acknowledgment
 
-Secure Vehicle API is a collaborative cybersecurity engineering project developed by Chukwuemeke Ikpeasonim and Christina James. The project combines expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles.
+Secure Vehicle API is a collaborative cybersecurity engineering project designed and developed by Chukwuemeke Ikpeasonim and Christina James.
 
-This project represents a collaborative effort to demonstrate practical cybersecurity engineering, Zero Trust architecture, modern SOC operations, and defensive security methodologies through an end-to-end simulation platform.
+The project combines expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles to simulate the evolution of a vulnerable API environment into a modern SOC-driven security ecosystem.
 
 Key areas of collaboration included:
 
 * Security architecture and platform design
 * Zero Trust strategy and implementation concepts
 * Identity-centric security controls and access governance
+* Authentication and authorization model development
 * Detection engineering and threat detection methodologies
 * Security design reviews and technical validation
 * SOC workflows, monitoring, and incident response concepts
-* Overall project planning, direction, and continuous improvement
+* Project planning, direction, and continuous improvement
 
-The resulting platform demonstrates the progression of a vulnerable API environment into a comprehensive SOC-focused security ecosystem. The project incorporates authentication and authorization controls, SIEM analytics, UEBA capabilities, threat hunting workflows, SOAR automation, cloud security monitoring, identity security, EDR simulation, Kubernetes security monitoring, and AI-assisted security operations.
+The resulting platform demonstrates the progression of a vulnerable API environment into a layered security architecture incorporating authentication, authorization, telemetry generation, SIEM analytics, UEBA monitoring, threat hunting workflows, SOAR automation, threat intelligence correlation, cloud security monitoring, identity security concepts, endpoint telemetry simulation, Kubernetes security monitoring, and AI-assisted SOC capabilities.
 
-This collaboration reflects a shared commitment to advancing practical cybersecurity education, modern defensive security practices, and real-world security operations capabilities.
-  
+The project serves as a practical cybersecurity engineering portfolio that showcases the evolution of security controls, detection capabilities, and operational workflows across a modern Zero Trust security model while emphasizing real-world cybersecurity engineering practices.
+
+This collaboration reflects a shared commitment to advancing cybersecurity education, defensive security engineering, modern security operations, and the practical application of Zero Trust principles in simulated enterprise environments.
 ---
 
 # ⭐ Security Engineering Outcomes

@@ -763,6 +763,8 @@ GitHub: github.com/switice
 ### Christina James
 Cybersecurity Professional | Security Architecture | Identity & Access Management
 
+LinkedIn: www.linkedin.com/in/christinanjames
+
 This project was developed through collaboration between Chukwuemeke Ikpeasonim and Christina James. The collaboration included cybersecurity architecture discussions, security design reviews, Zero Trust strategy development, identity-centric security concepts, detection engineering methodologies, and overall project direction.
 
 The resulting platform demonstrates the evolution of a vulnerable API environment into a mature SOC-oriented security ecosystem encompassing authentication, authorization, SIEM analytics, UEBA, threat hunting, SOAR automation, cloud security monitoring, identity security, EDR simulation, Kubernetes security, and AI-assisted security operations.

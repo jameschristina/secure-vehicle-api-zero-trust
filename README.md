@@ -750,28 +750,25 @@ The project simulates how modern Security Operations Centers evolve from vulnera
 
 This project is licensed under the MIT License.
 
+📜 License
+
+👤 Project Collaboration
+
+⭐ Security Engineering Outcomes
+
 ---
 
-# 👤 Author
+# 👤 Project Collaboration
 
 **Chukwuemeke Ikpeasonim**  
-Cybersecurity Engineer | SOC Analyst | Detection Engineering Enthusiast
+Cybersecurity Engineer | SOC Operations | Detection Engineering | Zero Trust Security
 
-LinkedIn: www.linkedin.com/in/chukwuemeke-ikpeasonim  
-GitHub: github.com/switice
+**Christina James**  
+Cybersecurity Professional | Security Architecture | Identity & Access Management
 
-This project was developed independently as a cybersecurity engineering and SOC simulation platform focused on:
+This project was developed through a collaborative effort between Chukwuemeke Ikpeasonim and Christina James. The collaboration included cybersecurity architecture discussions, security design reviews, Zero Trust strategy development, identity-centric security concepts, detection engineering approaches, and overall project direction.
 
-- Zero Trust Architecture
-- Detection Engineering
-- SIEM & UEBA Analytics
-- Threat Hunting
-- SOAR Automation
-- Cloud Security
-- Identity Security
-- Kubernetes Security
-- EDR Simulation
-- AI-Assisted Security Operations
+The resulting platform demonstrates the evolution of a vulnerable API environment into a mature SOC-oriented security ecosystem encompassing authentication, authorization, SIEM analytics, UEBA, threat hunting, SOAR automation, cloud security monitoring, identity security, EDR simulation, Kubernetes security, and AI-assisted security operations.
   
 ---
 

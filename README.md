@@ -773,7 +773,7 @@ GitHub: https://github.com/phoenyxcipher
 
 ## Collaboration Acknowledgment
 
-Secure Vehicle API was collaboratively designed and developed by Chukwuemeke Ikpeasonim and Christina James, combining expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles.
+Secure Vehicle API is a collaborative cybersecurity engineering project developed by Chukwuemeke Ikpeasonim and Christina James. The project combines expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles.
 
 Key areas of collaboration included:
 

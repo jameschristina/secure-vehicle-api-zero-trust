@@ -3,7 +3,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
 ![SOC Simulation](https://img.shields.io/badge/SOC-Simulation-red)
 ![Zero Trust](https://img.shields.io/badge/Zero%20Trust-Architecture-green)
-![MITRE ATT\&CK](https://img.shields.io/badge/MITRE-ATT%26CK-darkred)
+![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-darkred)
 ![Machine Learning](https://img.shields.io/badge/ML-Anomaly%20Detection-orange)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
@@ -676,7 +676,7 @@ pip install -r requirements.txt
 ## Example
 
 ```bash
-python phase10_soc_dashboard.py
+python phase_10_soc_dashboard.py
 ```
 
 ---
@@ -774,6 +774,8 @@ GitHub: https://github.com/phoenyxcipher
 ## Collaboration Acknowledgment
 
 Secure Vehicle API is a collaborative cybersecurity engineering project developed by Chukwuemeke Ikpeasonim and Christina James. The project combines expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles.
+
+This project represents a collaborative effort to demonstrate practical cybersecurity engineering, Zero Trust architecture, modern SOC operations, and defensive security methodologies through an end-to-end simulation platform.
 
 Key areas of collaboration included:
 

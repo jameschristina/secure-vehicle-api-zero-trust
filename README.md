@@ -137,7 +137,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 1 — Vulnerable Baseline
+## Phase 01 — Vulnerable Baseline
 
 ### Implementation
 
@@ -156,7 +156,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 2 — Authentication + Rate Limiting
+## Phase 02 — Authentication + Rate Limiting
 
 ### Implementation
 
@@ -174,7 +174,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 3 — Authorization + Least Privilege
+## Phase 03 — Authorization + Least Privilege
 
 ### Implementation
 
@@ -192,7 +192,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 4 — SIEM / UEBA Detection
+## Phase 04 — SIEM / UEBA Detection
 
 ### Implementation
 
@@ -210,7 +210,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 5 — Detection Engineering + MITRE ATT&CK
+## Phase 05 — Detection Engineering + MITRE ATT&CK
 
 ### Implementation
 
@@ -228,7 +228,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 6 — Threat Hunting
+## Phase 06 — Threat Hunting
 
 ### Implementation
 
@@ -246,7 +246,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 7 — SOC Incident Response Automation
+## Phase 07 — SOC Incident Response Automation
 
 ### Implementation
 
@@ -264,7 +264,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 8 — Threat Intelligence Correlation
+## Phase 08 — Threat Intelligence Correlation
 
 ### Implementation
 
@@ -282,7 +282,7 @@ This repository demonstrates practical cybersecurity engineering concepts across
 
 ---
 
-## Phase 9 — SOAR Automation
+## Phase 09 — SOAR Automation
 
 ### Implementation
 
@@ -684,13 +684,14 @@ python phase10_soc_dashboard.py
 ## Additional Examples
 
 ```bash
-python phase11_ml_anomaly_detection.py
-python phase12_cloud_security.py
-python phase14_attack_heatmap.py
-python phase15_executive_reporting.py
-python phase16_identity_federation.py
-python phase17_kubernetes_security.py
-python phase18_edr_simulation.py
+python phase_10_soc_dashboard.py
+python phase_11_ml_anomaly_detection.py
+python phase_12_cloud_security.py
+python phase_14_attack_heatmap.py
+python phase_15_executive_reporting.py
+python phase_16_identity_federation.py
+python phase_17_kubernetes_security.py
+python phase_18_edr_simulation.py
 ```
 
 ---
@@ -758,21 +759,21 @@ This project is licensed under the MIT License. See the LICENSE.txt file for add
 
 Cybersecurity Engineer | SOC Operations | Detection Engineering | Zero Trust Security
 
-LinkedIn: www.linkedin.com/in/chukwuemeke-ikpeasonim
+LinkedIn: https://www.linkedin.com/in/chukwuemeke-ikpeasonim
 
-GitHub: www.github.com/switice
+GitHub: https://github.com/switice
 
 ## Christina James
 
 Cybersecurity Professional | Security Architecture | Identity & Access Management
 
-LinkedIn: www.linkedin.com/in/christinanjames
+LinkedIn: https://www.linkedin.com/in/christinanjames
 
-GitHub: www.github.com/phoenyxcipher
+GitHub: https://github.com/phoenyxcipher
 
 ## Collaboration Acknowledgment
 
-This project was collaboratively designed and developed by Chukwuemeke Ikpeasonim and Christina James, combining expertise in security operations, security architecture, identity security, detection engineering, and Zero Trust principles.
+Secure Vehicle API was collaboratively designed and developed by Chukwuemeke Ikpeasonim and Christina James, combining expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles.
 
 Key areas of collaboration included:
 

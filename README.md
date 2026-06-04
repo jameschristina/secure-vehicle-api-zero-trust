@@ -767,6 +767,7 @@ GitHub: github.com/switice
 Cybersecurity Professional | Security Architecture | Identity & Access Management
 
 LinkedIn: www.linkedin.com/in/christinanjames
+GitHub: github.com/phoenyxcipher
 
 ## Collaboration Acknowledgment
 

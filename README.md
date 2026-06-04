@@ -798,6 +798,7 @@ The project serves as a practical cybersecurity engineering portfolio that showc
 
 This collaboration reflects a shared commitment to advancing cybersecurity education, defensive security engineering, modern security operations, and the practical application of Zero Trust principles in simulated enterprise environments.
 
+
 ---
 
 # ⭐ Security Engineering Outcomes

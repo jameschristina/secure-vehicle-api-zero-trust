@@ -760,14 +760,15 @@ Cybersecurity Engineer | SOC Operations | Detection Engineering | Zero Trust Sec
 
 LinkedIn: www.linkedin.com/in/chukwuemeke-ikpeasonim
 
-GitHub: github.com/switice
+GitHub: www.github.com/switice
 
 ## Christina James
 
 Cybersecurity Professional | Security Architecture | Identity & Access Management
 
 LinkedIn: www.linkedin.com/in/christinanjames
-GitHub: github.com/phoenyxcipher
+
+GitHub: www.github.com/phoenyxcipher
 
 ## Collaboration Acknowledgment
 

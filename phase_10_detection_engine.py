@@ -1,376 +1,183 @@
-import time
-import threading
-import uuid
-
-from datetime import datetime, timezone, timedelta
+from flask import Flask, jsonify
 from collections import defaultdict, deque
-from flask import Flask, request, jsonify
+from datetime import datetime, timezone
+import threading
+import time
+import uuid
 
 app = Flask(__name__)
 
-# ==================================
-# CONFIG
-# ==================================
+# =========================
+# IMMUTABLE EVENT STORE
+# =========================
 
-WINDOW_SECONDS = 60
-MAX_SCORE = 100
+EVENT_STORE = []
 
-API_KEY = "dev-key-123"
+VEHICLE = "CAR456"
 
-# ==================================
-# ATTACK GRAPH
-# ==================================
+SIGNAL_GRAPH = defaultdict(set)
 
-ATTACK_GRAPH = {
-    "AUTH_SPIKE": [],
-    "BRUTE_FORCE": ["AUTH_SPIKE"],
-    "DEVICE_CHANGE": ["AUTH_SPIKE"],
-    "BASELINE_DEVIATION": ["AUTH_SPIKE"],
-    "PRIVILEGE_ABUSE": [
-        "BRUTE_FORCE",
-        "DEVICE_CHANGE"
-    ],
-    "VEHICLE_COMMAND_ACCESS": [
-        "PRIVILEGE_ABUSE"
-    ]
-}
 
-# ==================================
-# STORAGE
-# ==================================
+# =========================
+# SAFE EVENT FACTORY
+# =========================
 
-event_stream = defaultdict(lambda: deque())
-
-vehicle_profile = defaultdict(
-    lambda: {
-        "baseline_failures": 2,
-        "device_changes": 0,
-        "last_seen": None
-    }
-)
-
-incidents = {}
-
-last_alert_time = {}
-
-# ==================================
-# UTILS
-# ==================================
-
-def utc_now():
+def now():
     return datetime.now(timezone.utc)
 
-def severity(score):
 
-    if score >= 90:
-        return "CRITICAL"
-
-    if score >= 70:
-        return "HIGH"
-
-    if score >= 40:
-        return "MEDIUM"
-
-    return "LOW"
-
-def suppress(vehicle):
-
-    last = last_alert_time.get(vehicle)
-
-    if not last:
-        return False
-
-    return (utc_now() - last).seconds < 5
-
-def mark_alert(vehicle):
-    last_alert_time[vehicle] = utc_now()
-
-# ==================================
-# LEVEL 4 RISK ENGINE
-# ==================================
-
-def calculate_risk(
-    failed_count,
-    device_change=False,
-    privilege_abuse=False,
-    command_access=False
-):
-
-    score = 0
-    signals = []
-
-    if failed_count >= 5:
-        score += 40
-        signals.append("AUTH_SPIKE")
-
-    if failed_count >= 10:
-        score += 20
-        signals.append("BRUTE_FORCE")
-
-    if device_change:
-        score += 20
-        signals.append("DEVICE_CHANGE")
-
-    baseline = vehicle_profile["CAR456"]["baseline_failures"]
-
-    if failed_count > baseline * 2:
-        score += 10
-        signals.append("BASELINE_DEVIATION")
-
-    if privilege_abuse:
-        score += 30
-        signals.append("PRIVILEGE_ABUSE")
-
-    if command_access:
-        score += 40
-        signals.append("VEHICLE_COMMAND_ACCESS")
-
-    return min(score, MAX_SCORE), signals
-
-# ==================================
-# ATTACK GRAPH CORRELATION
-# ==================================
-
-def build_attack_path(signals):
-
-    ordered = []
-
-    for stage in ATTACK_GRAPH:
-
-        if stage in signals:
-            ordered.append(stage)
-
-    return ordered
-
-# ==================================
-# INCIDENT ENGINE
-# ==================================
-
-def create_incident(
-    vehicle,
-    score,
-    signals
-):
-
-    attack_path = build_attack_path(signals)
-
-    incident = {
-        "incident_id": str(uuid.uuid4()),
-        "vehicle": vehicle,
-        "type": "Attack Graph Correlated Threat",
-        "status": "NEW",
-        "first_seen": utc_now().isoformat(),
-        "last_seen": utc_now().isoformat(),
-        "risk_score": score,
-        "severity": severity(score),
-        "signals": signals,
-        "attack_path": attack_path,
-        "recommended_action":
-            "Monitor Activity"
+def create_event(signal):
+    return {
+        "event_id": str(uuid.uuid4()),
+        "vehicle": VEHICLE,
+        "signal": signal,
+        "timestamp": now(),
+        "risk_delta": 0
     }
 
-    incidents[vehicle] = incident
 
-    print("\n🚨 NEW INCIDENT CREATED")
-    print(incident)
+# =========================
+# RISK ENGINE
+# =========================
 
-def update_incident(
-    vehicle,
-    score,
-    signals
-):
+RISK_WEIGHTS = {
+    "AUTH_SPIKE": 10,
+    "DEVICE_CHANGE": 20,
+    "VEHICLE_COMMAND_ACCESS": 40,
+    "BASELINE_DEVIATION": 25,
+    "BRUTE_FORCE": 35,
+    "PRIVILEGE_ABUSE": 50
+}
 
-    incident = incidents[vehicle]
 
-    incident["last_seen"] = utc_now().isoformat()
+def compute_risk(events):
+    return sum(RISK_WEIGHTS.get(e["signal"], 5) for e in events)
 
-    incident["signals"] = list(
-        set(
-            incident["signals"] + signals
-        )
-    )
 
-    incident["attack_path"] = build_attack_path(
-        incident["signals"]
-    )
+# =========================
+# GRAPH ENGINE
+# =========================
 
-    incident["risk_score"] = score
-    incident["severity"] = severity(score)
+def update_graph(events):
+    for i in range(1, len(events)):
+        a = events[i - 1]["signal"]
+        b = events[i]["signal"]
+        SIGNAL_GRAPH[a].add(b)
+        SIGNAL_GRAPH[b].add(a)
 
-    if score >= 90:
-        incident["status"] = "ESCALATED"
-        incident["recommended_action"] = (
-            "Lock Vehicle + Force MFA"
-        )
 
-    elif score >= 70:
-        incident["status"] = "ACTIVE"
-        incident["recommended_action"] = (
-            "SOC Investigation Required"
-        )
+def correlated_paths(events):
+    paths = []
+    for i in range(len(events)):
+        path = "→".join(e["signal"] for e in events[: i + 1])
+        if len(path) > 0:
+            paths.append(path)
+    return paths
 
+
+def graph_degree():
+    return {k: len(v) for k, v in SIGNAL_GRAPH.items()}
+
+
+# =========================
+# SNAPSHOT BUILDER
+# =========================
+
+def build_snapshot(events):
+    signals = list(dict.fromkeys(e["signal"] for e in events))
+
+    risk = compute_risk(events)
+
+    if risk < 30:
+        severity = "LOW"
+        action = "MONITOR"
+    elif risk < 80:
+        severity = "MEDIUM"
+        action = "MONITOR"
+    elif risk < 140:
+        severity = "HIGH"
+        action = "SOC INVESTIGATION"
     else:
-        incident["status"] = "ACTIVE"
+        severity = "CRITICAL"
+        action = "IMMEDIATE LOCKDOWN"
 
-    print("\n🔁 INCIDENT UPDATED")
-    print(incident)
+    predicted_next = "PRIVILEGE_ABUSE" if risk > 40 else None
+    confidence = 0.75 if risk > 40 else 0.0
 
-# ==================================
-# STREAM PROCESSOR
-# ==================================
+    update_graph(events)
 
-def process_event(
-    vehicle,
-    failed_auth=True,
-    device_change=False,
-    privilege_abuse=False,
-    command_access=False
-):
+    return {
+        "vehicle": VEHICLE,
+        "risk_score": risk,
+        "signals": signals,
+        "status": "ACTIVE",
+        "severity": severity,
+        "predicted_next": predicted_next,
+        "confidence": confidence,
+        "recommended_action": action,
+        "event_count": len(events),
+        "correlated_signals": correlated_paths(events),
+        "graph_degree": graph_degree(),
+        "last_event_time": events[-1]["timestamp"].isoformat()
+    }
 
-    ts = utc_now()
 
-    stream = event_stream[vehicle]
+# =========================
+# IMMUTABLE PROCESSOR
+# =========================
 
-    stream.append(ts)
+def process_signal(signal):
+    event = create_event(signal)
+    EVENT_STORE.append(event)
 
-    cutoff = ts - timedelta(
-        seconds=WINDOW_SECONDS
-    )
+    snapshot = build_snapshot(EVENT_STORE)
 
-    while stream and stream[0] < cutoff:
-        stream.popleft()
+    print("\n🔁 LEVEL 12 SNAPSHOT:")
+    print(snapshot)
 
-    failed_count = len(stream)
+    return snapshot
 
-    score, signals = calculate_risk(
-        failed_count,
-        device_change,
-        privilege_abuse,
-        command_access
-    )
 
-    if score == 0:
-        return
+# =========================
+# SIMULATOR (ATTACK FLOW)
+# =========================
 
-    if vehicle not in incidents:
-        create_incident(
-            vehicle,
-            score,
-            signals
-        )
+ATTACK_SEQUENCE = [
+    "AUTH_SPIKE",
+    "DEVICE_CHANGE",
+    "VEHICLE_COMMAND_ACCESS",
+    "BASELINE_DEVIATION",
+    "BRUTE_FORCE",
+    "PRIVILEGE_ABUSE"
+]
 
-    else:
-        update_incident(
-            vehicle,
-            score,
-            signals
-        )
-
-# ==================================
-# ATTACK SIMULATION
-# ==================================
 
 def simulator():
-
-    vehicle = "CAR456"
-
-    for i in range(1, 25):
-
-        device_change = False
-        privilege_abuse = False
-        command_access = False
-
-        if i == 8:
-            device_change = True
-
-        if i == 15:
-            privilege_abuse = True
-
-        if i == 20:
-            command_access = True
-
-        process_event(
-            vehicle,
-            True,
-            device_change,
-            privilege_abuse,
-            command_access
-        )
-
+    for sig in ATTACK_SEQUENCE:
         time.sleep(1)
+        process_signal(sig)
 
-# ==================================
+
+# =========================
 # API
-# ==================================
+# =========================
 
 @app.route("/")
-def root():
+def index():
     return jsonify({
-        "engine": "SOC Level 4 Attack Graph",
-        "status": "running"
+        "status": "SOC LEVEL 12 IMMUTABLE ENGINE RUNNING",
+        "events": len(EVENT_STORE)
     })
 
-@app.route("/status")
-def status():
 
-    key = request.headers.get(
-        "X-API-KEY"
-    )
-
-    if key != API_KEY:
-        return jsonify({
-            "error": "unauthorized"
-        }), 401
-
-    vehicle = request.args.get(
-        "vehicle_id"
-    )
-
-    incident = incidents.get(vehicle)
-
-    if not incident:
-        return jsonify({
-            "vehicle": vehicle,
-            "status": "clean"
-        })
-
-    return jsonify(incident)
-
-@app.route("/incidents")
-def all_incidents():
-
-    key = request.headers.get(
-        "X-API-KEY"
-    )
-
-    if key != API_KEY:
-        return jsonify({
-            "error": "unauthorized"
-        }), 401
-
-    return jsonify(
-        list(
-            incidents.values()
-        )
-    )
-
-# ==================================
+# =========================
 # MAIN
-# ==================================
+# =========================
 
 if __name__ == "__main__":
+    print("\n=== FINALIZED IMMUTABLE SOC ENGINE (LEVEL 12 CORE) ===\n")
 
-    print(
-        "\n=== SOC LEVEL 4 ATTACK GRAPH ENGINE RUNNING ===\n"
-    )
+    t = threading.Thread(target=simulator, daemon=True)
+    t.start()
 
-    threading.Thread(
-        target=simulator,
-        daemon=True
-    ).start()
-
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=False
-    )
+    app.run(host="0.0.0.0", port=5000, debug=False)

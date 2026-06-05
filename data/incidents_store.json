@@ -1,0 +1,232 @@
+[
+  {
+    "incident_id": "24f973922a30c844e666a3e32db88a87d82da85e6c0a0c772e3b80dc98f49ee1",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 15,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:16:15.442522"
+  },
+  {
+    "incident_id": "651f27aa78bbcabfece6a7f636b17663265301558cdb49938acd16dcd2a39692",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 18,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:24:10.279420+00:00"
+  },
+  {
+    "incident_id": "6100da26ceb41c4a2c069a187d31ddc06188201c67ff73560ec1364b5bb6030f",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 19,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:24:53.692166+00:00"
+  },
+  {
+    "incident_id": "f0de61b51b87a78a349a5cc6f5ae1bc38bbec8bc7478e1325a8095b207ccf34c",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 22,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:29:44.845682+00:00"
+  },
+  {
+    "incident_id": "c732d3e1407eeccd93bcac4daca5fd0f852eaf0ce933032af4a536658fa3af76",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 5,
+    "risk_score": 50,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153495+00:00"
+  },
+  {
+    "incident_id": "37c380de0a65bd6f96048e8572451d0806e62252b0798690f3c5bf8321f393ab",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 6,
+    "risk_score": 60,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153590+00:00"
+  },
+  {
+    "incident_id": "0dfecb104f0c8970fa0548370db5c40c9e6605f4a9fe381076b4f5e7b0c49247",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 7,
+    "risk_score": 70,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153604+00:00"
+  },
+  {
+    "incident_id": "7a1cf1d9637665a351050a4acd9b26deb68f83b0c5042fe8c163f8f3adaec9ec",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 8,
+    "risk_score": 80,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153613+00:00"
+  },
+  {
+    "incident_id": "d5ac543b99d25e5504eb891b3f9caafe01cd9ecf3f24aadff85defb2f7895e87",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 9,
+    "risk_score": 90,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153626+00:00"
+  },
+  {
+    "incident_id": "6f23f345c18fc1c72fd8b3a4304751a271b8140b5fd3e1a6870bd9f5c5ca2fda",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 10,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153682+00:00"
+  },
+  {
+    "incident_id": "096cc2b606015e989e156fa7a33675fc2cc72ddd15cff79cef91702a87ee4bd7",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 11,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153695+00:00"
+  },
+  {
+    "incident_id": "6a88f85dc4ebe43e240c0698ce385d2bd6b6350f2a4fcac0f5b9c22c4e12770c",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 12,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153704+00:00"
+  },
+  {
+    "incident_id": "119d944ebde3a5d2929f844b861d210f9b2513cf2b20c6925fee37991f2e67aa",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 13,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153712+00:00"
+  },
+  {
+    "incident_id": "5aa054735d4bc5133fa287d24845405700ace62248d224f0424b1034347dae3e",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 14,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153721+00:00"
+  },
+  {
+    "incident_id": "92723623f3221311fe34a929f6a457b9526e6c0575d736e08d8245408e636b77",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 15,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153731+00:00"
+  },
+  {
+    "incident_id": "3fe5cbbe35eaf9f3bd7d5056115aa13cc41320505774c765a81ee0598b353ffa",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 16,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153740+00:00"
+  },
+  {
+    "incident_id": "e7059eee46453fdac2287fb31a2c3bb0f902bc8c4e029fa16311c7efb33d4052",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 17,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153751+00:00"
+  },
+  {
+    "incident_id": "2332167d260deff49d2c0401ea28d2b12795eeb520ef5b48a0e1bb00beaa8f5d",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 20,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153770+00:00"
+  },
+  {
+    "incident_id": "958f7b72852c56d504e8c1dd23a16f0249c79b139a1a10d9e5b7473f80916db7",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 21,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153775+00:00"
+  },
+  {
+    "incident_id": "ec44f7cf706d2b46589a1cc93d90282c199bbd9d4b64004b5d43dd156e03fa8f",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 22,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153781+00:00"
+  },
+  {
+    "incident_id": "42359f3c9445db53ecc6e1ff062634aa0009df7e7e09479f587d057a1cb197fc",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 23,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153792+00:00"
+  },
+  {
+    "incident_id": "f78bd7ecebfe7f0856ebc5a6bb55f0ba52592ef32f1f4e9d5cfef906db5a0f38",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 24,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153797+00:00"
+  },
+  {
+    "incident_id": "8e4af9f70178ef53fd4893081708c557c6dd5cd6d084c1b3a9d9606d0919aef4",
+    "incident": "Suspicious Vehicle Access Pattern",
+    "vehicle": "CAR456",
+    "failed_auth_attempts": 25,
+    "risk_score": 100,
+    "severity": "CRITICAL",
+    "mitre": "T1078 - Valid Accounts Abuse",
+    "first_seen": "2026-06-05T16:41:46.153803+00:00"
+  }
+]

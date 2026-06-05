@@ -2,11 +2,14 @@ from flask import Flask, request, jsonify
 from datetime import datetime, timezone, timedelta
 from functools import wraps
 import hashlib
+import json
+from pathlib import Path
+import os
 
 app = Flask(__name__)
 
 # =========================================================
-# CONFIGURATION (Phase 3 Controls)
+# CONFIGURATION
 # =========================================================
 
 API_KEYS = {
@@ -32,10 +35,14 @@ vehicles = {
 }
 
 logs = []
+
+LOG_FILE = Path("data/api_logs.json")
+LOG_FILE.parent.mkdir(exist_ok=True)
+
 rate_limit_store = {}
 
 # =========================================================
-# SECURITY HELPERS
+# HELPERS
 # =========================================================
 
 def get_client_identity():
@@ -52,8 +59,7 @@ def get_user_role():
 
 
 def is_authorized(user_role, vehicle_id):
-    allowed_vehicles = VEHICLE_PERMISSIONS.get(user_role, [])
-    return vehicle_id in allowed_vehicles
+    return vehicle_id in VEHICLE_PERMISSIONS.get(user_role, [])
 
 
 def require_api_key(f):
@@ -73,15 +79,11 @@ def require_api_key(f):
 
     return wrapper
 
-# =========================================================
-# RATE LIMITING
-# =========================================================
 
 def is_rate_limited(identity):
     now = datetime.now(timezone.utc)
 
-    if identity not in rate_limit_store:
-        rate_limit_store[identity] = []
+    rate_limit_store.setdefault(identity, [])
 
     rate_limit_store[identity] = [
         t for t in rate_limit_store[identity]
@@ -94,12 +96,30 @@ def is_rate_limited(identity):
     rate_limit_store[identity].append(now)
     return False
 
+
 # =========================================================
-# LOGGING
+# LOGGING (SOC-READY + ATOMIC WRITE)
 # =========================================================
 
+def write_log(entry):
+    existing = []
+
+    if LOG_FILE.exists():
+        try:
+            existing = json.loads(LOG_FILE.read_text() or "[]")
+        except:
+            existing = []
+
+    existing.append(entry)
+
+    tmp_file = LOG_FILE.with_suffix(".tmp")
+    tmp_file.write_text(json.dumps(existing, indent=2))
+
+    os.replace(tmp_file, LOG_FILE)
+
+
 def log_event(endpoint, vehicle_id, action, success, reason=None):
-    logs.append({
+    entry = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "endpoint": endpoint,
         "vehicle_id": vehicle_id,
@@ -108,7 +128,23 @@ def log_event(endpoint, vehicle_id, action, success, reason=None):
         "reason": reason,
         "client": get_client_identity(),
         "role": get_user_role()
-    })
+    }
+
+    logs.append(entry)
+
+    write_log(entry)
+
+    print(f"[LOGGED] {endpoint} | {action} | {success}")
+
+
+def load_logs():
+    if not LOG_FILE.exists():
+        return []
+    try:
+        return json.loads(LOG_FILE.read_text() or "[]")
+    except:
+        return []
+
 
 # =========================================================
 # SECURITY HEADERS
@@ -121,17 +157,19 @@ def add_security_headers(response):
     response.headers["X-XSS-Protection"] = "1; mode=block"
     return response
 
+
 # =========================================================
-# BASE ENDPOINT
+# BASE
 # =========================================================
 
 @app.route("/")
 def home():
     return jsonify({
         "service": "Secure Vehicle API",
-        "phase": "Phase 3 - Authorization + Entitlement Enforcement",
+        "phase": "Phase 3 - SOC-Ready Authorization System",
         "endpoints": ["/status", "/unlock", "/start", "/logs"]
     })
+
 
 # =========================================================
 # STATUS
@@ -141,8 +179,8 @@ def home():
 @require_api_key
 def status():
     vehicle_id = request.args.get("vehicle_id")
-    identity = get_client_identity()
     user_role = get_user_role()
+    identity = get_client_identity()
 
     if not vehicle_id:
         log_event("/status", None, "status_check", False, "missing_vehicle_id")
@@ -157,8 +195,8 @@ def status():
         return jsonify({"error": "vehicle not found"}), 404
 
     if not is_authorized(user_role, vehicle_id):
-        log_event("/status", vehicle_id, "authorization_check", False, "unauthorized_vehicle_access")
-        return jsonify({"error": "unauthorized vehicle access"}), 403
+        log_event("/status", vehicle_id, "authorization_check", False, "unauthorized")
+        return jsonify({"error": "unauthorized"}), 403
 
     log_event("/status", vehicle_id, "status_check", True)
 
@@ -166,6 +204,7 @@ def status():
         "vehicle_id": vehicle_id,
         "status": vehicles[vehicle_id]
     })
+
 
 # =========================================================
 # UNLOCK
@@ -183,17 +222,15 @@ def unlock():
         return jsonify({"error": "vehicle not found"}), 404
 
     if not is_authorized(user_role, vehicle_id):
-        log_event("/unlock", vehicle_id, "authorization_check", False, "unauthorized_vehicle_access")
-        return jsonify({"error": "unauthorized vehicle access"}), 403
+        log_event("/unlock", vehicle_id, "authorization_check", False, "unauthorized")
+        return jsonify({"error": "unauthorized"}), 403
 
     vehicles[vehicle_id] = "unlocked"
 
     log_event("/unlock", vehicle_id, "unlock", True)
 
-    return jsonify({
-        "message": "vehicle unlocked",
-        "vehicle_id": vehicle_id
-    })
+    return jsonify({"message": "vehicle unlocked"})
+
 
 # =========================================================
 # START
@@ -211,15 +248,13 @@ def start():
         return jsonify({"error": "vehicle not found"}), 404
 
     if not is_authorized(user_role, vehicle_id):
-        log_event("/start", vehicle_id, "authorization_check", False, "unauthorized_vehicle_access")
-        return jsonify({"error": "unauthorized vehicle access"}), 403
+        log_event("/start", vehicle_id, "authorization_check", False, "unauthorized")
+        return jsonify({"error": "unauthorized"}), 403
 
     log_event("/start", vehicle_id, "start", True)
 
-    return jsonify({
-        "message": "vehicle started",
-        "vehicle_id": vehicle_id
-    })
+    return jsonify({"message": "vehicle started"})
+
 
 # =========================================================
 # LOGS
@@ -228,10 +263,13 @@ def start():
 @app.route("/logs")
 @require_api_key
 def get_logs():
+    data = load_logs()
+
     return jsonify({
-        "count": len(logs),
-        "logs": logs[-100:]
+        "count": len(data),
+        "logs": data[-100:]
     })
+
 
 # =========================================================
 # RUN

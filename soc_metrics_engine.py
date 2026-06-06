@@ -74,7 +74,18 @@ report = {
     ]
 }
 
+# -----------------------------
+# SAVE CURRENT METRICS
+# -----------------------------
 with open("soc_metrics.json", "w") as f:
     json.dump(report, f, indent=4)
+
+# -----------------------------
+# APPEND TO HISTORY (NEW)
+# -----------------------------
+history_file = "soc_metrics_history.jsonl"
+
+with open(history_file, "a") as f:
+    f.write(json.dumps(report) + "\n")
 
 print(json.dumps(report, indent=4))

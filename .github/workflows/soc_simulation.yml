@@ -44,3 +44,11 @@ jobs:
       with:
         name: soc-metrics
         path: soc_metrics.json
+    - name: Run Phase D - Executive SOC Metrics
+      run: python soc_metrics_phase_d.py
+
+    - name: Upload SOC Metrics Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: soc_metrics
+        path: soc_metrics_phase_d.json

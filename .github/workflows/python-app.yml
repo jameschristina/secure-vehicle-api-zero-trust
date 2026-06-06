@@ -27,16 +27,16 @@ jobs:
     # =========================
 
     - name: Run Phase 16 - Identity Federation
-      run: python phase16_identity_federation.py
+      run: python phase_16_identity_federation.py
 
     - name: Run Phase 17 - Kubernetes Security
-      run: python phase17_kubernetes_security.py
+      run: python phase_17_kubernetes_security.py
 
     - name: Run Phase 18 - EDR Simulation
-      run: python phase18_edr_simulation.py
+      run: python phase_18_edr_simulation.py
 
     - name: Run Phase 19 - Purple Team
-      run: python phase19_purple_team.py
+      run: python phase_19_purple_team.py
 
     - name: Run Phase 20 - AI SOC Analyst
-      run: python phase20_ai_soc_analyst.py
+      run: python phase_20_ai_soc_analyst.py

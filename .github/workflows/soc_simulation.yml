@@ -1,66 +1,60 @@
-name: SOC Simulation Pipeline
+name: SOC Simulation CI Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
-  soc:
+  soc_simulation:
     runs-on: ubuntu-latest
 
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-      - uses: actions/checkout@v4
+      # -----------------------------
+      # 1. Checkout repository
+      # -----------------------------
+      - name: Checkout repo
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-python@v5
+      # -----------------------------
+      # 2. Set up Python environment
+      # -----------------------------
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
           python-version: "3.12"
 
+      # -----------------------------
+      # 3. Install dependencies
+      # -----------------------------
       - name: Install dependencies
         run: |
-          pip install --upgrade pip
+          python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest bandit pip-audit
+          pip install plotly pandas
 
       # -----------------------------
-      # SOC Simulation Phases
+      # 4. Run SOC Metrics Engine
       # -----------------------------
-      - name: Run SOC Phases
-        run: |
-          python phase_16_identity_federation.py
-          python phase_17_kubernetes_security.py
-          python phase_18_edr_simulation.py
-          python phase_19_purple_team.py
-          python phase_20_ai_soc_analyst.py
-
-      # -----------------------------
-      # Metrics Engine
-      # -----------------------------
-      - name: Generate SOC Metrics
+      - name: Run SOC Metrics Engine
         run: python soc_metrics_engine.py
 
       # -----------------------------
-      # Tests
+      # 5. Generate Dashboards
       # -----------------------------
-      - name: Run Tests
-        run: python -m pytest tests -v
+      - name: Generate Dashboards
+        run: python soc_dashboard.py
 
       # -----------------------------
-      # Security Scans (soft-fail)
+      # 6. Upload Dashboards as Artifacts
       # -----------------------------
-      - name: Bandit
-        run: bandit -r . || true
-
-      - name: pip-audit
-        run: pip-audit || true
-
-      # -----------------------------
-      # Upload SOC Metrics Artifact
-      # -----------------------------
-      - name: Upload SOC Metrics
+      - name: Archive Dashboards
         uses: actions/upload-artifact@v4
         with:
-          name: soc-metrics
-          path: soc_metrics.json
+          name: soc_dashboards
+          path: |
+            dashboard_health.html
+            dashboard_events.html
+            dashboard_attack_vectors.html

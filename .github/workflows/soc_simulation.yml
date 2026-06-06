@@ -1,54 +1,66 @@
-name: SOC Simulation CI Pipeline
+name: SOC Simulation Pipeline
 
 on:
   push:
     branches: [ main ]
 
 jobs:
-  soc_simulation:
+  soc:
     runs-on: ubuntu-latest
 
     env:
       FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.12'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest bandit pip-audit
 
-    # =========================
-    # Run all SOC simulation phases
-    # =========================
-    - name: Run Phase 16-20 SOC simulation
-      run: |
-        python phase_16_identity_federation.py
-        python phase_17_kubernetes_security.py
-        python phase_18_edr_simulation.py
-        python phase_19_purple_team.py
-        python phase_20_ai_soc_analyst.py
+      # -----------------------------
+      # SOC Simulation Phases
+      # -----------------------------
+      - name: Run SOC Phases
+        run: |
+          python phase_16_identity_federation.py
+          python phase_17_kubernetes_security.py
+          python phase_18_edr_simulation.py
+          python phase_19_purple_team.py
+          python phase_20_ai_soc_analyst.py
 
-    - name: Generate SOC Metrics
-      run: python soc_metrics.py
+      # -----------------------------
+      # Metrics Engine
+      # -----------------------------
+      - name: Generate SOC Metrics
+        run: python soc_metrics_engine.py
 
-    - name: Upload SOC Metrics Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: soc-metrics
-        path: soc_metrics.json
-    - name: Run Phase D - Executive SOC Metrics
-      run: python soc_metrics_phase_d.py
+      # -----------------------------
+      # Tests
+      # -----------------------------
+      - name: Run Tests
+        run: python -m pytest tests -v
 
-    - name: Upload SOC Metrics Artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: soc_metrics
-        path: soc_metrics_phase_d.json
+      # -----------------------------
+      # Security Scans (soft-fail)
+      # -----------------------------
+      - name: Bandit
+        run: bandit -r . || true
+
+      - name: pip-audit
+        run: pip-audit || true
+
+      # -----------------------------
+      # Upload SOC Metrics Artifact
+      # -----------------------------
+      - name: Upload SOC Metrics
+        uses: actions/upload-artifact@v4
+        with:
+          name: soc-metrics
+          path: soc_metrics.json

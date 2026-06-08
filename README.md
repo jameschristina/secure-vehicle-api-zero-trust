@@ -6,6 +6,7 @@
 ![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-darkred)
 ![Machine Learning](https://img.shields.io/badge/ML-Anomaly%20Detection-orange)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
+![Tests](https://github.com/switice/secure-vehicle-api-zero-trust/actions/workflows/python-tests.yml/badge.svg)
 
 ---
 

@@ -33,7 +33,7 @@ jobs:
     # =========================
     # PHASE B — Security Scanning
     # =========================
-        - name: Run Bandit Security Scan
+    - name: Run Bandit Security Scan
       run: |
         pip install bandit
         bandit -r . -lll || true   # soft fail, report only

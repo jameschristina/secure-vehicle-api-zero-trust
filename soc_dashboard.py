@@ -1,78 +1,27 @@
-import json
-import pandas as pd
-from datetime import datetime
+# soc_dashboard.py
 
-# Load historical SOC metrics
-history_file = "soc_metrics_history.jsonl"
+from soc_metrics_engine import SOCMetricsEngine
 
-records = []
-with open(history_file) as f:
-    for line in f:
-        records.append(json.loads(line))
+engine = SOCMetricsEngine()
 
-df = pd.DataFrame(records)
+def render_dashboard():
+    data = engine.snapshot()
 
-# Convert timestamps
-df['timestamp'] = pd.to_datetime(df['timestamp'])
+    print("\n================ SOC DASHBOARD ================\n")
 
-# -----------------------------
-# 1️⃣ SOC Health Score Over Time
-# -----------------------------
-fig_health = px.line(
-    df, x='timestamp', y='soc_health_score',
-    title="SOC Health Score Over Time",
-    markers=True
-)
-fig_health.write_html("dashboard_health.html")
+    print(f"Total Events: {data['metrics']['total_events']}")
+    print(f"Alerts: {data['metrics']['alerts_generated']}")
+    print(f"High Risk: {data['metrics']['high_risk_events']}")
+    print(f"Medium Risk: {data['metrics']['medium_risk_events']}")
+    print(f"Low Risk: {data['metrics']['low_risk_events']}")
 
-# -----------------------------
-# 2️⃣ Total Events, Alerts, Incidents Over Time
-# -----------------------------
-fig_events = px.line(
-    df, x='timestamp',
-    y=['total_events', 'alerts', 'incidents'],
-    title="Events / Alerts / Incidents Over Time",
-    markers=True
-)
-fig_events.write_html("dashboard_events.html")
+    print("\nTop Identities:")
+    for item in data["top_identities"]:
+        print(f" - {item['identity']} | score={item['risk_score']}")
 
-# -----------------------------
-# 3️⃣ Top Attack Vectors Over Time
-# -----------------------------
-# Flatten attack vectors for historical visualization
-attack_records = []
+    print("\n=============================================\n")
 
-for rec in records:
-    ts = rec.get("timestamp")
 
-    vectors = rec.get("top_attack_vectors", [])
-
-    # ensure valid structure
-    if isinstance(vectors, list) and len(vectors) > 0:
-        for item in vectors:
-            if isinstance(item, (list, tuple)) and len(item) == 2:
-                attack_records.append({
-                    "timestamp": ts,
-                    "attack_vector": item[0],
-                    "count": item[1]
-                })
-
-df_attack = pd.DataFrame(attack_records)
-
-if df_attack.empty:
-    print("No attack vector data available yet.")
-else:
-    fig_attack = px.bar(
-        df_attack,
-        x='timestamp',
-        y='count',
-        color='attack_vector',
-        title="Top Attack Vectors Over Time",
-        barmode='group'
-    )
-    fig_attack.write_html("dashboard_attack_vectors.html")
-
-print("Dashboards generated:")
-print(" - dashboard_health.html")
-print(" - dashboard_events.html")
-print(" - dashboard_attack_vectors.html")
+def test_main():
+    # lightweight CI hook
+    render_dashboard()

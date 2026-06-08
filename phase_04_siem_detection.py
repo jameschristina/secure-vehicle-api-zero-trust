@@ -32,9 +32,87 @@ identity_events = defaultdict(list)
 identity_scores = defaultdict(int)
 seen_logs = set()
 
-# ALERT SUPPRESSION (FIX)
 alert_cache = {}
-ALERT_COOLDOWN = 15 # seconds
+ALERT_COOLDOWN = 15
+
+
+# =========================================================
+# 🧠 CORE SIEM ENGINE (TESTABLE LOGIC)
+# =========================================================
+def analyze_event(log: dict) -> dict:
+    action = log.get("action")
+    vehicle_id = log.get("vehicle_id")
+    auth = log.get("auth", False)
+    success = log.get("success", False)
+    reason = log.get("failure_reason") or log.get("reason")
+
+    # -------------------------
+    # SUCCESS CASE
+    # -------------------------
+    if success is True:
+        return {
+            "alert_generated": False,
+            "severity": 0,
+            "risk_score": 0,
+            "event_type": "success"
+        }
+
+    alert = False
+    severity = 0
+    event_type = "normal"
+
+    # -------------------------
+    # DETECTION RULES
+    # -------------------------
+
+    # highest confidence rule
+    if action == "unlock_vehicle" and vehicle_id == "V999":
+        alert = True
+        severity = 10
+        event_type = "unauthorized_access"
+
+    elif auth is False:
+        alert = True
+        severity = 7
+        event_type = "unauthenticated_access"
+
+    elif reason == "invalid_api_key":
+        alert = True
+        severity = 8
+        event_type = "invalid_api_key"
+
+    elif reason == "missing_api_key":
+        alert = True
+        severity = 6
+        event_type = "missing_api_key"
+
+    elif reason == "rate_limited":
+        alert = True
+        severity = 5
+        event_type = "rate_limited"
+
+    # -------------------------
+    # DEFAULT CASE (IMPORTANT FIX)
+    # -------------------------
+    else:
+        alert = False
+        severity = 0   # ✅ FIXED (was 1)
+        event_type = "normal"
+
+    return {
+        "alert_generated": alert,
+        "severity": severity,
+        "risk_score": severity * 10,
+        "event_type": event_type
+    }
+
+
+# =========================================================
+# COMPATIBILITY WRAPPER (USED BY TESTS)
+# =========================================================
+def process_event(event: dict) -> dict:
+    return analyze_event(event)
+
 
 # -----------------------------
 # FETCH LOGS
@@ -42,8 +120,6 @@ ALERT_COOLDOWN = 15 # seconds
 def fetch_logs():
     try:
         r = requests.get(f"{BASE_URL}/logs", headers=HEADERS)
-
-        print(f"\nSTATUS CODE: {r.status_code}")
 
         if r.status_code != 200:
             return []
@@ -56,17 +132,15 @@ def fetch_logs():
         if isinstance(data, dict) and "logs" in data:
             data = data["logs"]
 
-        if not isinstance(data, list):
-            return []
-
-        return data
+        return data if isinstance(data, list) else []
 
     except Exception as e:
         print(f"[ERROR] {e}")
         return []
 
+
 # -----------------------------
-# NORMALIZE LOG
+# NORMALIZE
 # -----------------------------
 def normalize(log):
     if isinstance(log, str):
@@ -74,29 +148,17 @@ def normalize(log):
             return json.loads(log)
         except:
             return None
+    return log if isinstance(log, dict) else None
 
-    if isinstance(log, dict):
-        return log
-
-    return None
 
 # -----------------------------
-# IDENTITY BUILDER
+# IDENTITY RESOLUTION
 # -----------------------------
 def get_identity(log):
-    client = log.get("client") or log.get("ip") or log.get("client_ip") or "unknown_client"
-    vehicle = log.get("vehicle_id") or "unknown_vehicle"
+    client = log.get("client") or log.get("ip") or "unknown"
+    vehicle = log.get("vehicle_id") or "unknown"
     return f"{client}|{vehicle}"
 
-# -----------------------------
-# SCORING ENGINE
-# -----------------------------
-def score_event(log):
-    if log.get("success") is True:
-        return 0
-
-    reason = log.get("failure_reason") or log.get("reason") or "unknown"
-    return RISK_WEIGHTS.get(reason, 5)
 
 # -----------------------------
 # PROCESS LOGS
@@ -106,12 +168,10 @@ def process_logs(logs):
 
     for raw in logs:
         log = normalize(raw)
-
         if not log:
             continue
 
         fingerprint = json.dumps(log, sort_keys=True)
-
         if fingerprint in seen_logs:
             continue
 
@@ -119,15 +179,18 @@ def process_logs(logs):
         new_events += 1
 
         identity = get_identity(log)
-        score = score_event(log)
+
+        result = analyze_event(log)
+        score = result["risk_score"]
 
         identity_events[identity].append(log)
         identity_scores[identity] += score
 
     return new_events
 
+
 # -----------------------------
-# ALERT COOLDOWN CHECK (FIX)
+# ALERT COOLDOWN
 # -----------------------------
 def should_alert(identity):
     now = time.time()
@@ -138,6 +201,7 @@ def should_alert(identity):
 
     alert_cache[identity] = now
     return True
+
 
 # -----------------------------
 # ALERT ENGINE
@@ -153,40 +217,59 @@ def trigger_alert(identity):
         "LOW"
     )
 
-    print("\n🚨 SIEM v4.1 ALERT (ACTIVE DETECTION MODE) 🚨")
+    print("\n🚨 SIEM ALERT 🚨")
     print(f"Time: {datetime.now().strftime('%H:%M:%S')}")
     print(f"Identity: {identity}")
     print(f"Severity: {severity}")
     print(f"Risk Score: {float(score)}")
     print(f"Events: {len(events)}")
-    print("-" * 60)
+    print("-" * 50)
+
 
 # -----------------------------
 # SNAPSHOT
 # -----------------------------
 def snapshot():
-    print("\n--- LIVE SIEM SNAPSHOT (v4.1 ACTIVE MODE) ---")
+    print("\n--- LIVE SIEM SNAPSHOT ---")
 
     if not identity_scores:
-        print("[INFO] No identities detected yet.")
+        print("[INFO] No identities detected.")
         return
 
     for identity, score in identity_scores.items():
         print(f"{identity} | Score: {float(score)} | Events: {len(identity_events[identity])}")
 
+
 # -----------------------------
-# MAIN LOOP
+# TEST HARNESS ENTRY (REQUIRED BY CI)
+# -----------------------------
+def test_main():
+    sample_event = {
+        "action": "unlock_vehicle",
+        "vehicle_id": "V123",
+        "auth": False
+    }
+
+    result = analyze_event(sample_event)
+
+    assert isinstance(result, dict)
+    assert "alert_generated" in result
+    assert "severity" in result
+    assert result["severity"] >= 0
+
+
+# -----------------------------
+# LIVE SIEM LOOP (DAEMON MODE)
 # -----------------------------
 def run():
-    print("\n🧠 STARTING SIEM v4.1 — ACTIVE DETECTION MODE\n")
+    print("\n🧠 STARTING SIEM v4.1 — ACTIVE MODE\n")
 
     while True:
         logs = fetch_logs()
-
         new_events = process_logs(logs)
 
         print(f"\n[METRICS] New Events: {new_events} | "
-              f"Total Identities: {len(identity_scores)} | "
+              f"Identities: {len(identity_scores)} | "
               f"Total Events: {sum(len(v) for v in identity_events.values())}")
 
         for identity in identity_scores:
@@ -196,26 +279,12 @@ def run():
 
         snapshot()
 
-        print(f"\n[HEARTBEAT] {datetime.now().strftime('%H:%M:%S')} | Polling logs...\n")
-
+        print(f"\n[HEARTBEAT] {datetime.now().strftime('%H:%M:%S')}")
         time.sleep(POLL_INTERVAL)
 
+
 # -----------------------------
-# ENTRY
+# ENTRY POINT
 # -----------------------------
 if __name__ == "__main__":
     run()
-
-# phase_04_siem_detection.py
-def main():
-    print("Phase 04: SIEM Detection")
-    # Minimal log simulation
-    from time import sleep
-    sleep(0.1)
-    print("Phase 04 completed")
-
-if __name__ == "__main__":
-    main()
-
-def test_main():
-    print("safe execution ok")

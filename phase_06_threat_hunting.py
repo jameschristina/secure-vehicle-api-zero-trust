@@ -1,7 +1,7 @@
 import requests
 import json
 from collections import defaultdict, Counter
-from datetime import datetime
+from datetime import datetime, timezone
 
 BASE_URL = "http://127.0.0.1:5000"
 
@@ -13,7 +13,6 @@ HEADERS = {
 # FETCH LOGS
 # -----------------------------
 def fetch_logs():
-
     try:
         response = requests.get(
             f"{BASE_URL}/logs",
@@ -29,21 +28,15 @@ def fetch_logs():
 
         data = response.json()
 
-        print(f"[DEBUG] RESPONSE TYPE: {type(data)}")
-
-        # Handle wrapped JSON format
         if isinstance(data, dict) and "logs" in data:
             logs = data["logs"]
-
         elif isinstance(data, list):
             logs = data
-
         else:
             print("[ERROR] Unexpected log format")
             return []
 
         print(f"[INFO] LOG COUNT: {len(logs)}")
-
         return logs
 
     except Exception as e:
@@ -62,26 +55,13 @@ def analyze_logs(logs):
     technique_counter = Counter()
     suspicious_clients = Counter()
 
-    # MITRE Mapping
     mitre_mapping = {
-        "invalid_api_key": {
-            "technique": "T1078",
-            "name": "Valid Accounts",
-            "risk": 40
-        },
-
-        "missing_api_key": {
-            "technique": "T1190",
-            "name": "Exploit Public-Facing Application",
-            "risk": 25
-        },
-
-        "unauthorized_vehicle_access": {
-            "technique": "T1210",
-            "name": "Exploitation of Remote Services",
-            "risk": 50
-        }
+        "invalid_api_key": {"technique": "T1078", "risk": 40},
+        "missing_api_key": {"technique": "T1190", "risk": 25},
+        "unauthorized_vehicle_access": {"technique": "T1210", "risk": 50},
     }
+
+    total_risk = 0
 
     # -----------------------------
     # PROCESS LOGS
@@ -91,9 +71,7 @@ def analyze_logs(logs):
         identity = log.get("role", "unknown")
         vehicle = log.get("vehicle_id", "unknown")
         client = log.get("client", "unknown")
-        reason = log.get("reason")
-        timestamp = log.get("timestamp")
-        success = log.get("success")
+        reason = log.get("reason", "normal_activity")
 
         identity_activity[identity].append(log)
 
@@ -102,19 +80,16 @@ def analyze_logs(logs):
 
         suspicious_clients[client] += 1
 
-        # Risk Scoring
         if reason in mitre_mapping:
-
             risk = mitre_mapping[reason]["risk"]
-
-            identity_risk[identity] += risk
-
             technique = mitre_mapping[reason]["technique"]
 
+            identity_risk[identity] += risk
             technique_counter[technique] += 1
+            total_risk += risk
 
     # -----------------------------
-    # PRINT THREAT HUNT RESULTS
+    # PRINT RESULTS (optional UI output)
     # -----------------------------
     print("\n==============================")
     print("THREAT HUNT RESULTS")
@@ -122,47 +97,33 @@ def analyze_logs(logs):
 
     for identity, events in identity_activity.items():
 
-        print(f"\nIdentity: {identity}")
+        score = identity_risk[identity]
 
+        print(f"\nIdentity: {identity}")
         print(f"Total Events: {len(events)}")
 
         print("Vehicles Targeted:")
-
         for vehicle in vehicle_targets[identity]:
             print(f" - {vehicle}")
 
-        print(f"Cumulative Risk Score: {identity_risk[identity]}")
+        print(f"Cumulative Risk Score: {score}")
 
-        # Severity Classification
-        if identity_risk[identity] >= 200:
+        if score >= 200:
             severity = "CRITICAL"
-
-        elif identity_risk[identity] >= 100:
+        elif score >= 100:
             severity = "HIGH"
-
-        elif identity_risk[identity] >= 50:
+        elif score >= 50:
             severity = "MEDIUM"
-
         else:
             severity = "LOW"
 
         print(f"Severity: {severity}")
 
-        # Timeline Reconstruction
         print("\nTimeline:")
-
-        sorted_events = sorted(
-            events,
-            key=lambda x: x.get("timestamp", "")
-        )
-
-        for event in sorted_events:
-
-            event_time = event.get("timestamp", "unknown")
-            reason = event.get("reason", "normal_activity")
-            endpoint = event.get("endpoint", "unknown")
-
-            print(f"[{event_time}] {endpoint} -> {reason}")
+        for event in sorted(events, key=lambda x: x.get("timestamp", "")):
+            print(f"[{event.get('timestamp','unknown')}] "
+                  f"{event.get('endpoint','unknown')} -> "
+                  f"{event.get('reason','normal_activity')}")
 
     # -----------------------------
     # MITRE SUMMARY
@@ -172,7 +133,6 @@ def analyze_logs(logs):
     print("==============================")
 
     for technique, count in technique_counter.items():
-
         print(f"{technique} : {count} event(s)")
 
     # -----------------------------
@@ -183,34 +143,28 @@ def analyze_logs(logs):
     print("==============================")
 
     for client, count in suspicious_clients.items():
-
         if count >= 3:
-
             print(f"{client} -> {count} events")
 
     # -----------------------------
-    # EXPORT INCIDENT REPORT
+    # INCIDENT REPORT
     # -----------------------------
     incident_report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total_logs": len(logs),
+        "total_risk": total_risk,
         "identities": {},
-        "mitre_summary": dict(technique_counter)
+        "mitre_summary": dict(technique_counter),
     }
 
     for identity in identity_activity:
-
         incident_report["identities"][identity] = {
             "risk_score": identity_risk[identity],
             "vehicles_targeted": list(vehicle_targets[identity]),
             "event_count": len(identity_activity[identity]),
-            "events": identity_activity[identity]
         }
 
-    filename = (
-        f"incident_report_"
-        f"{datetime.now().strftime('%H%M%S')}.json"
-    )
+    filename = f"incident_report_{datetime.now().strftime('%H%M%S')}.json"
 
     with open(filename, "w") as f:
         json.dump(incident_report, f, indent=4)
@@ -218,32 +172,31 @@ def analyze_logs(logs):
     print("\n==============================")
     print("INCIDENT REPORT GENERATED")
     print("==============================")
-
     print(f"[SAVED] {filename}")
 
+    # IMPORTANT: pipeline needs a score output
+    return {
+        "score": total_risk,
+        "techniques": dict(technique_counter),
+        "suspicious_clients": dict(suspicious_clients),
+        "incident_report": incident_report
+    }
+
 
 # -----------------------------
-# MAIN
+# MAIN ENTRY
 # -----------------------------
 if __name__ == "__main__":
-
     logs = fetch_logs()
 
     if not logs:
         print("[INFO] No logs available")
-
     else:
         analyze_logs(logs)
 
-# phase_06_threat_hunting.py
-def main():
-    print("Phase 06: Threat Hunting")
-    from time import sleep
-    sleep(0.1)
-    print("Phase 06 completed")
 
-if __name__ == "__main__":
-    main()
-
+# -----------------------------
+# TEST ENTRYPOINT
+# -----------------------------
 def test_main():
     print("safe execution ok")

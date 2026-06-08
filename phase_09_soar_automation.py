@@ -1,168 +1,119 @@
-import requests
-import json
 import time
+from datetime import datetime, timezone 
 from collections import defaultdict
-from datetime import datetime
-
-BASE_URL = "http://127.0.0.1:5000"
-
-API_HEADERS = {
-    "X-API-KEY": "dev-key-123"
-}
 
 # -----------------------------
-# SOAR PLAYBOOK CONFIGURATION
+# SYSTEM STATE
 # -----------------------------
-RISK_SCORES = {
-    "missing_api_key": 40,
-    "invalid_api_key": 50,
-    "unauthorized_vehicle_access": 75
-}
-
-CRITICAL_THRESHOLD = 200
-
-# -----------------------------
-# TRACKING STRUCTURES
-# -----------------------------
-identity_risk = defaultdict(int)
-contained_identities = set()
-processed = set()
+identity_status = defaultdict(lambda: "active")
+revoked_identities = set()
+incidents = []
 
 
 # -----------------------------
-# FETCH LOGS
+# SOAR ACTIONS
 # -----------------------------
-def fetch_logs():
-    try:
-        response = requests.get(
-            f"{BASE_URL}/logs",
-            headers=API_HEADERS,
-            timeout=5
-        )
-
-        if response.status_code != 200:
-            return []
-
-        data = response.json()
-
-        if isinstance(data, dict) and "logs" in data:
-            return data["logs"]
-
-        return []
-
-    except Exception:
-        return []
+def quarantine_identity(identity):
+    identity_status[identity] = "quarantined"
+    revoked_identities.add(identity)
 
 
-# -----------------------------
-# CONTAINMENT ACTION
-# -----------------------------
-def execute_containment(identity, reason):
-    containment_event = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+def revoke_identity(identity):
+    identity_status[identity] = "revoked"
+    revoked_identities.add(identity)
+
+
+def create_incident(identity, alert):
+    incident = {
         "identity": identity,
-        "containment_action": "API_KEY_DISABLED",
-        "reason": reason,
-        "status": "EXECUTED"
+        "severity": alert["severity"],
+        "event_type": alert["event_type"],
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "status": "open"
+    }
+    incidents.append(incident)
+    return incident
+
+
+# -----------------------------
+# SOAR DECISION ENGINE
+# -----------------------------
+def evaluate_alert(identity, alert):
+    severity = alert.get("severity", 0)
+
+    actions = []
+
+    # HIGH SEVERITY → FULL CONTAINMENT
+    if severity >= 9:
+        revoke_identity(identity)
+        incident = create_incident(identity, alert)
+        actions.append("revoke_identity")
+        actions.append("create_incident")
+
+    # MEDIUM SEVERITY → QUARANTINE
+    elif severity >= 6:
+        quarantine_identity(identity)
+        incident = create_incident(identity, alert)
+        actions.append("quarantine_identity")
+        actions.append("create_incident")
+
+    # LOW SEVERITY → LOG ONLY
+    else:
+        incident = create_incident(identity, alert)
+        actions.append("log_only")
+
+    return {
+        "identity": identity,
+        "actions": actions,
+        "identity_status": identity_status[identity],
+        "incident_created": True if severity >= 6 else True
     }
 
-    contained_identities.add(identity)
 
-    print("\n==============================")
-    print("[SOAR ACTION EXECUTED]")
-    print("==============================")
-    print(json.dumps(containment_event, indent=4))
-
-    filename = f"containment_{identity}_{datetime.now().strftime('%H%M%S')}.json"
-
-    with open(filename, "w") as f:
-        json.dump(containment_event, f, indent=4)
+# -----------------------------
+# TESTABLE ENTRY POINT
+# -----------------------------
+def process_alert(identity, alert):
+    return evaluate_alert(identity, alert)
 
 
 # -----------------------------
-# PROCESS LOGS
+# TEST HARNESS (CI SAFE)
 # -----------------------------
-def process_logs(logs):
-    for log in logs:
+def test_main():
+    identity = "test|vehicle123"
 
-        identity = log.get("role", "unknown")
-        reason = log.get("reason")
+    alert = {
+        "severity": 8,
+        "event_type": "unauthorized_access"
+    }
 
-        if not reason:
-            continue
+    result = process_alert(identity, alert)
 
-        # prevent duplicate processing
-        log_id = f"{log.get('timestamp')}_{identity}_{reason}"
-        if log_id in processed:
-            continue
-
-        processed.add(log_id)
-
-        risk = RISK_SCORES.get(reason, 0)
-        identity_risk[identity] += risk
-
-        print("\n==============================")
-        print("[SOAR ANALYSIS]")
-        print("==============================")
-        print(f"Identity: {identity}")
-        print(f"Reason: {reason}")
-        print(f"Risk Added: {risk}")
-        print(f"Cumulative Risk: {identity_risk[identity]}")
-
-        if (
-            identity_risk[identity] >= CRITICAL_THRESHOLD
-            and identity not in contained_identities
-        ):
-            print("\n[CRITICAL]")
-            print(f"Identity '{identity}' exceeded threshold")
-            execute_containment(identity, reason)
+    assert "actions" in result
+    assert isinstance(result["actions"], list)
+    assert result["identity_status"] in ["active", "quarantined", "revoked"]
 
 
 # -----------------------------
-# SAFE RUN (USED BY TESTS)
+# OPTIONAL LIVE DEMO LOOP
 # -----------------------------
-def run_once():
-    logs = fetch_logs()
-    process_logs(logs)
+def run_demo():
+    print("\n🛡️ SOAR SYSTEM ACTIVE\n")
 
-    print(
-        f"\n[HEARTBEAT] {datetime.now().strftime('%H:%M:%S')} | SOAR cycle complete"
-    )
+    sample_alerts = [
+        ("user1|V1", {"severity": 10, "event_type": "unauthorized_access"}),
+        ("user2|V2", {"severity": 7, "event_type": "auth_failure"}),
+        ("user3|V3", {"severity": 3, "event_type": "low_risk"})
+    ]
 
-
-# -----------------------------
-# TEST ENTRY POINT (IMPORTANT)
-# -----------------------------
-def main():
-    """
-    SAFE: used by pytest
-    Must NEVER hang or loop forever
-    """
-    run_once()
-
-
-# -----------------------------
-# LIVE MODE (OPTIONAL)
-# -----------------------------
-def run_live():
-    """
-    Real SOC simulation mode (only used if run directly)
-    """
-    print("\n====================================")
-    print("PHASE 9 — SOAR AUTOMATION ENGINE")
-    print("====================================")
-
-    while True:
-        run_once()
-        time.sleep(5)
+    for identity, alert in sample_alerts:
+        result = process_alert(identity, alert)
+        print(f"\nIdentity: {identity}")
+        print(f"Actions: {result['actions']}")
+        print(f"Status: {result['identity_status']}")
+        time.sleep(0.5)
 
 
 if __name__ == "__main__":
-    run_live()
-
-
-# -----------------------------
-# TEST COMPATIBILITY HELPER
-# -----------------------------
-def test_main():
-    print("safe execution ok")
+    run_demo()

@@ -201,7 +201,7 @@ def incident_response(logs):
     # EXPORT INCIDENT REPORT
     # -----------------------------
     report = {
-        "generated_at": datetime.utcnow().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "blocked_identities": list(blocked_identities),
         "incidents": []
     }

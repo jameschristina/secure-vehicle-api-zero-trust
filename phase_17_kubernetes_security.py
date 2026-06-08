@@ -1,21 +1,21 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 events = [
     {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "event": "RBAC_PRIVILEGE_ESCALATION",
         "user": "service-account-admin",
         "severity": "CRITICAL"
     },
     {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "event": "CONTAINER_EXECUTION",
         "container": "vehicle-api-pod",
         "severity": "MEDIUM"
     },
     {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "event": "KUBE_ADMIN_ACCESS",
         "user": "developer",
         "severity": "HIGH"

@@ -1,5 +1,5 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 cloud_events = [
     {
@@ -19,7 +19,7 @@ print("\n=== CLOUD SECURITY EVENTS ===")
 for event in cloud_events:
 
     enriched = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "event": event["event"],
         "user": event["user"],
         "severity": event["severity"]

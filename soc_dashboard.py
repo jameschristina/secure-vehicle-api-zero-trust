@@ -1,6 +1,5 @@
 import json
 import pandas as pd
-import plotly.express as px
 from datetime import datetime
 
 # Load historical SOC metrics

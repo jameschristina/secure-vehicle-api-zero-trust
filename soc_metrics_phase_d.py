@@ -21,7 +21,7 @@ mitre_mapping = {
 
 # Executive report summary
 report = {
-    "timestamp": datetime.utcnow().isoformat() + "Z",
+    "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
     "phases": phases,
     "avg_soc_score": avg_score,
     "mitre_attacks_detected": mitre_mapping,

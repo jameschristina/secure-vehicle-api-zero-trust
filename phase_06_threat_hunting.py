@@ -192,7 +192,7 @@ def analyze_logs(logs):
     # EXPORT INCIDENT REPORT
     # -----------------------------
     incident_report = {
-        "generated_at": datetime.utcnow().isoformat(),
+        "generated_at": datetime.now(timezone.utc).isoformat(),
         "total_logs": len(logs),
         "identities": {},
         "mitre_summary": dict(technique_counter)

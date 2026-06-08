@@ -59,7 +59,7 @@ def fetch_logs():
 # -----------------------------
 def execute_containment(identity, reason):
     containment_event = {
-        "timestamp": datetime.utcnow().isoformat(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
         "identity": identity,
         "containment_action": "API_KEY_DISABLED",
         "reason": reason,

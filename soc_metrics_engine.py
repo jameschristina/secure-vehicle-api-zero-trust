@@ -70,7 +70,7 @@ soc_health_score = round(
 # REPORT
 # -----------------------------
 report = {
-    "timestamp": datetime.utcnow().isoformat() + "Z",
+    "timestamp": datetime.now(timezone.utc).isoformat() + "Z",
     "total_events": total_events,
     "alerts": len(alerts),
     "incidents": len(incidents),

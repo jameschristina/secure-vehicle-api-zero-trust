@@ -1,9 +1,9 @@
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 
 executive_report = {
 
-    "generated": datetime.utcnow().isoformat(),
+    "generated": datetime.now(timezone.utc).isoformat(),
 
     "metrics": {
 

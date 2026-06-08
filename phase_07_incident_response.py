@@ -1,8 +1,10 @@
 import requests
 import json
 from collections import defaultdict, Counter
-from datetime import datetime
+from datetime import datetime, timezone
 import time
+
+from soc_scoring import compute_severity, normalize_score
 
 BASE_URL = "http://127.0.0.1:5000"
 
@@ -11,29 +13,19 @@ HEADERS = {
 }
 
 # -----------------------------
-# RISK THRESHOLDS
-# -----------------------------
-MEDIUM_THRESHOLD = 50
-HIGH_THRESHOLD = 100
-CRITICAL_THRESHOLD = 150
-
-# -----------------------------
 # MITRE ATT&CK MAPPING
 # -----------------------------
 MITRE_MAPPING = {
-
     "invalid_api_key": {
         "technique": "T1078",
         "attack": "Valid Accounts",
         "risk": 40
     },
-
     "missing_api_key": {
         "technique": "T1190",
         "attack": "Exploit Public-Facing Application",
         "risk": 25
     },
-
     "unauthorized_vehicle_access": {
         "technique": "T1210",
         "attack": "Exploitation of Remote Services",
@@ -41,62 +33,31 @@ MITRE_MAPPING = {
     }
 }
 
+
 # -----------------------------
 # FETCH LOGS
 # -----------------------------
 def fetch_logs():
-
     try:
-
         response = requests.get(
             f"{BASE_URL}/logs",
             headers=HEADERS,
             timeout=5
         )
 
-        print(f"[INFO] STATUS CODE: {response.status_code}")
-
         if response.status_code != 200:
-            print("[ERROR] Failed to fetch logs")
             return []
 
         data = response.json()
 
-        # Wrapped structure
         if isinstance(data, dict) and "logs" in data:
-            logs = data["logs"]
+            return data["logs"]
 
-        elif isinstance(data, list):
-            logs = data
+        return data if isinstance(data, list) else []
 
-        else:
-            print("[ERROR] Unexpected log format")
-            return []
-
-        print(f"[INFO] LOG COUNT: {len(logs)}")
-
-        return logs
-
-    except Exception as e:
-        print(f"[ERROR] Connection failed: {e}")
+    except Exception:
         return []
 
-# -----------------------------
-# CLASSIFY SEVERITY
-# -----------------------------
-def classify_severity(score):
-
-    if score >= CRITICAL_THRESHOLD:
-        return "CRITICAL"
-
-    elif score >= HIGH_THRESHOLD:
-        return "HIGH"
-
-    elif score >= MEDIUM_THRESHOLD:
-        return "MEDIUM"
-
-    else:
-        return "LOW"
 
 # -----------------------------
 # INCIDENT RESPONSE ENGINE
@@ -119,18 +80,11 @@ def incident_response(logs):
 
         identity_events[identity].append(log)
 
-        # -----------------------------
-        # APPLY RISK SCORING
-        # -----------------------------
         if reason in MITRE_MAPPING:
 
-            risk = MITRE_MAPPING[reason]["risk"]
+            base = MITRE_MAPPING[reason]
 
-            identity_risk[identity] += risk
-
-            technique = MITRE_MAPPING[reason]["technique"]
-
-            attack = MITRE_MAPPING[reason]["attack"]
+            identity_risk[identity] += base["risk"]
 
             print("\n==============================")
             print("[SECURITY EVENT]")
@@ -140,65 +94,52 @@ def incident_response(logs):
             print(f"Identity: {identity}")
             print(f"Vehicle: {vehicle}")
             print(f"Reason: {reason}")
-            print(f"MITRE Technique: {technique}")
-            print(f"Attack Name: {attack}")
-            print(f"Risk Added: {risk}")
-            print(
-                f"Cumulative Risk: "
-                f"{identity_risk[identity]}"
-            )
+            print(f"MITRE Technique: {base['technique']}")
+            print(f"Attack Name: {base['attack']}")
+            print(f"Risk Added: {base['risk']}")
+
+            print(f"Cumulative Raw Risk: {identity_risk[identity]}")
 
     # -----------------------------
-    # INCIDENT REVIEW
+    # SOC INCIDENT REVIEW
     # -----------------------------
     print("\n==============================")
     print("SOC INCIDENT REVIEW")
     print("==============================")
 
-    for identity, score in identity_risk.items():
+    for identity, raw_score in identity_risk.items():
 
-        severity = classify_severity(score)
+        # 🔥 UNIFIED SCORING (CRITICAL FIX)
+        score = normalize_score(raw_score)
+        severity = compute_severity(score)
 
         print(f"\nIdentity: {identity}")
         print(f"Risk Score: {score}")
         print(f"Severity: {severity}")
 
         # -----------------------------
-        # AUTO-CONTAINMENT
+        # RESPONSE LOGIC (NO HARD THRESHOLDS)
         # -----------------------------
         if severity == "CRITICAL":
 
             blocked_identities.add(identity)
 
             print("\n[CONTAINMENT ACTION]")
-            print(
-                f"Identity '{identity}' "
-                f"temporarily blocked"
-            )
-
-            print(
-                "Recommended Action: "
-                "Disable API key immediately"
-            )
+            print(f"Identity '{identity}' BLOCKED")
+            print("Action: Disable API key immediately")
 
         elif severity == "HIGH":
 
             print("\n[ESCALATION]")
-            print(
-                f"Identity '{identity}' "
-                f"requires analyst review"
-            )
+            print(f"Identity '{identity}' escalated to analyst")
 
         elif severity == "MEDIUM":
 
             print("\n[MONITORING]")
-            print(
-                f"Identity '{identity}' "
-                f"flagged for observation"
-            )
+            print(f"Identity '{identity}' flagged for monitoring")
 
     # -----------------------------
-    # EXPORT INCIDENT REPORT
+    # INCIDENT REPORT EXPORT
     # -----------------------------
     report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -206,24 +147,20 @@ def incident_response(logs):
         "incidents": []
     }
 
-    for identity, score in identity_risk.items():
+    for identity, raw_score in identity_risk.items():
 
-        severity = classify_severity(score)
+        score = normalize_score(raw_score)
+        severity = compute_severity(score)
 
-        incident = {
+        report["incidents"].append({
             "identity": identity,
             "risk_score": score,
             "severity": severity,
             "event_count": len(identity_events[identity]),
             "events": identity_events[identity]
-        }
+        })
 
-        report["incidents"].append(incident)
-
-    filename = (
-        f"soc_incident_report_"
-        f"{datetime.now().strftime('%H%M%S')}.json"
-    )
+    filename = f"soc_incident_report_{datetime.now().strftime('%H%M%S')}.json"
 
     with open(filename, "w") as f:
         json.dump(report, f, indent=4)
@@ -231,8 +168,10 @@ def incident_response(logs):
     print("\n==============================")
     print("INCIDENT REPORT GENERATED")
     print("==============================")
-
     print(f"[SAVED] {filename}")
+
+    return report
+
 
 # -----------------------------
 # HEARTBEAT MONITOR
@@ -243,42 +182,40 @@ def heartbeat():
 
         current_time = datetime.now().strftime("%H:%M:%S")
 
-        print(
-            f"\n[HEARTBEAT] "
-            f"{current_time} | "
-            f"SOC monitoring active..."
-        )
+        print(f"\n[HEARTBEAT] {current_time} | SOC monitoring active...")
 
         logs = fetch_logs()
 
         if logs:
             incident_response(logs)
-
         else:
             print("[INFO] No logs available")
 
         time.sleep(15)
 
+
+# -----------------------------
+# TEST ENTRYPOINT
+# -----------------------------
+def test_main():
+    sample_logs = [
+        {"role": "alice", "reason": "invalid_api_key"},
+        {"role": "bob", "reason": "missing_api_key"}
+    ]
+
+    result = incident_response(sample_logs)
+
+    assert isinstance(result, dict)
+    assert "incidents" in result
+    assert "blocked_identities" in result
+
+
 # -----------------------------
 # MAIN
 # -----------------------------
 if __name__ == "__main__":
-
     print("\n==============================")
     print("PHASE 7 INCIDENT RESPONSE")
     print("==============================")
 
     heartbeat()
-
-# phase_07_incident_response.py
-def main():
-    print("Phase 07: Incident Response")
-    from time import sleep
-    sleep(0.1)
-    print("Phase 07 completed")
-
-if __name__ == "__main__":
-    main()
-
-def test_main():
-    print("safe execution ok")

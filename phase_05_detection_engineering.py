@@ -1,7 +1,8 @@
 import requests
-import time
+import json
 from collections import defaultdict
-from datetime import datetime
+
+from soc_scoring import compute_severity, normalize_score
 
 BASE_URL = "http://127.0.0.1:5000"
 
@@ -9,43 +10,106 @@ HEADERS = {
     "X-API-KEY": "dev-key-123"
 }
 
+# -----------------------------
+# ATTACK INTELLIGENCE MAP
+# -----------------------------
 ATTACK_MAPPING = {
     "invalid_api_key": {
         "technique": "T1078",
         "name": "Valid Accounts",
-        "severity": "HIGH",
-        "score": 40
+        "base_score": 40
     },
     "missing_api_key": {
         "technique": "T1190",
         "name": "Exploit Public-Facing Application",
-        "severity": "MEDIUM",
-        "score": 20
+        "base_score": 25
     },
     "unauthorized_vehicle_access": {
         "technique": "T1210",
         "name": "Exploitation of Remote Services",
-        "severity": "HIGH",
-        "score": 50
+        "base_score": 50
     }
 }
 
+# -----------------------------
+# STATE (optional analytics)
+# -----------------------------
 identity_risk = defaultdict(int)
 processed_events = set()
 
 
+# =========================================================
+# DETECTION ENGINE (ENRICHMENT LAYER)
+# =========================================================
+def analyze_event(event: dict) -> dict:
+    """
+    Takes SIEM output → enriches + normalizes → returns SOC-grade signal
+    """
+
+    reason = event.get("reason") or event.get("event_type")
+    identity = event.get("role", "unknown")
+
+    base = ATTACK_MAPPING.get(reason)
+
+    # -----------------------------
+    # BENIGN CASE
+    # -----------------------------
+    if not base:
+        return {
+            "risk_score": 0,
+            "severity": "LOW",
+            "technique": None,
+            "attack": "benign_activity",
+            "enriched": False
+        }
+
+    # -----------------------------
+    # RAW SCORE (from mapping)
+    # -----------------------------
+    raw_score = base["base_score"]
+
+    # -----------------------------
+    # 🔥 NORMALIZATION STEP (CRITICAL FIX)
+    # -----------------------------
+    risk_score = normalize_score(raw_score)
+
+    # -----------------------------
+    # UNIFIED SEVERITY
+    # -----------------------------
+    severity = compute_severity(risk_score)
+
+    # -----------------------------
+    # OPTIONAL TRACKING
+    # -----------------------------
+    identity_risk[identity] += risk_score
+
+    return {
+        "risk_score": int(risk_score),
+        "severity": severity,
+        "technique": base["technique"],
+        "attack": base["name"],
+        "enriched": True
+    }
+
+
+# =========================================================
+# COMPAT WRAPPER (USED BY SOC PIPELINE)
+# =========================================================
+def process_event(event: dict) -> dict:
+    return analyze_event(event)
+
+
+# =========================================================
+# LOG FETCH (optional local testing)
+# =========================================================
 def fetch_logs():
     try:
-        response = requests.get(
-            f"{BASE_URL}/logs",
-            headers=HEADERS,
-            timeout=5
-        )
+        r = requests.get(f"{BASE_URL}/logs", headers=HEADERS, timeout=5)
 
-        if response.status_code != 200:
+        if r.status_code != 200:
             return []
 
-        data = response.json()
+        data = r.json()
 
         if isinstance(data, dict) and "logs" in data:
             return data["logs"]
@@ -56,48 +120,47 @@ def fetch_logs():
         return []
 
 
+# =========================================================
+# BATCH PROCESSING
+# =========================================================
 def process_logs(logs):
+    results = []
+
     for log in logs:
-        timestamp = log.get("timestamp")
-        reason = log.get("reason")
-        identity = log.get("role", "unknown")
-        vehicle_id = log.get("vehicle_id", "unknown")
+        result = analyze_event(log)
+        results.append(result)
 
-        unique_event = f"{timestamp}-{reason}-{identity}"
-
-        if unique_event in processed_events:
-            continue
-
-        processed_events.add(unique_event)
-
-        if reason in ATTACK_MAPPING:
-            mapping = ATTACK_MAPPING[reason]
-
-            identity_risk[identity] += mapping["score"]
-
-            print(f"[{mapping['severity']}] {identity} risk = {identity_risk[identity]}")
+    return results
 
 
-# -----------------------------
-# SAFE ENTRYPOINT (NO LOOP)
-# -----------------------------
-def main():
-    print("Phase 05 safe run start")
-
-    logs = fetch_logs()
-    process_logs(logs)
-
-    print("Phase 05 completed (single run)")
-
-
+# =========================================================
+# TEST ENTRYPOINT
+# =========================================================
 def test_main():
-    print("safe execution ok")
+    sample = {
+        "reason": "invalid_api_key",
+        "role": "test_user"
+    }
+
+    result = analyze_event(sample)
+
+    assert isinstance(result, dict)
+    assert "risk_score" in result
+    assert "severity" in result
+    assert isinstance(result["risk_score"], int)
 
 
+# =========================================================
+# MAIN
+# =========================================================
 if __name__ == "__main__":
-    # ONLY runs when executed directly, NOT in pytest
-    while True:
-        logs = fetch_logs()
-        process_logs(logs)
-        print(f"[HEARTBEAT] {datetime.now().strftime('%H:%M:%S')}")
-        time.sleep(5)
+    logs = fetch_logs()
+
+    if logs:
+        out = process_logs(logs)
+
+        print("\n=== DETECTION ENGINE RESULTS ===")
+        for o in out:
+            print(o)
+    else:
+        print("[INFO] No logs available")

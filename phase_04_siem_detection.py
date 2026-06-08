@@ -4,6 +4,8 @@ import time
 from collections import defaultdict
 from datetime import datetime
 
+from soc_scoring import compute_severity, normalize_score
+
 BASE_URL = "http://127.0.0.1:5000"
 
 HEADERS = {
@@ -11,7 +13,7 @@ HEADERS = {
 }
 
 # -----------------------------
-# RISK MODEL
+# SIEM CONFIG
 # -----------------------------
 RISK_WEIGHTS = {
     "missing_api_key": 5,
@@ -24,22 +26,27 @@ RISK_WEIGHTS = {
 
 ALERT_THRESHOLD = 20
 POLL_INTERVAL = 3
+ALERT_COOLDOWN = 15
+
 
 # -----------------------------
 # STATE
 # -----------------------------
 identity_events = defaultdict(list)
 identity_scores = defaultdict(int)
-seen_logs = set()
 
+seen_logs = set()
 alert_cache = {}
-ALERT_COOLDOWN = 15
 
 
 # =========================================================
-# 🧠 CORE SIEM ENGINE (TESTABLE LOGIC)
+# 🧠 SIEM DETECTION ENGINE
 # =========================================================
 def analyze_event(log: dict) -> dict:
+    """
+    Converts raw event → normalized SOC signal
+    """
+
     action = log.get("action")
     vehicle_id = log.get("vehicle_id")
     auth = log.get("auth", False)
@@ -47,79 +54,75 @@ def analyze_event(log: dict) -> dict:
     reason = log.get("failure_reason") or log.get("reason")
 
     # -------------------------
-    # SUCCESS CASE
+    # SUCCESS PATH
     # -------------------------
     if success is True:
         return {
             "alert_generated": False,
-            "severity": 0,
             "risk_score": 0,
+            "severity": "LOW",
             "event_type": "success"
         }
 
     alert = False
-    severity = 0
+    base_score = 0
     event_type = "normal"
 
     # -------------------------
-    # DETECTION RULES
+    # RULE ENGINE
     # -------------------------
-
-    # highest confidence rule
     if action == "unlock_vehicle" and vehicle_id == "V999":
         alert = True
-        severity = 10
-        event_type = "unauthorized_access"
+        base_score = 100
+        event_type = "unauthorized_vehicle_access"
 
     elif auth is False:
         alert = True
-        severity = 7
+        base_score = 70
         event_type = "unauthenticated_access"
 
     elif reason == "invalid_api_key":
         alert = True
-        severity = 8
+        base_score = 80
         event_type = "invalid_api_key"
 
     elif reason == "missing_api_key":
         alert = True
-        severity = 6
+        base_score = 60
         event_type = "missing_api_key"
 
     elif reason == "rate_limited":
         alert = True
-        severity = 5
+        base_score = 50
         event_type = "rate_limited"
 
     # -------------------------
-    # DEFAULT CASE (IMPORTANT FIX)
+    # 🔥 UNIFIED SCORING (IMPORTANT FIX)
     # -------------------------
-    else:
-        alert = False
-        severity = 0   # ✅ FIXED (was 1)
-        event_type = "normal"
+    risk_score = normalize_score(base_score)
+    severity = compute_severity(risk_score)
 
     return {
         "alert_generated": alert,
+        "risk_score": int(risk_score),
         "severity": severity,
-        "risk_score": severity * 10,
         "event_type": event_type
     }
 
 
 # =========================================================
-# COMPATIBILITY WRAPPER (USED BY TESTS)
+# COMPAT WRAPPER (SOC PIPELINE)
 # =========================================================
 def process_event(event: dict) -> dict:
     return analyze_event(event)
 
 
-# -----------------------------
+# =========================================================
 # FETCH LOGS
-# -----------------------------
+# =========================================================
 def fetch_logs():
     try:
-        r = requests.get(f"{BASE_URL}/logs", headers=HEADERS)
+        r = requests.get(f"{BASE_URL}/logs", headers=HEADERS, timeout=5)
 
         if r.status_code != 200:
             return []
@@ -130,18 +133,17 @@ def fetch_logs():
         data = r.json()
 
         if isinstance(data, dict) and "logs" in data:
-            data = data["logs"]
+            return data["logs"]
 
         return data if isinstance(data, list) else []
 
-    except Exception as e:
-        print(f"[ERROR] {e}")
+    except Exception:
         return []
 
 
-# -----------------------------
+# =========================================================
 # NORMALIZE
-# -----------------------------
+# =========================================================
 def normalize(log):
     if isinstance(log, str):
         try:
@@ -151,18 +153,16 @@ def normalize(log):
     return log if isinstance(log, dict) else None
 
 
-# -----------------------------
-# IDENTITY RESOLUTION
-# -----------------------------
+# =========================================================
+# IDENTITY MODEL
+# =========================================================
 def get_identity(log):
-    client = log.get("client") or log.get("ip") or "unknown"
-    vehicle = log.get("vehicle_id") or "unknown"
-    return f"{client}|{vehicle}"
+    return log.get("client") or log.get("ip") or log.get("vehicle_id") or "unknown"
 
 
-# -----------------------------
-# PROCESS LOGS
-# -----------------------------
+# =========================================================
+# BATCH PROCESSING
+# =========================================================
 def process_logs(logs):
     new_events = 0
 
@@ -189,9 +189,9 @@ def process_logs(logs):
     return new_events
 
 
-# -----------------------------
+# =========================================================
 # ALERT COOLDOWN
-# -----------------------------
+# =========================================================
 def should_alert(identity):
     now = time.time()
 
@@ -203,32 +203,27 @@ def should_alert(identity):
     return True
 
 
-# -----------------------------
+# =========================================================
 # ALERT ENGINE
-# -----------------------------
+# =========================================================
 def trigger_alert(identity):
     score = identity_scores[identity]
     events = identity_events[identity]
 
-    severity = (
-        "CRITICAL" if score >= 100 else
-        "HIGH" if score >= 60 else
-        "MEDIUM" if score >= 30 else
-        "LOW"
-    )
+    severity = compute_severity(score)
 
     print("\n🚨 SIEM ALERT 🚨")
     print(f"Time: {datetime.now().strftime('%H:%M:%S')}")
     print(f"Identity: {identity}")
     print(f"Severity: {severity}")
-    print(f"Risk Score: {float(score)}")
+    print(f"Risk Score: {score}")
     print(f"Events: {len(events)}")
     print("-" * 50)
 
 
-# -----------------------------
+# =========================================================
 # SNAPSHOT
-# -----------------------------
+# =========================================================
 def snapshot():
     print("\n--- LIVE SIEM SNAPSHOT ---")
 
@@ -237,12 +232,12 @@ def snapshot():
         return
 
     for identity, score in identity_scores.items():
-        print(f"{identity} | Score: {float(score)} | Events: {len(identity_events[identity])}")
+        print(f"{identity} | Score: {score} | Events: {len(identity_events[identity])}")
 
 
-# -----------------------------
-# TEST HARNESS ENTRY (REQUIRED BY CI)
-# -----------------------------
+# =========================================================
+# TEST ENTRYPOINT
+# =========================================================
 def test_main():
     sample_event = {
         "action": "unlock_vehicle",
@@ -253,24 +248,25 @@ def test_main():
     result = analyze_event(sample_event)
 
     assert isinstance(result, dict)
-    assert "alert_generated" in result
+    assert "risk_score" in result
     assert "severity" in result
-    assert result["severity"] >= 0
+    assert isinstance(result["risk_score"], int)
 
 
-# -----------------------------
-# LIVE SIEM LOOP (DAEMON MODE)
-# -----------------------------
+# =========================================================
+# DAEMON MODE
+# =========================================================
 def run():
     print("\n🧠 STARTING SIEM v4.1 — ACTIVE MODE\n")
 
     while True:
         logs = fetch_logs()
-        new_events = process_logs(logs)
+        process_logs(logs)
 
-        print(f"\n[METRICS] New Events: {new_events} | "
-              f"Identities: {len(identity_scores)} | "
-              f"Total Events: {sum(len(v) for v in identity_events.values())}")
+        print(
+            f"\n[METRICS] Identities: {len(identity_scores)} | "
+            f"Total Events: {sum(len(v) for v in identity_events.values())}"
+        )
 
         for identity in identity_scores:
             if identity_scores[identity] >= ALERT_THRESHOLD:
@@ -283,8 +279,8 @@ def run():
         time.sleep(POLL_INTERVAL)
 
 
-# -----------------------------
-# ENTRY POINT
-# -----------------------------
+# =========================================================
+# ENTRY
+# =========================================================
 if __name__ == "__main__":
     run()

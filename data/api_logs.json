@@ -868,5 +868,15 @@
     "reason": null,
     "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
     "role": "developer"
+  },
+  {
+    "timestamp": "2026-06-08T20:25:56.537229+00:00",
+    "endpoint": "/status",
+    "vehicle_id": "CAR123",
+    "action": "status_check",
+    "success": true,
+    "reason": null,
+    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+    "role": "developer"
   }
 ]

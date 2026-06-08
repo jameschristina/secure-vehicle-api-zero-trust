@@ -3,6 +3,8 @@ import json
 from collections import defaultdict, Counter
 from datetime import datetime, timezone
 
+from soc_scoring import compute_severity, normalize_score
+
 BASE_URL = "http://127.0.0.1:5000"
 
 HEADERS = {
@@ -20,27 +22,17 @@ def fetch_logs():
             timeout=5
         )
 
-        print(f"[INFO] STATUS CODE: {response.status_code}")
-
         if response.status_code != 200:
-            print("[ERROR] Failed to fetch logs")
             return []
 
         data = response.json()
 
         if isinstance(data, dict) and "logs" in data:
-            logs = data["logs"]
-        elif isinstance(data, list):
-            logs = data
-        else:
-            print("[ERROR] Unexpected log format")
-            return []
+            return data["logs"]
 
-        print(f"[INFO] LOG COUNT: {len(logs)}")
-        return logs
+        return data if isinstance(data, list) else []
 
-    except Exception as e:
-        print(f"[ERROR] Connection failed: {e}")
+    except Exception:
         return []
 
 
@@ -49,19 +41,21 @@ def fetch_logs():
 # -----------------------------
 def analyze_logs(logs):
 
-    identity_activity = defaultdict(list)
-    vehicle_targets = defaultdict(set)
+    identity_events = defaultdict(list)
     identity_risk = Counter()
     technique_counter = Counter()
     suspicious_clients = Counter()
 
-    mitre_mapping = {
+    vehicle_map = defaultdict(set)
+
+    # MITRE mapping (hunt layer interpretation)
+    MITRE = {
         "invalid_api_key": {"technique": "T1078", "risk": 40},
         "missing_api_key": {"technique": "T1190", "risk": 25},
         "unauthorized_vehicle_access": {"technique": "T1210", "risk": 50},
     }
 
-    total_risk = 0
+    raw_total_risk = 0
 
     # -----------------------------
     # PROCESS LOGS
@@ -73,57 +67,53 @@ def analyze_logs(logs):
         client = log.get("client", "unknown")
         reason = log.get("reason", "normal_activity")
 
-        identity_activity[identity].append(log)
-
-        if vehicle:
-            vehicle_targets[identity].add(vehicle)
-
+        identity_events[identity].append(log)
+        vehicle_map[identity].add(vehicle)
         suspicious_clients[client] += 1
 
-        if reason in mitre_mapping:
-            risk = mitre_mapping[reason]["risk"]
-            technique = mitre_mapping[reason]["technique"]
+        if reason in MITRE:
+            risk = MITRE[reason]["risk"]
 
             identity_risk[identity] += risk
-            technique_counter[technique] += 1
-            total_risk += risk
+            technique_counter[MITRE[reason]["technique"]] += 1
+            raw_total_risk += risk
 
     # -----------------------------
-    # PRINT RESULTS (optional UI output)
+    # NORMALIZED SOC SCORING
+    # -----------------------------
+    risk_score = normalize_score(raw_total_risk)
+    severity = compute_severity(risk_score)
+
+    # -----------------------------
+    # PRINT RESULTS (DEBUG / OBSERVABILITY)
     # -----------------------------
     print("\n==============================")
     print("THREAT HUNT RESULTS")
     print("==============================")
 
-    for identity, events in identity_activity.items():
+    for identity, events in identity_events.items():
 
         score = identity_risk[identity]
+        norm_score = normalize_score(score)
+        sev = compute_severity(norm_score)
 
         print(f"\nIdentity: {identity}")
         print(f"Total Events: {len(events)}")
 
         print("Vehicles Targeted:")
-        for vehicle in vehicle_targets[identity]:
-            print(f" - {vehicle}")
+        for v in vehicle_map[identity]:
+            print(f" - {v}")
 
-        print(f"Cumulative Risk Score: {score}")
-
-        if score >= 200:
-            severity = "CRITICAL"
-        elif score >= 100:
-            severity = "HIGH"
-        elif score >= 50:
-            severity = "MEDIUM"
-        else:
-            severity = "LOW"
-
-        print(f"Severity: {severity}")
+        print(f"Cumulative Risk Score: {norm_score}")
+        print(f"Severity: {sev}")
 
         print("\nTimeline:")
         for event in sorted(events, key=lambda x: x.get("timestamp", "")):
-            print(f"[{event.get('timestamp','unknown')}] "
-                  f"{event.get('endpoint','unknown')} -> "
-                  f"{event.get('reason','normal_activity')}")
+            print(
+                f"[{event.get('timestamp','unknown')}] "
+                f"{event.get('endpoint','unknown')} -> "
+                f"{event.get('reason','normal_activity')}"
+            )
 
     # -----------------------------
     # MITRE SUMMARY
@@ -136,7 +126,7 @@ def analyze_logs(logs):
         print(f"{technique} : {count} event(s)")
 
     # -----------------------------
-    # SUSPICIOUS CLIENTS
+    # SUSPICIOUS ACTIVITY
     # -----------------------------
     print("\n==============================")
     print("SUSPICIOUS CLIENT ACTIVITY")
@@ -152,16 +142,18 @@ def analyze_logs(logs):
     incident_report = {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "total_logs": len(logs),
-        "total_risk": total_risk,
+        "risk_score": risk_score,
+        "severity": severity,
         "identities": {},
         "mitre_summary": dict(technique_counter),
     }
 
-    for identity in identity_activity:
+    for identity in identity_events:
         incident_report["identities"][identity] = {
-            "risk_score": identity_risk[identity],
-            "vehicles_targeted": list(vehicle_targets[identity]),
-            "event_count": len(identity_activity[identity]),
+            "risk_score": normalize_score(identity_risk[identity]),
+            "severity": compute_severity(normalize_score(identity_risk[identity])),
+            "event_count": len(identity_events[identity]),
+            "vehicles": list(vehicle_map[identity])
         }
 
     filename = f"incident_report_{datetime.now().strftime('%H%M%S')}.json"
@@ -174,11 +166,15 @@ def analyze_logs(logs):
     print("==============================")
     print(f"[SAVED] {filename}")
 
-    # IMPORTANT: pipeline needs a score output
+    # -----------------------------
+    # 🔥 PIPELINE CONTRACT OUTPUT (IMPORTANT FIX)
+    # -----------------------------
     return {
-        "score": total_risk,
+        "risk_score": risk_score,
+        "severity": severity,
         "techniques": dict(technique_counter),
         "suspicious_clients": dict(suspicious_clients),
+        "identity_risk": dict(identity_risk),
         "incident_report": incident_report
     }
 
@@ -189,10 +185,10 @@ def analyze_logs(logs):
 if __name__ == "__main__":
     logs = fetch_logs()
 
-    if not logs:
-        print("[INFO] No logs available")
-    else:
+    if logs:
         analyze_logs(logs)
+    else:
+        print("[INFO] No logs available")
 
 
 # -----------------------------

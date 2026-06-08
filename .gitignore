@@ -1,13 +1,14 @@
-# Test artifacts
-.coverage
-.pytest_cache/
-
 # Python cache
 __pycache__/
 *.py[cod]
 
-# Generated reports
-executive_report_*.json
+# Test / coverage
+.pytest_cache/
+.coverage
 
-# Generated visualizations
+# Generated SOC artifacts
+executive_report_*.json
 attack_heatmap.png
+
+# Virtual environment
+venv/

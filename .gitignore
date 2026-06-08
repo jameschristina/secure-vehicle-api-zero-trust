@@ -12,3 +12,13 @@ attack_heatmap.png
 
 # Virtual environment
 venv/
+outputs/
+reports/
+*.json
+*.jsonl
+*.log
+
+.DS_Store
+coverage.xml
+htmlcov/
+.env

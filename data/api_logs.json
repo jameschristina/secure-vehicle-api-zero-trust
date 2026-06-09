@@ -918,5 +918,45 @@
     "reason": null,
     "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
     "role": "developer"
+  },
+  {
+    "timestamp": "2026-06-09T22:43:12.302145+00:00",
+    "endpoint": "/status",
+    "vehicle_id": "CAR123",
+    "action": "status_check",
+    "success": true,
+    "reason": null,
+    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+    "role": "developer"
+  },
+  {
+    "timestamp": "2026-06-09T22:44:51.449449+00:00",
+    "endpoint": "/status",
+    "vehicle_id": "CAR123",
+    "action": "status_check",
+    "success": true,
+    "reason": null,
+    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+    "role": "developer"
+  },
+  {
+    "timestamp": "2026-06-09T22:49:24.529723+00:00",
+    "endpoint": "/status",
+    "vehicle_id": "CAR123",
+    "action": "status_check",
+    "success": true,
+    "reason": null,
+    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+    "role": "developer"
+  },
+  {
+    "timestamp": "2026-06-09T22:50:45.218017+00:00",
+    "endpoint": "/status",
+    "vehicle_id": "CAR123",
+    "action": "status_check",
+    "success": true,
+    "reason": null,
+    "client": "127.0.0.1|0f11c9ecaecabe613512ae472855ae9cb7d9639bc8c3fe85e0357efbf4739cd4",
+    "role": "developer"
   }
 ]

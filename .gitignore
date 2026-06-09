@@ -22,3 +22,6 @@ reports/
 coverage.xml
 htmlcov/
 .env
+.png
+soc_events.json
+soc_metrics.json

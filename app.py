@@ -1,65 +1,130 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, session, jsonify
 from flask_socketio import SocketIO
+
 from soc_pipeline import process_pipeline
+from event_bus import EventBus
 
 app = Flask(__name__)
-socketio = SocketIO(app, cors_allowed_origins="*")
+app.secret_key = "dev-secret-key"
 
-# -------------------------
-# DASHBOARD ROUTE
-# -------------------------
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="eventlet")
+
+bus = EventBus()
+
+
+# =========================================================
+# AUTH
+# =========================================================
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        session["user"] = request.form.get("username", "analyst")
+        return redirect("/dashboard")
+
+    return render_template("login.html")
+
+
 @app.route("/")
+def root():
+    return redirect("/login")
+
+
+@app.route("/dashboard")
 def dashboard():
+    if "user" not in session:
+        return redirect("/login")
     return render_template("dashboard.html")
 
 
-# -------------------------
-# EMIT SOC EVENT
-# -------------------------
-def emit_soc_event(event):
-    socketio.emit("soc_event", event)
+# =========================================================
+# HEALTH CHECK (IMPORTANT FOR DEBUGGING)
+# =========================================================
+@app.route("/health")
+def health():
+    return jsonify({
+        "status": "ok",
+        "events": bus.size()
+    })
 
 
-# -------------------------
-# STREAM SIMULATION (replace later with real ingestion)
-# -------------------------
-def stream_events():
-    import time
-    from soc_pipeline import fetch_logs
-
-    while True:
-        logs = fetch_logs()
-
-        for log in logs:
-            result = process_pipeline(log)
-
-            socketio.emit("soc_event", {
-                "timestamp": result["timestamp"],
-                "user": result["identity"],
-                "event_type": result["event_type"],
-                "risk_score": result["risk_score"],
-                "severity": result["severity"]
-            })
-
-        time.sleep(3)
+# =========================================================
+# LOG STREAM (EVENT BUS = SINGLE SOURCE OF TRUTH)
+# =========================================================
+@app.route("/logs")
+def logs():
+    return jsonify({
+        "logs": bus.latest(100)
+    })
 
 
-# -------------------------
-# BACKGROUND THREAD
-# -------------------------
+# =========================================================
+# INPUT VALIDATION (CRITICAL FIX)
+# =========================================================
+def validate_event(event: dict) -> dict:
+    return {
+        "user": event.get("user", "unknown"),
+        "action": event.get("action", "unknown"),
+        "vehicle_id": event.get("vehicle_id", "unknown"),
+        "auth": bool(event.get("auth", False))
+    }
+
+
+# =========================================================
+# INGEST PIPELINE ENTRYPOINT
+# =========================================================
+@app.route("/ingest", methods=["POST"])
+def ingest():
+    raw_event = request.json or {}
+
+    event = validate_event(raw_event)
+
+    result = process_pipeline(event)
+
+    normalized = {
+        "user": event["user"],
+        "action": event["action"],
+        "vehicle_id": event["vehicle_id"],
+        "risk_score": result.get("risk_score", 0),
+        "severity": result.get("severity", "LOW"),
+        "alert": result.get("alert", False),
+        "timestamp": result.get("timestamp")
+    }
+
+    # SINGLE SOURCE OF TRUTH
+    bus.publish(normalized)
+
+    # REALTIME STREAM
+    socketio.emit("soc_event", normalized)
+
+    return jsonify({
+        "status": "ok",
+        "event": normalized
+    })
+
+
+# =========================================================
+# SOCKET EVENTS
+# =========================================================
 @socketio.on("connect")
 def on_connect():
-    print("Client connected")
+    print("🔌 Client connected")
 
 
-# -------------------------
-# MAIN
-# -------------------------
+@socketio.on("disconnect")
+def on_disconnect():
+    print("❌ Client disconnected")
+
+
+# =========================================================
+# START SERVER (CLEAN ENTRYPOINT)
+# =========================================================
 if __name__ == "__main__":
-    import threading
+    print("🚀 SOC COMMAND CENTER STARTING...")
 
-    thread = threading.Thread(target=stream_events)
-    thread.daemon = True
-    thread.start()
-
-    socketio.run(app, host="0.0.0.0", port=5000, debug=True)
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port=5000,
+        debug=False,
+        use_reloader=False
+    )

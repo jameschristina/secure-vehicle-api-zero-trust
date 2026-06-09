@@ -13,8 +13,7 @@ def test_normal_event_no_alert():
     result = process_event(event)
 
     assert result["alert_generated"] is False
-    assert result["severity"] == 0
-
+    assert result["severity"] == "LOW"
 
 def test_suspicious_event_generates_alert():
     event = {
@@ -27,7 +26,7 @@ def test_suspicious_event_generates_alert():
     result = process_event(event)
 
     assert result["alert_generated"] is True
-    assert result["severity"] > 0
+    assert result["severity"] in ["MEDIUM", "HIGH", "CRITICAL"]
 
 
 def test_alert_contains_required_fields():

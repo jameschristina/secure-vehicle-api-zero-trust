@@ -2,6 +2,7 @@ import requests
 import json
 from collections import defaultdict, Counter
 from datetime import datetime, timezone
+from pathlib import Path
 
 from soc_scoring import compute_severity, normalize_score
 
@@ -26,7 +27,6 @@ def fetch_logs():
             return []
 
         data = response.json()
-
         if isinstance(data, dict) and "logs" in data:
             return data["logs"]
 
@@ -45,7 +45,6 @@ def analyze_logs(logs):
     identity_risk = Counter()
     technique_counter = Counter()
     suspicious_clients = Counter()
-
     vehicle_map = defaultdict(set)
 
     # MITRE mapping (hunt layer interpretation)
@@ -61,7 +60,6 @@ def analyze_logs(logs):
     # PROCESS LOGS
     # -----------------------------
     for log in logs:
-
         identity = log.get("role", "unknown")
         vehicle = log.get("vehicle_id", "unknown")
         client = log.get("client", "unknown")
@@ -73,7 +71,6 @@ def analyze_logs(logs):
 
         if reason in MITRE:
             risk = MITRE[reason]["risk"]
-
             identity_risk[identity] += risk
             technique_counter[MITRE[reason]["technique"]] += 1
             raw_total_risk += risk
@@ -85,28 +82,24 @@ def analyze_logs(logs):
     severity = compute_severity(risk_score)
 
     # -----------------------------
-    # PRINT RESULTS (DEBUG / OBSERVABILITY)
+    # PRINT RESULTS
     # -----------------------------
     print("\n==============================")
     print("THREAT HUNT RESULTS")
     print("==============================")
 
     for identity, events in identity_events.items():
-
         score = identity_risk[identity]
         norm_score = normalize_score(score)
         sev = compute_severity(norm_score)
 
         print(f"\nIdentity: {identity}")
         print(f"Total Events: {len(events)}")
-
         print("Vehicles Targeted:")
         for v in vehicle_map[identity]:
             print(f" - {v}")
-
         print(f"Cumulative Risk Score: {norm_score}")
         print(f"Severity: {sev}")
-
         print("\nTimeline:")
         for event in sorted(events, key=lambda x: x.get("timestamp", "")):
             print(
@@ -121,17 +114,15 @@ def analyze_logs(logs):
     print("\n==============================")
     print("MITRE TECHNIQUE SUMMARY")
     print("==============================")
-
     for technique, count in technique_counter.items():
         print(f"{technique} : {count} event(s)")
 
     # -----------------------------
-    # SUSPICIOUS ACTIVITY
+    # SUSPICIOUS CLIENT ACTIVITY
     # -----------------------------
     print("\n==============================")
     print("SUSPICIOUS CLIENT ACTIVITY")
     print("==============================")
-
     for client, count in suspicious_clients.items():
         if count >= 3:
             print(f"{client} -> {count} events")
@@ -153,11 +144,14 @@ def analyze_logs(logs):
             "risk_score": normalize_score(identity_risk[identity]),
             "severity": compute_severity(normalize_score(identity_risk[identity])),
             "event_count": len(identity_events[identity]),
-            "vehicles": list(vehicle_map[identity])
+            "vehicles": list(vehicle_map[identity]),
         }
 
-    filename = f"incident_report_{datetime.now().strftime('%H%M%S')}.json"
-
+    # -----------------------------
+    # SAVE REPORT
+    # -----------------------------
+    Path("outputs/incidents").mkdir(parents=True, exist_ok=True)
+    filename = f"outputs/incidents/incident_report_{datetime.now().strftime('%H%M%S')}.json"
     with open(filename, "w") as f:
         json.dump(incident_report, f, indent=4)
 
@@ -167,7 +161,7 @@ def analyze_logs(logs):
     print(f"[SAVED] {filename}")
 
     # -----------------------------
-    # 🔥 PIPELINE CONTRACT OUTPUT (IMPORTANT FIX)
+    # PIPELINE CONTRACT OUTPUT
     # -----------------------------
     return {
         "risk_score": risk_score,
@@ -175,7 +169,7 @@ def analyze_logs(logs):
         "techniques": dict(technique_counter),
         "suspicious_clients": dict(suspicious_clients),
         "identity_risk": dict(identity_risk),
-        "incident_report": incident_report
+        "incident_report": incident_report,
     }
 
 
@@ -184,7 +178,6 @@ def analyze_logs(logs):
 # -----------------------------
 if __name__ == "__main__":
     logs = fetch_logs()
-
     if logs:
         analyze_logs(logs)
     else:

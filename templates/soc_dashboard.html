@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SOC Command Center</title>
+    <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+    <style>
+        body {
+            background: #0b0f14;
+            color: #00ff9f;
+            font-family: monospace;
+            margin: 0;
+            display: flex;
+        }
+
+        #grid {
+            width: 60%;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .car {
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 16px;
+            border: 1px solid #222;
+        }
+        
+
+        .LOW { background: #12301f; }
+        .MEDIUM { background: #3a2f10; color: #ffd34d; }
+        .HIGH { background: #3a1212; color: #ff5c5c; }
+        .CRITICAL {
+            background: #5a0000;
+            color: white;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        #feed {
+            width: 40%;
+            height: 100vh;
+            overflow-y: auto;
+            background: #05070a;
+            padding: 20px;
+            border-left: 1px solid #222;
+        }
+
+        .event {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-left: 3px solid #00ff9f;
+        }
+
+        .title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+
+<div id="grid">
+    <div class="car LOW" id="CAR100">CAR100</div>
+    <div class="car LOW" id="CAR101">CAR101</div>
+    <div class="car LOW" id="CAR102">CAR102</div>
+    <div class="car LOW" id="CAR103">CAR103</div>
+    <div class="car LOW" id="CAR104">CAR104</div>
+</div>
+
+<div id="wavePanel" style="position: fixed; bottom: 0; left: 0; width: 60%; height: 200px; background: #05070a; border-top: 1px solid #222; padding: 10px;">
+    <div style="color:white; margin-bottom:10px;">AUTH_SPIKE WAVE (last 10s)</div>
+    <canvas id="waveCanvas" width="800" height="150"></canvas>
+</div>
+
+<div id="feed">
+    <div class="title">LIVE SOC EVENTS</div>
+</div>
+
+<script>
+const socket = io("http://localhost:5000");
+
+// LIVE EVENT STREAM
+socket.on("soc_event", function(data) {
+    const feed = document.getElementById("feed");
+
+    const div = document.createElement("div");
+    div.className = "event";
+    div.innerHTML = `
+        <b>${data.vehicle_id}</b><br>
+        ${data.action}<br>
+        Risk: ${data.risk_score} | ${data.severity}
+    `;
+
+    feed.prepend(div);
+});
+
+// CAR HEATMAP UPDATE
+socket.on("car_update", function(data) {
+    const car = document.getElementById(data.vehicle_id);
+
+    if (!car) return;
+
+    car.className = "car " + data.severity;
+
+    car.innerHTML = `
+        ${data.vehicle_id}<br>
+        Risk: ${data.risk_score}<br>
+        ${data.severity}
+    `;
+});
+
+const waveData = {};
+
+const canvas = document.getElementById("waveCanvas");
+const ctx = canvas.getContext("2d");
+
+function drawWave() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let x = 20;
+
+    Object.keys(waveData).forEach((vehicle, i) => {
+        const data = waveData[vehicle];
+
+        const height = data.intensity * 1.2;
+
+        ctx.fillStyle = data.is_spike ? "#ff3b3b" : "#00ff9f";
+
+        ctx.fillRect(x, 120 - height, 40, height);
+
+        ctx.fillStyle = "#ffffff";
+        ctx.fillText(vehicle, x, 140);
+
+        x += 60;
+    });
+}
+
+// SOCKET EVENT
+socket.on("auth_spike_wave", function(data) {
+    waveData[data.vehicle_id] = data;
+    drawWave();
+});
+
+</script>
+
+</body>
+</html>

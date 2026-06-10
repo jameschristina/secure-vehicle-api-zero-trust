@@ -4,6 +4,16 @@ from flask_socketio import SocketIO
 from soc_pipeline import process_pipeline
 from event_bus import EventBus
 from soc_dashboard import ingest_pipeline_results
+from collections import defaultdict
+from collections import defaultdict, deque
+import time
+
+auth_spike_store = defaultdict(lambda: deque(maxlen=20))
+
+car_state = defaultdict(lambda: {
+    "risk_score": 0,
+    "severity": "LOW"
+})
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key"
@@ -36,6 +46,10 @@ def dashboard():
         return redirect("/login")
     return render_template("dashboard.html")
 
+@app.route("/soc")
+def soc_dashboard():
+    return render_template("soc_dashboard.html")
+
 
 # =========================================================
 # HEALTH CHECK
@@ -59,56 +73,89 @@ def logs():
 
 
 # =========================================================
-# VALIDATION (NORMALIZED SOC SCHEMA)
+# VALIDATION (FIXED)
 # =========================================================
 def validate_event(event: dict) -> dict:
     return {
-        "identity": event.get("user", "unknown"),
-        "event_type": event.get("action", "unknown"),
+        "user": event.get("user", "unknown"),
+        "action": event.get("action", "unknown"),
         "vehicle_id": event.get("vehicle_id", "unknown"),
         "auth": bool(event.get("auth", False))
     }
 
 
 # =========================================================
-# INGEST PIPELINE
+# INGEST PIPELINE (FIXED)
 # =========================================================
 @app.route("/ingest", methods=["POST"])
 def ingest():
-    raw_event = request.json or {}
+    try:
+        raw_event = request.json or {}
 
-    event = validate_event(raw_event)
+        event = validate_event(raw_event)
+        result = process_pipeline(event)
 
-    result = process_pipeline(event)
+        normalized = {
+            "user": event["user"],
+            "action": event["action"],
+            "vehicle_id": event["vehicle_id"],
+            "auth": event["auth"],
+            "risk_score": result.get("risk_score", 0),
+            "severity": result.get("severity", "LOW"),
+            "alert": result.get("alert", False),
+            "timestamp": result.get("timestamp")
+        }
 
-    normalized = {
-        "identity": event["identity"],
-        "event_type": event["event_type"],
-        "vehicle_id": event["vehicle_id"],
-        "risk_score": result.get("risk_score", 0),
-        "severity": result.get("severity", "LOW"),
-        "alert": result.get("alert", False),
-        "technique": result.get("technique", "T0000"),
-        "timestamp": result.get("timestamp")
-    }
+        # Emit CAR-level dashboard update
+        socketio.emit("car_update", {
+            "vehicle_id": normalized["vehicle_id"],
+            "risk_score": normalized["risk_score"],
+            "severity": normalized["severity"],
+            "action": normalized["action"],
+            "timestamp": normalized["timestamp"]
+        })
 
-    # event bus
-    bus.publish(normalized)
+        car_state[normalized["vehicle_id"]] = {
+           "risk_score": normalized["risk_score"],
+            "severity": normalized["severity"]
+        }
 
-    # SOC dashboard ingestion (IMPORTANT FIX)
-    ingest_pipeline_results(normalized)
+        if normalized["action"] in ["AUTH_SPIKE", "BRUTE_FORCE", "VEHICLE_COMMAND_ACCESS"]:
+            auth_spike_store[normalized["vehicle_id"]].append({
+             "time": time.time(),
+            "action": normalized["action"]
+            })
 
-    # realtime stream
-   # REALTIME STREAM (ENHANCED SOC FORMAT)
-    socketio.emit("soc_event", {
-    "identity": normalized["identity"],
-    "event_type": normalized["event_type"],
-    "vehicle_id": normalized["vehicle_id"],
-    "risk_score": normalized["risk_score"],
-    "severity": normalized["severity"],
-    "timestamp": normalized["timestamp"]
-    })
+        # Event bus
+        bus.publish(normalized)
 
+        # SOC dashboard ingestion
+        ingest_pipeline_results(normalized)
+
+        # realtime stream
+        socketio.emit("soc_event", normalized)
+
+        return jsonify({
+            "status": "ok",
+            "event": normalized
+        })
+
+    except Exception as e:
+        print("❌ INGEST ERROR:", str(e))
+        return jsonify({
+            "status": "error",
+            "message": str(e)
+        }), 500
+    
+    spike = compute_spike(normalized["vehicle_id"])
+
+    socketio.emit("auth_spike_wave", {
+        "vehicle_id": normalized["vehicle_id"],
+        "count": spike["count"],
+        "intensity": spike["intensity"],
+        "is_spike": spike["is_spike"],
+        "timestamp": normalized["timestamp"]
+        })
 
 # =========================================================
 # SOCKET EVENTS
@@ -136,3 +183,16 @@ if __name__ == "__main__":
         debug=False,
         use_reloader=False
     )
+
+def compute_spike(vehicle_id):
+    events = auth_spike_store[vehicle_id]
+    now = time.time()
+
+    # events in last 10 seconds
+    recent = [e for e in events if now - e["time"] <= 10]
+
+    return {
+        "count": len(recent),
+        "intensity": min(len(recent) * 20, 100),
+        "is_spike": len(recent) >= 3
+    }

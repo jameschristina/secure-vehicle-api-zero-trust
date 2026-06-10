@@ -2,26 +2,36 @@
 __pycache__/
 *.py[cod]
 
-# Test / coverage
+# Virtual environments
+venv/
+.env
+
+# Testing
 .pytest_cache/
 .coverage
+coverage.xml
+htmlcov/
+
+# Logs
+*.log
 
 # Generated SOC artifacts
 executive_report_*.json
-attack_heatmap.png
+incident_report_*.json
+soc_incident_report_*.json
 
-# Virtual environment
-venv/
+# Runtime data
+soc_events.json
+
+# Generated outputs
 outputs/
 reports/
-*.json
-*.jsonl
-*.log
 
+# OS files
 .DS_Store
-coverage.xml
-htmlcov/
-.env
-.png
+data/api_logs.json
 soc_events.json
+soc_events.jsonl
 soc_metrics.json
+soc_metrics_history.jsonl
+incidents_store.json

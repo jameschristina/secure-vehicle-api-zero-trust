@@ -157,6 +157,89 @@ This system simulates how an attack moves through a modern SOC pipeline:
 
 ---
 
+# 🧨 Adversary Attack Scenario Walkthrough (End-to-End Simulation)
+
+This section demonstrates how a realistic attacker interaction flows through the Secure Vehicle API SOC environment, triggering detection, correlation, and automated response mechanisms.
+
+---
+
+## 🎯 Scenario: Unauthorized Vehicle Access Attempt
+
+### 🧑‍💻 Step 1 — Reconnaissance
+An attacker scans the API for exposed endpoints and identifies `/vehicle/unlock` as a target.
+
+---
+
+### 🔐 Step 2 — Unauthorized Access Attempt
+The attacker sends repeated unauthorized requests without valid authentication credentials.
+
+---
+
+### 📡 Step 3 — Telemetry Generation
+The system logs:
+- Invalid API requests
+- Missing authentication headers
+- Repeated endpoint targeting
+- Suspicious identity patterns
+
+---
+
+### 🧠 Step 4 — Detection Engine Trigger
+The SIEM layer identifies:
+- High-frequency failed requests
+- Non-authenticated access attempts
+- MITRE ATT&CK mapping: T1078 (Valid Accounts Abuse Attempt Pattern)
+
+Alert severity is escalated.
+
+---
+
+### 🔍 Step 5 — SOC Investigation
+Threat hunting workflows analyze:
+- Request origin patterns
+- Historical behavior anomalies
+- Cross-vehicle access attempts
+
+Behavior is classified as malicious.
+
+---
+
+### 🚨 Step 6 — Incident Response Activation
+Incident is created with:
+- High severity score
+- Attack classification: API Abuse / Unauthorized Access Attempt
+
+---
+
+### 🤖 Step 7 — SOAR Automated Response
+Automated actions triggered:
+- API key invalidation (if present)
+- Identity quarantine simulation
+- Rate-limiting escalation
+- Session termination simulation
+
+---
+
+### 📊 Step 8 — Executive Visibility
+SOC dashboard updates:
+- Attack frequency spike
+- MITRE ATT&CK coverage update
+- Risk score increase
+
+Executive report reflects active threat mitigation.
+
+---
+
+## 🧠 Outcome
+
+This scenario demonstrates a full lifecycle:
+
+**Attack → Detection → Investigation → Response → Reporting**
+
+It reflects how modern SOC teams operationalize Zero Trust security principles in real-world environments.
+
+---
+
 # 🏗️ Architecture Overview
 
 ```mermaid

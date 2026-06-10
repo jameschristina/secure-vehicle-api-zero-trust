@@ -1,12 +1,13 @@
 # 🚗 Secure Vehicle API: Zero Trust SOC Simulation Platform
 
 ![Python](https://img.shields.io/badge/Python-3.10-blue)
-![SOC Simulation](https://img.shields.io/badge/SOC-Simulation-red)
+![SOC](https://img.shields.io/badge/SOC-Simulation-red)
 ![Zero Trust](https://img.shields.io/badge/Zero%20Trust-Architecture-green)
 ![MITRE ATT&CK](https://img.shields.io/badge/MITRE-ATT%26CK-darkred)
-![Machine Learning](https://img.shields.io/badge/ML-Anomaly%20Detection-orange)
+![ML](https://img.shields.io/badge/ML-Anomaly%20Detection-orange)
 ![License](https://img.shields.io/badge/License-MIT-yellow)
-![Tests](https://github.com/switice/secure-vehicle-api-zero-trust/actions/workflows/python-tests.yml/badge.svg)
+![CI](https://github.com/switice/secure-vehicle-api-zero-trust/actions/workflows/python-app.yml/badge.svg)
+![Tests](https://github.com/switice/secure-vehicle-api-zero-trust/actions/workflows/test.yml/badge.svg)
 
 > **Project Status:** ✅ Portfolio Ready | Zero Trust Security Platform | SOC Engineering Demonstration | Version 1.0.0
 
@@ -157,57 +158,6 @@ Machine Learning Anomaly Detection
 Executive Security Reporting
 ```
 
----
-
-## Architecture
-
-```mermaid
-flowchart LR
-
-User[Authorized User]
-
-API[Vehicle API]
-
-AUTH[Authentication Layer]
-
-AUTHZ[Authorization Layer]
-
-SIEM[SIEM Detection]
-
-DET[Detection Engine]
-
-SOC[SOC Command Center]
-
-IR[Incident Response]
-
-SOAR[SOAR Automation]
-
-AI[AI SOC Analyst]
-
-VEH[Vehicle Systems]
-
-User --> API
-
-API --> AUTH
-
-AUTH --> AUTHZ
-
-AUTHZ --> VEH
-
-AUTH --> SIEM
-
-AUTHZ --> SIEM
-
-SIEM --> DET
-
-DET --> SOC
-
-SOC --> IR
-
-IR --> SOAR
-
-SOAR --> AI
-```
 ---
 
 # 🎯 Project Objectives

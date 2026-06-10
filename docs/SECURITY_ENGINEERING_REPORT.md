@@ -1,25 +1,127 @@
 # Security Engineering Report
+## Secure Vehicle API – Zero Trust Security Evolution
 
-## Project Overview
-
-Secure Vehicle API Zero Trust is a cybersecurity engineering project that demonstrates the evolution of a connected vehicle platform from a vulnerable API into a security-focused cyber-physical system protected by layered defensive controls.
-
-The project was developed to simulate realistic security operations, detection engineering, identity controls, threat hunting, incident response, cloud security, SOAR automation, and AI-assisted SOC workflows.
+Author: Chukwuemeke Ikpeasonim, CISM, SecurityX
 
 ---
 
-# Objectives
+# Executive Summary
 
-The primary objectives of the project are:
+This project demonstrates the progressive transformation of a vulnerable vehicle command API into a Zero Trust–inspired cyber-physical security platform.
 
-- Demonstrate Zero Trust security principles
-- Simulate cyber-physical vehicle security
-- Implement layered security controls
-- Generate realistic SOC telemetry
-- Develop detection engineering workflows
-- Practice incident response processes
-- Create executive security reporting
-- Showcase cybersecurity engineering skills
+The project was intentionally developed in multiple phases to illustrate how security controls evolve from basic authentication into a modern Security Operations Center (SOC) ecosystem capable of:
+
+- Identity verification
+- Authorization enforcement
+- Threat detection
+- Threat hunting
+- Incident response
+- SOAR automation
+- Threat intelligence correlation
+- Detection engineering
+- Cloud security controls
+- Kubernetes security monitoring
+- Endpoint detection and response
+- Attack path analysis
+- Purple team validation
+- AI-assisted SOC analysis
+
+The project is intended for cybersecurity education, portfolio demonstration, and security engineering research.
+
+---
+
+# Project Objective
+
+The objective was to simulate how a modern organization might protect connected vehicle APIs against unauthorized access, insider abuse, credential compromise, and malicious command execution.
+
+The system demonstrates:
+
+1. API Security
+2. Identity Security
+3. Security Monitoring
+4. Detection Engineering
+5. Incident Response
+6. Security Automation
+7. SOC Operations
+
+---
+
+# Security Architecture
+
+The project follows a layered defense model.
+
+```text
+Vehicle Client
+      |
+      v
+Authentication Layer
+      |
+      v
+Authorization Layer
+      |
+      v
+Vehicle Command API
+      |
+      v
+Event Collection
+      |
+      v
+SIEM Detection
+      |
+      v
+Threat Hunting
+      |
+      v
+Incident Response
+      |
+      v
+SOAR Automation
+      |
+      v
+SOC Dashboard
+      |
+      v
+Executive Reporting
+```
+
+The architecture demonstrates how security telemetry can move through a complete defensive workflow.
+
+---
+
+# Zero Trust Principles Implemented
+
+The project incorporates several Zero Trust concepts.
+
+## Verify Explicitly
+
+Every request requires authentication.
+
+Examples:
+
+- API keys
+- Identity federation simulation
+- Device validation
+
+## Least Privilege
+
+Authorization policies restrict users to specific vehicle resources.
+
+Examples:
+
+- Role-based permissions
+- Vehicle ownership restrictions
+- Administrative separation
+
+## Assume Breach
+
+The system continuously evaluates telemetry for suspicious behavior.
+
+Examples:
+
+- Brute-force detection
+- Authentication anomalies
+- Privilege abuse detection
+- Baseline deviation detection
 
 ---
 
@@ -27,186 +129,316 @@ The primary objectives of the project are:
 
 ## Phase 1 – Vulnerable API
 
-Capabilities:
+Characteristics:
 
 - No authentication
 - No authorization
-- Direct vehicle access
+- Direct vehicle command execution
 
 Risk:
 
-- Unauthorized command execution
-- Complete compromise possible
+- Complete compromise of vehicle control
 
 ---
 
 ## Phase 2 – Authentication
 
-Controls Added:
+Security Improvements:
 
 - API key validation
-- Request logging
-- Rate limiting
+- Unauthorized request rejection
 
 Benefits:
 
-- Reduced unauthorized access
-- Improved visibility
+- Eliminates anonymous access
 
 ---
 
 ## Phase 3 – Authorization
 
-Controls Added:
+Security Improvements:
 
-- Role-based vehicle permissions
-- Entitlement enforcement
-- Access validation
+- Role enforcement
+- Vehicle access controls
 
 Benefits:
 
-- Least privilege enforcement
-- Vehicle-specific access control
+- Implements least privilege
 
 ---
 
 ## Phase 4 – SIEM Detection
 
-Capabilities:
+Security Improvements:
 
-- Event collection
+- Event monitoring
 - Security alert generation
-- Centralized visibility
+
+Benefits:
+
+- Security visibility
 
 ---
 
 ## Phase 5 – Detection Engineering
 
-Capabilities:
+Security Improvements:
 
-- Detection rule development
-- Threat pattern identification
+- Custom detection rules
+- Threat identification logic
+
+Benefits:
+
+- Improved detection capability
 
 ---
 
 ## Phase 6 – Threat Hunting
 
-Capabilities:
+Security Improvements:
 
-- Behavioral analysis
-- Threat discovery
+- Proactive investigation workflows
+
+Benefits:
+
+- Detection of hidden threats
 
 ---
 
 ## Phase 7 – Incident Response
 
-Capabilities:
+Security Improvements:
 
 - Incident creation
-- Response workflows
-- Containment simulation
+- Response procedures
+
+Benefits:
+
+- Structured remediation process
 
 ---
 
 ## Phase 8 – Threat Intelligence
 
-Capabilities:
+Security Improvements:
 
 - IOC correlation
 - Threat enrichment
+
+Benefits:
+
+- Improved context for analysts
 
 ---
 
 ## Phase 9 – SOAR Automation
 
-Capabilities:
+Security Improvements:
 
+- Automated containment
 - Automated response actions
-- Playbook execution
+
+Benefits:
+
+- Reduced response time
 
 ---
 
 ## Phase 10 – Detection Engine
 
-Capabilities:
+Security Improvements:
 
-- Real-time telemetry generation
 - Risk scoring
-- SOC alerting
+- Behavioral analysis
 
-Severity Levels:
+Benefits:
 
-- LOW
-- MEDIUM
-- HIGH
-- CRITICAL
+- Prioritized investigations
 
 ---
 
-## Phases 11–20
+## Phase 11 – Machine Learning
 
-Advanced Security Topics:
+Security Improvements:
 
-- Machine Learning Detection
-- Cloud Security
-- Attack Path Analysis
-- Attack Heatmaps
-- Executive Reporting
-- Identity Federation
-- Kubernetes Security
-- EDR Simulation
-- Purple Team Operations
-- AI SOC Analyst
+- Anomaly detection simulation
+
+Benefits:
+
+- Behavioral threat identification
 
 ---
 
-# Testing Results
+## Phase 12 – Cloud Security
 
-Current Test Status:
+Security Improvements:
 
-- 33/33 tests passing
+- Cloud posture monitoring
 
-Validated Areas:
+Benefits:
 
-- Authentication
-- Authorization
-- Rate Limiting
-- Detection Engine
-- SIEM Logic
-- SOC Pipeline Execution
+- Expanded security coverage
 
 ---
 
-# Security Architecture Principles
+## Phase 13 – Attack Path Analysis
 
-The project follows:
+Security Improvements:
 
-- Zero Trust
-- Least Privilege
-- Defense in Depth
-- Continuous Monitoring
-- Detection Engineering
-- Incident Response Readiness
+- Attack chain visualization
+
+Benefits:
+
+- Better risk understanding
+
+---
+
+## Phase 14 – Attack Heat Mapping
+
+Security Improvements:
+
+- Visual attack analytics
+
+Benefits:
+
+- Improved operational visibility
+
+---
+
+## Phase 15 – Executive Reporting
+
+Security Improvements:
+
+- Leadership-level reporting
+
+Benefits:
+
+- Business communication
+
+---
+
+## Phase 16 – Identity Federation
+
+Security Improvements:
+
+- Federated identity concepts
+
+Benefits:
+
+- Centralized identity management
+
+---
+
+## Phase 17 – Kubernetes Security
+
+Security Improvements:
+
+- Container security monitoring
+
+Benefits:
+
+- Cloud-native protection
+
+---
+
+## Phase 18 – EDR Simulation
+
+Security Improvements:
+
+- Endpoint visibility
+
+Benefits:
+
+- Endpoint threat detection
+
+---
+
+## Phase 19 – Purple Team
+
+Security Improvements:
+
+- Detection validation
+
+Benefits:
+
+- Continuous improvement
+
+---
+
+## Phase 20 – AI SOC Analyst
+
+Security Improvements:
+
+- AI-assisted investigation support
+
+Benefits:
+
+- Analyst efficiency
+
+---
+
+# Security Outcomes
+
+The final platform demonstrates:
+
+- Authentication controls
+- Authorization controls
+- Detection engineering
+- Threat hunting
+- Incident response
+- SOAR automation
+- SOC monitoring
+- Executive reporting
+
+The project evolved from a vulnerable API into a multi-layered security simulation platform.
+
+---
+
+# Project Limitations
+
+This project is intentionally educational and does not represent a production deployment.
+
+Examples:
+
+- Simplified authentication
+- Simulated threat intelligence
+- Simulated SOAR actions
+- Simulated EDR telemetry
+- Simulated ML detections
+
+Additional controls would be required for production use.
+
+Examples:
+
+- OAuth2/OIDC
+- Multi-factor authentication
+- Hardware-backed secrets
+- Real SIEM integration
+- Real EDR integration
+- Production-grade logging
+- Secure secret management
 
 ---
 
 # Future Enhancements
 
-Potential future improvements:
+Potential future improvements include:
 
-- OAuth2/OIDC integration
-- MFA enforcement
-- Container security scanning
-- Infrastructure as Code
-- Kubernetes deployment
-- Cloud-native logging
-- MITRE ATT&CK mapping
-- Detection-as-Code pipelines
+1. OAuth2 Integration
+2. OpenID Connect Federation
+3. Real Threat Intelligence Feeds
+4. MITRE ATT&CK Mapping
+5. Kubernetes Admission Controls
+6. Detection-as-Code Framework
+7. Security Data Lake Integration
+8. Real-Time WebSocket Analytics
+9. Advanced Behavioral Analytics
+10. LLM-Assisted Investigation Workflows
 
 ---
 
 # Conclusion
 
-Secure Vehicle API Zero Trust demonstrates the evolution of a vulnerable application into a layered cyber-physical security platform using modern cybersecurity engineering principles.
+The Secure Vehicle API – Zero Trust project demonstrates the evolution of a connected vehicle platform from an insecure API into a layered security architecture incorporating Zero Trust concepts, detection engineering, SOC operations, incident response, threat hunting, automation, cloud security, identity security, and AI-assisted analysis.
 
-The project showcases practical skills across application security, detection engineering, security operations, incident response, cloud security, and security architecture.
+The project serves as a practical demonstration of modern cybersecurity engineering principles and reflects the security lifecycle used across enterprise and public-sector environments.

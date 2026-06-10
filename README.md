@@ -160,13 +160,88 @@ SOC Dashboard
 
 ## Screenshots
 
-### SOC Dashboard
+# 📸 Security Analytics Intelligence Layer
 
-![SOC Dashboard](screenshots/phase10_soc_dashboard.png)
+> **Executive Summary:**  
+This section visualizes SOC telemetry, detection engineering outputs, behavioral analytics, and machine learning–driven anomaly detection across the Secure Vehicle API environment.
 
-### Attack Heatmap
+---
 
-![Attack Heatmap](screenshots/phase14_attack_heatmap.png)
+## 🧭 SOC Command Dashboard
+
+<p align="center">
+  <img src="screenshots/phase10_soc_dashboard.png" width="850"/>
+</p>
+
+**Key Insights:**
+- Unified SOC operational visibility  
+- Real-time alert aggregation  
+- Multi-layer security monitoring  
+
+---
+
+## 🔥 MITRE ATT&CK Coverage Heatmap
+
+<p align="center">
+  <img src="screenshots/phase14_attack_heatmap.png" width="850"/>
+</p>
+
+**Key Insights:**
+- Maps detections to adversary techniques  
+- Identifies coverage gaps  
+- Enables purple team validation  
+
+---
+
+## 📊 API Behavioral Analytics
+
+<p align="center">
+  <img src="screenshots/requests_per_endpoint.png" width="850"/>
+</p>
+
+**Key Insights:**
+- Detects abnormal endpoint usage  
+- Establishes baseline traffic behavior  
+- Identifies abuse patterns  
+
+---
+
+## 🚗 Identity-Based Access Distribution
+
+<p align="center">
+  <img src="screenshots/requests_per_vehicle.png" width="850"/>
+</p>
+
+**Key Insights:**
+- Tracks identity-level access patterns  
+- Supports least privilege validation  
+- Detects anomalous identity concentration  
+
+---
+
+## ⚠️ Security Failure & Attack Signals
+
+<p align="center">
+  <img src="screenshots/security_failures.png" width="850"/>
+</p>
+
+**Key Insights:**
+- Highlights authentication failures  
+- Detects brute-force patterns  
+- Supports incident investigation  
+
+---
+
+## 🤖 ML-Based Anomaly Detection Engine
+
+<p align="center">
+  <img src="screenshots/phase11_ml_detection.png" width="850"/>
+</p>
+
+**Key Insights:**
+- Detects statistical outliers  
+- Flags behavioral anomalies  
+- Enhances SOC triage prioritization  
 
 ---
 

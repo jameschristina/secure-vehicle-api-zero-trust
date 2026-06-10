@@ -3,6 +3,7 @@ from flask_socketio import SocketIO
 
 from soc_pipeline import process_pipeline
 from event_bus import EventBus
+from soc_dashboard import ingest_pipeline_results
 
 app = Flask(__name__)
 app.secret_key = "dev-secret-key"
@@ -37,7 +38,7 @@ def dashboard():
 
 
 # =========================================================
-# HEALTH CHECK (IMPORTANT FOR DEBUGGING)
+# HEALTH CHECK
 # =========================================================
 @app.route("/health")
 def health():
@@ -48,7 +49,7 @@ def health():
 
 
 # =========================================================
-# LOG STREAM (EVENT BUS = SINGLE SOURCE OF TRUTH)
+# LOG STREAM
 # =========================================================
 @app.route("/logs")
 def logs():
@@ -58,19 +59,19 @@ def logs():
 
 
 # =========================================================
-# INPUT VALIDATION (CRITICAL FIX)
+# VALIDATION (NORMALIZED SOC SCHEMA)
 # =========================================================
 def validate_event(event: dict) -> dict:
     return {
-        "user": event.get("user", "unknown"),
-        "action": event.get("action", "unknown"),
+        "identity": event.get("user", "unknown"),
+        "event_type": event.get("action", "unknown"),
         "vehicle_id": event.get("vehicle_id", "unknown"),
         "auth": bool(event.get("auth", False))
     }
 
 
 # =========================================================
-# INGEST PIPELINE ENTRYPOINT
+# INGEST PIPELINE
 # =========================================================
 @app.route("/ingest", methods=["POST"])
 def ingest():
@@ -81,24 +82,31 @@ def ingest():
     result = process_pipeline(event)
 
     normalized = {
-        "user": event["user"],
-        "action": event["action"],
+        "identity": event["identity"],
+        "event_type": event["event_type"],
         "vehicle_id": event["vehicle_id"],
         "risk_score": result.get("risk_score", 0),
         "severity": result.get("severity", "LOW"),
         "alert": result.get("alert", False),
+        "technique": result.get("technique", "T0000"),
         "timestamp": result.get("timestamp")
     }
 
-    # SINGLE SOURCE OF TRUTH
+    # event bus
     bus.publish(normalized)
 
-    # REALTIME STREAM
-    socketio.emit("soc_event", normalized)
+    # SOC dashboard ingestion (IMPORTANT FIX)
+    ingest_pipeline_results(normalized)
 
-    return jsonify({
-        "status": "ok",
-        "event": normalized
+    # realtime stream
+   # REALTIME STREAM (ENHANCED SOC FORMAT)
+    socketio.emit("soc_event", {
+    "identity": normalized["identity"],
+    "event_type": normalized["event_type"],
+    "vehicle_id": normalized["vehicle_id"],
+    "risk_score": normalized["risk_score"],
+    "severity": normalized["severity"],
+    "timestamp": normalized["timestamp"]
     })
 
 
@@ -116,7 +124,7 @@ def on_disconnect():
 
 
 # =========================================================
-# START SERVER (CLEAN ENTRYPOINT)
+# START SERVER
 # =========================================================
 if __name__ == "__main__":
     print("🚀 SOC COMMAND CENTER STARTING...")

@@ -13,9 +13,29 @@
 
 ---
 
+## 🧠 Executive SOC Summary
+
+Secure Vehicle API is a Zero Trust SOC simulation platform that models how modern security operations teams detect, analyze, and respond to adversarial behavior across API, identity, cloud, and infrastructure layers.
+
+The system demonstrates a full cybersecurity lifecycle:
+
+- Attack surface exposure (vulnerable API baseline)
+- Identity enforcement (authentication & authorization)
+- Detection engineering (SIEM + MITRE ATT&CK mapping)
+- Behavioral analytics (UEBA-style monitoring)
+- Threat intelligence correlation
+- Automated response (SOAR simulation)
+- Machine learning anomaly detection
+- Executive-level security reporting
+
+This project is designed to simulate real-world SOC workflows used in enterprise security operations centers.
+
+---
+
 A cybersecurity engineering portfolio project demonstrating the evolution of a vulnerable API into a Zero Trust, SOC-driven security ecosystem through authentication, authorization, detection engineering, SIEM analytics, threat intelligence correlation, SOAR automation, cloud security monitoring, and AI-assisted security operations.
 
 ---
+
 # 🚀 Overview
 
 Secure Vehicle API is a multi-phase cybersecurity simulation platform that demonstrates how a vulnerable API environment evolves into a mature Security Operations Center (SOC) ecosystem using Zero Trust security principles.
@@ -84,6 +104,59 @@ The architecture progressively introduces:
 
 ---
 
+# 🔄 Threat Detection Lifecycle (End-to-End SOC Flow)
+
+This system simulates how an attack moves through a modern SOC pipeline:
+
+### 🧨 1. Attack Initiation
+- Unauthorized API request
+- Credential abuse or brute-force attempt
+- Suspicious identity behavior
+
+↓
+
+### 🧾 2. Telemetry Generation
+- Request logging
+- Identity tracking
+- System event capture
+
+↓
+
+### 🧠 3. Detection Layer
+- SIEM rule evaluation
+- MITRE ATT&CK technique mapping
+- Behavioral anomaly detection
+
+↓
+
+### 🔍 4. Investigation Layer
+- Threat hunting queries
+- IOC correlation
+- Historical event analysis
+
+↓
+
+### 🚨 5. Incident Response
+- Alert classification
+- Severity scoring
+- Incident creation
+
+↓
+
+### 🤖 6. SOAR Automation
+- Containment actions
+- API key revocation
+- Identity quarantine simulation
+
+↓
+
+### 📊 7. Executive Reporting
+- SOC dashboards
+- Risk scoring
+- Security posture visualization
+
+---
+
 # 🏗️ Architecture Overview
 
 ```mermaid
@@ -131,6 +204,21 @@ This architecture demonstrates the progression from a vulnerable API to a mature
 
 ---
 
+# 🧭 Architecture → Security Control Mapping
+
+| Layer | Component | Security Function |
+|------|-----------|------------------|
+| API Layer | Vehicle API | Attack surface simulation |
+| Identity Layer | Authentication / Authorization | Zero Trust enforcement |
+| Detection Layer | SIEM Engine | Event correlation & alerting |
+| Threat Intelligence | IOC Correlation | External threat enrichment |
+| Analytics Layer | UEBA / ML Models | Behavioral anomaly detection |
+| Response Layer | SOAR Automation | Incident containment |
+| SOC Layer | Command Center | Analyst workflow simulation |
+| Reporting Layer | Dashboards | Executive security visibility |
+| Infrastructure | Cloud/Kubernetes/EDR | Attack surface hardening |
+
+---
 
 # 🔄 End-to-End SOC Pipeline
 
@@ -615,96 +703,88 @@ This platform includes simulations for modern SOC detection workflows such as:
 
 ---
 
-# 📸 Screenshots
-
-# 📸 Security Analytics Gallery
+# 📸 Security Analytics Intelligence Layer
 
 > **Executive Summary:**  
-This section visualizes operational telemetry from the Secure Vehicle API SOC simulation, demonstrating detection engineering, behavioral analytics, threat visibility, and machine learning–driven anomaly detection across multiple security domains.
+This section visualizes SOC telemetry, detection engineering outputs, behavioral analytics, and machine learning–driven anomaly detection across the Secure Vehicle API environment.
 
 ---
 
 ## 🧭 SOC Command Dashboard
-Centralized security operations view aggregating alerts, telemetry, and SOC workflows.
 
 <p align="center">
-  <img src="screenshots/phase10_soc_dashboard.png" width="800"/>
+  <img src="screenshots/phase10_soc_dashboard.png" width="850"/>
 </p>
 
 **Key Insights:**
-- Real-time SOC monitoring across system components  
-- Aggregated alert visibility for incident triage  
-- Centralized operational security awareness  
+- Unified SOC operational visibility  
+- Real-time alert aggregation  
+- Multi-layer security monitoring  
 
 ---
 
-## 🔥 MITRE ATT&CK Heatmap
-Maps detection coverage against adversary techniques for threat modeling.
+## 🔥 MITRE ATT&CK Coverage Heatmap
 
 <p align="center">
-  <img src="screenshots/phase14_attack_heatmap.png" width="800"/>
+  <img src="screenshots/phase14_attack_heatmap.png" width="850"/>
 </p>
 
 **Key Insights:**
-- Highlights detection coverage gaps  
-- Aligns system behavior with MITRE ATT&CK framework  
-- Supports adversary simulation and purple team validation  
+- Maps detections to adversary techniques  
+- Identifies coverage gaps  
+- Enables purple team validation  
 
 ---
 
-## 📊 Behavioral Analytics — Requests per Endpoint
-Analyzes API usage patterns to detect anomalies and abuse.
+## 📊 API Behavioral Analytics
 
 <p align="center">
-  <img src="screenshots/requests_per_endpoint.png" width="800"/>
+  <img src="screenshots/requests_per_endpoint.png" width="850"/>
 </p>
 
 **Key Insights:**
-- Identifies high-frequency endpoints under load  
-- Helps detect brute-force or abuse patterns  
+- Detects abnormal endpoint usage  
 - Establishes baseline traffic behavior  
+- Identifies abuse patterns  
 
 ---
 
-## 🚗 Vehicle Activity Distribution
-Tracks identity-based access patterns across simulated vehicle entities.
+## 🚗 Identity-Based Access Distribution
 
 <p align="center">
-  <img src="screenshots/requests_per_vehicle.png" width="800"/>
+  <img src="screenshots/requests_per_vehicle.png" width="850"/>
 </p>
 
 **Key Insights:**
-- Maps request distribution per identity  
-- Supports least-privilege validation  
-- Detects abnormal access concentration  
+- Tracks identity-level access patterns  
+- Supports least privilege validation  
+- Detects anomalous identity concentration  
 
 ---
 
-## ⚠️ Security Failure Analysis
-Visualizes failed authentication and authorization attempts.
+## ⚠️ Security Failure & Attack Signals
 
 <p align="center">
-  <img src="screenshots/security_failures.png" width="800"/>
+  <img src="screenshots/security_failures.png" width="850"/>
 </p>
 
 **Key Insights:**
-- Highlights authentication failure spikes  
-- Identifies potential brute-force activity  
-- Supports incident investigation workflows  
+- Highlights authentication failures  
+- Detects brute-force patterns  
+- Supports incident investigation  
 
 ---
 
-## 🤖 ML Anomaly Detection Results
-Machine learning–based detection of behavioral outliers in system activity.
+## 🤖 ML-Based Anomaly Detection Engine
 
 <p align="center">
-  <img src="screenshots/phase11_ml_detection.png" width="800"/>
+  <img src="screenshots/phase11_ml_detection.png" width="850"/>
 </p>
 
 **Key Insights:**
-- Detects statistical anomalies in request patterns  
-- Flags outliers for SOC investigation  
-- Demonstrates ML-driven security analytics capability  
+- Detects statistical outliers  
+- Flags behavioral anomalies  
+- Enhances SOC triage prioritization  
 
 ---
 

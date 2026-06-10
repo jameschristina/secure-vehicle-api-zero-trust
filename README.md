@@ -65,6 +65,7 @@ The architecture progressively introduces:
 
 ---
 
+
 # 🔄 End-to-End SOC Pipeline
 
 ```text
@@ -91,6 +92,57 @@ Machine Learning Anomaly Detection
 Executive Security Reporting
 ```
 
+---
+
+## Architecture
+
+```mermaid
+flowchart LR
+
+User[Authorized User]
+
+API[Vehicle API]
+
+AUTH[Authentication Layer]
+
+AUTHZ[Authorization Layer]
+
+SIEM[SIEM Detection]
+
+DET[Detection Engine]
+
+SOC[SOC Command Center]
+
+IR[Incident Response]
+
+SOAR[SOAR Automation]
+
+AI[AI SOC Analyst]
+
+VEH[Vehicle Systems]
+
+User --> API
+
+API --> AUTH
+
+AUTH --> AUTHZ
+
+AUTHZ --> VEH
+
+AUTH --> SIEM
+
+AUTHZ --> SIEM
+
+SIEM --> DET
+
+DET --> SOC
+
+SOC --> IR
+
+IR --> SOAR
+
+SOAR --> AI
+```
 ---
 
 # 🎯 Project Objectives

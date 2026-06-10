@@ -1,23 +1,20 @@
 import json
 from collections import defaultdict, Counter
 from datetime import datetime
-
 import matplotlib.pyplot as plt
 
 
 # =========================================================
-# STORAGE
+# STORAGE (SOC MEMORY LAYER)
 # =========================================================
 events = []
 
 
 # =========================================================
-# INGEST PIPELINE OUTPUT
+# INGEST
 # =========================================================
 def ingest_pipeline_results(result: dict):
-    """
-    Accepts SOC pipeline output (single event result)
-    """
+    """Receives normalized SOC event stream"""
     events.append(result)
 
 
@@ -30,7 +27,6 @@ def compute_metrics():
     severity_count = Counter()
     event_types = Counter()
     technique_count = Counter()
-
     identity_risk = defaultdict(int)
 
     for e in events:
@@ -38,19 +34,18 @@ def compute_metrics():
         risk = e.get("risk_score", 0)
         severity = e.get("severity", "LOW")
         event_type = e.get("event_type", "unknown")
-        technique = e.get("technique")
+        identity = e.get("identity", "unknown")
+        technique = e.get("technique", "T0000")
 
         risk_timeline.append(risk)
         severity_count[severity] += 1
         event_types[event_type] += 1
-
-        identity = e.get("identity", "unknown")
         identity_risk[identity] += risk
 
-        if isinstance(technique, dict):
-            for k in technique:
-                technique_count[k] += technique[k]
-        elif technique:
+        if isinstance(technique, list):
+            for t in technique:
+                technique_count[t] += 1
+        else:
             technique_count[technique] += 1
 
     return {
@@ -65,58 +60,49 @@ def compute_metrics():
 # =========================================================
 # PLOTS
 # =========================================================
-def plot_risk_timeline(risk_timeline):
-
+def plot_risk_timeline(data):
     plt.figure(figsize=(10, 4))
-    plt.plot(risk_timeline, marker="o")
-    plt.title("SOC Risk Score Timeline")
-    plt.xlabel("Event Index")
-    plt.ylabel("Risk Score")
-    plt.grid(True)
+    plt.plot(data, marker="o")
+    plt.title("SOC Risk Timeline")
+    plt.grid()
     plt.tight_layout()
     plt.savefig("soc_risk_timeline.png")
     plt.close()
 
 
-def plot_severity_distribution(severity_count):
-
+def plot_severity_distribution(data):
     plt.figure(figsize=(6, 4))
-    plt.bar(severity_count.keys(), severity_count.values())
+    plt.bar(data.keys(), data.values())
     plt.title("Severity Distribution")
-    plt.xlabel("Severity")
-    plt.ylabel("Count")
     plt.tight_layout()
     plt.savefig("soc_severity_distribution.png")
     plt.close()
 
 
-def plot_event_types(event_types):
-
+def plot_event_types(data):
     plt.figure(figsize=(8, 4))
-    plt.bar(event_types.keys(), event_types.values())
-    plt.title("Event Type Distribution")
+    plt.bar(data.keys(), data.values())
+    plt.title("Event Types")
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig("soc_event_types.png")
     plt.close()
 
 
-def plot_identity_risk(identity_risk):
-
+def plot_identity_risk(data):
     plt.figure(figsize=(8, 4))
-    plt.bar(identity_risk.keys(), identity_risk.values())
-    plt.title("Identity Risk Scores")
+    plt.bar(data.keys(), data.values())
+    plt.title("Identity Risk Score")
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig("soc_identity_risk.png")
     plt.close()
 
 
-def plot_mitre(technique_count):
-
+def plot_mitre(data):
     plt.figure(figsize=(8, 4))
-    plt.bar(technique_count.keys(), technique_count.values())
-    plt.title("MITRE ATT&CK Technique Frequency")
+    plt.bar(data.keys(), data.values())
+    plt.title("MITRE ATT&CK Coverage")
     plt.xticks(rotation=45)
     plt.tight_layout()
     plt.savefig("soc_mitre.png")
@@ -127,6 +113,10 @@ def plot_mitre(technique_count):
 # DASHBOARD EXPORT
 # =========================================================
 def export_dashboard():
+
+    if not events:
+        print("No SOC events available")
+        return
 
     metrics = compute_metrics()
 
@@ -141,7 +131,7 @@ def export_dashboard():
         "total_events": len(events),
         "summary": {
             "total_risk": sum(metrics["risk_timeline"]),
-            "max_risk": max(metrics["risk_timeline"], default=0),
+            "max_risk": max(metrics["risk_timeline"])
         }
     }
 
@@ -149,19 +139,12 @@ def export_dashboard():
         json.dump(report, f, indent=4)
 
     print("\n📊 SOC DASHBOARD GENERATED")
-    print(" - soc_risk_timeline.png")
-    print(" - soc_severity_distribution.png")
-    print(" - soc_event_types.png")
-    print(" - soc_identity_risk.png")
-    print(" - soc_mitre.png")
-    print(" - soc_dashboard_report.json")
 
 
 # =========================================================
-# SIMPLE RUNNER
+# RUNNER
 # =========================================================
 def run_dashboard(pipeline_results):
-
     for r in pipeline_results:
         ingest_pipeline_results(r)
 
@@ -169,7 +152,7 @@ def run_dashboard(pipeline_results):
 
 
 # =========================================================
-# TEST ENTRYPOINT
+# TEST (FIXED)
 # =========================================================
 def test_main():
     sample = {
@@ -181,4 +164,8 @@ def test_main():
     }
 
     ingest_pipeline_results(sample)
-    assert len(events) == 1
+
+    assert len(events) > 0
+    assert events[-1]["identity"] == "user1"
+
+    print("TEST PASSED")

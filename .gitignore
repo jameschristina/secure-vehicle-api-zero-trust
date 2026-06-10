@@ -38,3 +38,6 @@ tests/attack_heatmap.png
 
 # OS files
 .DS_Store
+
+# Dashboard exports
+dashboard_*.html

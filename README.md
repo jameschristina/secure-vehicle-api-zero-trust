@@ -619,45 +619,92 @@ This platform includes simulations for modern SOC detection workflows such as:
 
 # 📸 Security Analytics Gallery
 
-## 🧭 SOC Command Dashboard
-Real-time security operations visibility across API, identity, and detection layers.
+> **Executive Summary:**  
+This section visualizes operational telemetry from the Secure Vehicle API SOC simulation, demonstrating detection engineering, behavioral analytics, threat visibility, and machine learning–driven anomaly detection across multiple security domains.
 
-![SOC Dashboard](screenshots/phase10_soc_dashboard.png)
+---
+
+## 🧭 SOC Command Dashboard
+Centralized security operations view aggregating alerts, telemetry, and SOC workflows.
+
+<p align="center">
+  <img src="screenshots/phase10_soc_dashboard.png" width="800"/>
+</p>
+
+**Key Insights:**
+- Real-time SOC monitoring across system components  
+- Aggregated alert visibility for incident triage  
+- Centralized operational security awareness  
 
 ---
 
 ## 🔥 MITRE ATT&CK Heatmap
-Visualization of detection coverage mapped to adversary techniques.
+Maps detection coverage against adversary techniques for threat modeling.
 
-![ATT&CK Heatmap](screenshots/phase14_attack_heatmap.png)
+<p align="center">
+  <img src="screenshots/phase14_attack_heatmap.png" width="800"/>
+</p>
+
+**Key Insights:**
+- Highlights detection coverage gaps  
+- Aligns system behavior with MITRE ATT&CK framework  
+- Supports adversary simulation and purple team validation  
 
 ---
 
 ## 📊 Behavioral Analytics — Requests per Endpoint
-Traffic analysis and anomaly detection across API surfaces.
+Analyzes API usage patterns to detect anomalies and abuse.
 
-![Endpoint Traffic](screenshots/requests_per_endpoint.png)
+<p align="center">
+  <img src="screenshots/requests_per_endpoint.png" width="800"/>
+</p>
+
+**Key Insights:**
+- Identifies high-frequency endpoints under load  
+- Helps detect brute-force or abuse patterns  
+- Establishes baseline traffic behavior  
 
 ---
 
 ## 🚗 Vehicle Activity Distribution
-Identity-based segmentation and request attribution across vehicles.
+Tracks identity-based access patterns across simulated vehicle entities.
 
-![Vehicle Activity](screenshots/requests_per_vehicle.png)
+<p align="center">
+  <img src="screenshots/requests_per_vehicle.png" width="800"/>
+</p>
+
+**Key Insights:**
+- Maps request distribution per identity  
+- Supports least-privilege validation  
+- Detects abnormal access concentration  
 
 ---
 
 ## ⚠️ Security Failure Analysis
-Detection of failed access attempts and potential attack patterns.
+Visualizes failed authentication and authorization attempts.
 
-![Security Failures](screenshots/security_failures.png)
+<p align="center">
+  <img src="screenshots/security_failures.png" width="800"/>
+</p>
+
+**Key Insights:**
+- Highlights authentication failure spikes  
+- Identifies potential brute-force activity  
+- Supports incident investigation workflows  
 
 ---
 
 ## 🤖 ML Anomaly Detection Results
-Machine learning-based detection of behavioral outliers and suspicious activity.
+Machine learning–based detection of behavioral outliers in system activity.
 
-![ML Detection](screenshots/phase11_ml_detection.png)
+<p align="center">
+  <img src="screenshots/phase11_ml_detection.png" width="800"/>
+</p>
+
+**Key Insights:**
+- Detects statistical anomalies in request patterns  
+- Flags outliers for SOC investigation  
+- Demonstrates ML-driven security analytics capability  
 
 ---
 

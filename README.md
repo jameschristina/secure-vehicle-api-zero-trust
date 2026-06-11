@@ -65,16 +65,16 @@ G --> H
 H --> I
 I --> J
 ```
-
+---
 ## Documentation
 
-| Document                    | Description                         |
-| --------------------------- | ----------------------------------- |
-| Security Engineering Report | docs/SECURITY_ENGINEERING_REPORT.md |
-| Zero Trust Maturity Matrix  | docs/ZERO_TRUST_MATURITY_MATRIX.md  |
-| MITRE ATT&CK Mapping        | docs/MITRE_MAPPING.md               |
-| Security Policy             | SECURITY.md                         |
-| Project License             | LICENSE                             |
+| Document                    | Link                                               |
+| --------------------------- | -------------------------------------------------- |
+| Security Engineering Report | [View Report](docs/SECURITY_ENGINEERING_REPORT.md) |
+| Zero Trust Maturity Matrix  | [View Matrix](docs/ZERO_TRUST_MATURITY_MATRIX.md)  |
+| MITRE ATT&CK Mapping        | [View Mapping](docs/MITRE_MAPPING.md)              |
+| Security Policy             | [View Policy](SECURITY.md)                         |
+| Project License             | [View License](LICENSE)                            |
 
 ---
 
@@ -143,9 +143,8 @@ I --> J
 
 ## Screenshots
 
-# 📸 Security Analytics Intelligence Layer
+### 📸 Security Analytics Intelligence Layer
 
-> **Executive Summary:**  
 This section visualizes SOC telemetry, detection engineering outputs, behavioral analytics, and machine learning–driven anomaly detection across the Secure Vehicle API environment.
 
 ---

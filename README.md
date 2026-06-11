@@ -37,34 +37,25 @@ This repository is intended as a cybersecurity engineering and SOC simulation pl
 
 ## Architecture
 
-```mermaid
 flowchart TD
 
 A[Vehicle API]
 
-B[Authentication]
-C[Authorization]
+A --> B[Authentication]
+B --> C[Authorization]
 
-D[Detection Engineering]
-E[Threat Intelligence]
-F[Threat Hunting]
+C --> D[Detection Engineering]
+C --> E[Threat Intelligence]
+C --> F[Threat Hunting]
 
-G[SOAR Automation]
-H[Incident Response]
-
-I[Executive Reporting]
-J[SOC Dashboard]
-
-A --> B
-B --> C
-C --> D
-D --> E
-E --> F
+D --> G[SOAR Automation]
+E --> G
 F --> G
-G --> H
-H --> I
-I --> J
-```
+
+G --> H[Incident Response]
+
+H --> I[Executive Reporting]
+I --> J[SOC Dashboard]
 ---
 ## Documentation
 
@@ -143,7 +134,7 @@ I --> J
 
 ## Screenshots
 
-### 📸 Security Analytics Intelligence Layer
+## 📸 Security Analytics Intelligence Layer
 
 This section visualizes SOC telemetry, detection engineering outputs, behavioral analytics, and machine learning–driven anomaly detection across the Secure Vehicle API environment.
 
@@ -315,3 +306,9 @@ The project combines expertise in:
 * Security Architecture
 
 The platform demonstrates the evolution of a vulnerable API into a layered security ecosystem featuring authentication, authorization, detection engineering, threat intelligence, SOAR automation, identity federation, cloud security, Kubernetes security, EDR simulation, purple team operations, and AI-assisted SOC analysis.
+
+---
+
+## About
+
+Zero Trust SOC simulation platform demonstrating API security, detection engineering, SIEM analytics, threat hunting, SOAR automation, cloud security, identity security, and adversary emulation across Kubernetes and endpoint environments.

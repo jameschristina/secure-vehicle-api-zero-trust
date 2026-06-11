@@ -37,44 +37,6 @@ This repository is intended as a cybersecurity engineering and SOC simulation pl
 
 ## Architecture
 
-## Documentation
-
-| Document                    | Description                         |
-| --------------------------- | ----------------------------------- |
-| Security Engineering Report | docs/SECURITY_ENGINEERING_REPORT.md |
-| Zero Trust Maturity Matrix  | docs/ZERO_TRUST_MATURITY_MATRIX.md  |
-| MITRE ATT&CK Mapping        | docs/MITRE_MAPPING.md               |
-| Security Policy             | SECURITY.md                         |
-| Project License             | LICENSE                             |
-
-
-```mermaid
-flowchart TD
-
-    U[Users] --> API[Secure Vehicle API]
-
-    API --> AUTH[Authentication]
-    API --> AUTHZ[Authorization]
-
-    AUTH --> DET
-    AUTHZ --> DET
-
-    DET[Detection Engine]
-        --> TI[Threat Intelligence]
-
-    TI --> TH[Threat Hunting]
-
-    TH --> SOAR[SOAR Automation]
-
-    SOAR --> IR[Incident Response]
-
-    IR --> EXEC[Executive Reporting]
-
-    EXEC --> DASH[SOC Dashboard]
-```
-
-## Architecture
-
 ```mermaid
 flowchart TD
 
@@ -104,30 +66,15 @@ H --> I
 I --> J
 ```
 
+## Documentation
 
-### Security Flow
-
-```text
-Vehicle API
-    ↓
-Authentication
-    ↓
-Authorization
-    ↓
-Detection Engineering
-    ↓
-Threat Intelligence
-    ↓
-Threat Hunting
-    ↓
-SOAR Automation
-    ↓
-Incident Response
-    ↓
-Executive Reporting
-    ↓
-SOC Dashboard
-```
+| Document                    | Description                         |
+| --------------------------- | ----------------------------------- |
+| Security Engineering Report | docs/SECURITY_ENGINEERING_REPORT.md |
+| Zero Trust Maturity Matrix  | docs/ZERO_TRUST_MATURITY_MATRIX.md  |
+| MITRE ATT&CK Mapping        | docs/MITRE_MAPPING.md               |
+| Security Policy             | SECURITY.md                         |
+| Project License             | LICENSE                             |
 
 ---
 
@@ -164,13 +111,6 @@ SOC Dashboard
 - Endpoint Detection & Response Simulation
 - Purple Team Operations
 - AI SOC Analyst
-
----
-
-## Additional Documentation
-
-- Security Engineering Report: `docs/SECURITY_ENGINEERING_REPORT.md`
-- Security Policy: `SECURITY.md`
 
 ---
 

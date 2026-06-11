@@ -1,4 +1,3 @@
-cat > docs/MITRE_MAPPING.md << 'EOF'
 # MITRE ATT&CK Mapping
 
 ## Overview
@@ -52,4 +51,3 @@ Using ATT&CK mapping provides:
 - Executive reporting consistency
 
 This mapping demonstrates how project detections align with recognized industry threat models.
-EOF

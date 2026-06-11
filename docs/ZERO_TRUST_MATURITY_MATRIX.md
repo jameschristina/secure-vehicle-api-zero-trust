@@ -1,4 +1,3 @@
-cat > docs/ZERO_TRUST_MATURITY_MATRIX.md << 'EOF'
 # Zero Trust Maturity Matrix
 
 ## Overview
@@ -56,4 +55,4 @@ Priority enhancements:
 6. Policy-based authorization
 
 These additions would further strengthen alignment with NIST Zero Trust Architecture principles.
-EOF
+

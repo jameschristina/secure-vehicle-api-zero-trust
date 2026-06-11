@@ -37,6 +37,17 @@ This repository is intended as a cybersecurity engineering and SOC simulation pl
 
 ## Architecture
 
+## Documentation
+
+| Document                    | Description                         |
+| --------------------------- | ----------------------------------- |
+| Security Engineering Report | docs/SECURITY_ENGINEERING_REPORT.md |
+| Zero Trust Maturity Matrix  | docs/ZERO_TRUST_MATURITY_MATRIX.md  |
+| MITRE ATT&CK Mapping        | docs/MITRE_MAPPING.md               |
+| Security Policy             | SECURITY.md                         |
+| Project License             | LICENSE                             |
+
+
 ```mermaid
 flowchart TD
 
@@ -61,6 +72,38 @@ flowchart TD
 
     EXEC --> DASH[SOC Dashboard]
 ```
+
+## Architecture
+
+```mermaid
+flowchart TD
+
+A[Vehicle API]
+
+B[Authentication]
+C[Authorization]
+
+D[Detection Engineering]
+E[Threat Intelligence]
+F[Threat Hunting]
+
+G[SOAR Automation]
+H[Incident Response]
+
+I[Executive Reporting]
+J[SOC Dashboard]
+
+A --> B
+B --> C
+C --> D
+D --> E
+E --> F
+F --> G
+G --> H
+H --> I
+I --> J
+```
+
 
 ### Security Flow
 
@@ -305,25 +348,6 @@ pytest --cov=. --cov-report=term-missing
 
 ---
 
-## Security Domains Demonstrated
-
-- Zero Trust Architecture
-- Detection Engineering
-- SIEM Analytics
-- Threat Hunting
-- Threat Intelligence
-- Incident Response
-- SOAR Automation
-- Cloud Security
-- Identity Security
-- Kubernetes Security
-- Endpoint Detection & Response
-- Machine Learning Security Analytics
-- Purple Team Operations
-- AI-Assisted SOC Workflows
-
----
-
 ## License
 
 MIT License
@@ -354,23 +378,17 @@ GitHub: https://github.com/phoenyxcipher
 
 ## Collaboration Acknowledgment
 
-Secure Vehicle API is a collaborative cybersecurity engineering project designed and developed by Chukwuemeke Ikpeasonim and Christina James.
+Secure Vehicle API: Zero Trust Security Operations Platform was collaboratively developed by Chukwuemeke Ikpeasonim and Christina James.
 
-The project combines expertise in security operations, security architecture, identity and access management, detection engineering, and Zero Trust security principles to simulate the evolution of a vulnerable API environment into a modern SOC-driven security ecosystem.
+The project combines expertise in:
 
-Key areas of collaboration included:
+* Zero Trust Architecture
+* Identity & Access Management
+* Detection Engineering
+* Threat Hunting
+* Incident Response
+* Security Operations
+* Security Architecture
 
-* Security architecture and platform design
-* Zero Trust strategy and implementation concepts
-* Identity-centric security controls and access governance
-* Authentication and authorization model development
-* Detection engineering and threat detection methodologies
-* Security design reviews and technical validation
-* SOC workflows, monitoring, and incident response concepts
-* Project planning, direction, and continuous improvement
+The platform demonstrates the evolution of a vulnerable API into a layered security ecosystem featuring authentication, authorization, detection engineering, threat intelligence, SOAR automation, identity federation, cloud security, Kubernetes security, EDR simulation, purple team operations, and AI-assisted SOC analysis.
 
-The resulting platform demonstrates the progression of a vulnerable API environment into a layered security architecture incorporating authentication, authorization, telemetry generation, SIEM analytics, UEBA monitoring, threat hunting workflows, SOAR automation, threat intelligence correlation, cloud security monitoring, identity security concepts, endpoint telemetry simulation, Kubernetes security monitoring, and AI-assisted SOC capabilities.
-
-The project serves as a practical cybersecurity engineering portfolio that showcases the evolution of security controls, detection capabilities, and operational workflows across a modern Zero Trust security model while emphasizing real-world cybersecurity engineering practices.
-
-This collaboration reflects a shared commitment to advancing cybersecurity education, defensive security engineering, modern security operations, and the practical application of Zero Trust principles in simulated enterprise environments.

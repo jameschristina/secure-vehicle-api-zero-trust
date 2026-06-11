@@ -37,34 +37,36 @@ This repository is intended as a cybersecurity engineering and SOC simulation pl
 
 ## Architecture
 
+```mermaid
 flowchart TD
 
-A[Vehicle API]
+A[🚗 Vehicle API]
 
-A --> B[Authentication]
-B --> C[Authorization]
+A --> B[🔐 Authentication]
+B --> C[🛡️ Authorization]
 
-C --> D[Detection Engineering]
-C --> E[Threat Intelligence]
-C --> F[Threat Hunting]
+C --> D[🧠 Detection Engineering]
+C --> E[🕵️ Threat Intelligence]
+C --> F[🎯 Threat Hunting]
 
-D --> G[SOAR Automation]
+D --> G[⚙️ SOAR Automation]
 E --> G
 F --> G
 
 E --> D
 F --> D
 
-G --> H[Incident Response]
+G --> H[🚨 Incident Response]
 
-H --> I[Executive Reporting]
+H --> I[📊 Executive Reporting]
 
-I --> J[SOC Dashboard]
+I --> J[📡 SOC Dashboard]
 
 J --> D
 J --> F
 
 ---
+
 ## Documentation
 
 | Document                    | Link                                               |

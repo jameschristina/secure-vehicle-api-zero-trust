@@ -52,10 +52,18 @@ D --> G[SOAR Automation]
 E --> G
 F --> G
 
+E --> D
+F --> D
+
 G --> H[Incident Response]
 
 H --> I[Executive Reporting]
+
 I --> J[SOC Dashboard]
+
+J --> D
+J --> F
+
 ---
 ## Documentation
 

@@ -1,4 +1,4 @@
-name: SOC Simulation CI Pipeline
+name: SOC Simulation
 
 on:
   push:

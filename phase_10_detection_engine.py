@@ -1,13 +1,11 @@
-# phase_10_detection_engine.py (FINAL ENTERPRISE SIEM VERSION)
+# phase_10_detection_engine.py (FINAL FIXED VERSION)
 
-from flask import Flask, render_template_string, Response, request
+from flask import Flask, render_template_string, Response
 from datetime import datetime, timezone
 from collections import defaultdict, deque
 import threading
 import random
 import time
-import sqlite3
-import json
 
 app = Flask(__name__)
 
@@ -21,91 +19,46 @@ USER_VEHICLE_MAP = {
     "user3": ["CAR102"],
 }
 
-VEHICLES = ["CAR100", "CAR101", "CAR102", "CAR103", "CAR104"]
 USERS = list(USER_VEHICLE_MAP.keys())
+VEHICLES = ["CAR100", "CAR101", "CAR102", "CAR103", "CAR104"]
 
 # ============================================================
-# KAFKA-STYLE EVENT STREAM (IN-MEMORY TOPIC)
+# EVENT STORE
 # ============================================================
-
-TOPIC = deque(maxlen=500)
-
-# ============================================================
-# SQLITE PERSISTENCE LAYER (SIEM INDEX)
-# ============================================================
-
-conn = sqlite3.connect("siem_phase10.db", check_same_thread=False)
-cursor = conn.cursor()
-
-cursor.execute("""
-CREATE TABLE IF NOT EXISTS events (
-    timestamp TEXT,
-    user TEXT,
-    vehicle TEXT,
-    alert TEXT,
-    severity TEXT,
-    score INTEGER,
-    mitre TEXT,
-    correlation TEXT
-)
-""")
-conn.commit()
-
-def persist(event):
-    cursor.execute("""
-        INSERT INTO events VALUES (?,?,?,?,?,?,?,?)
-    """, (
-        event["timestamp"],
-        event["user"],
-        event["vehicle"],
-        event["alert"],
-        event["severity"],
-        event["score"],
-        event["mitre"],
-        event["correlation"]
-    ))
-    conn.commit()
-
-# ============================================================
-# ATTACK GRAPH (RELATIONSHIP MAP)
-# ============================================================
-
-ATTACK_GRAPH = defaultdict(set)
-
-def update_graph(user, alert):
-    ATTACK_GRAPH[user].add(alert)
-
-# ============================================================
-# YAML RULE ENGINE (SIMULATED)
-# ============================================================
-
-RULES = [
-    {"name": "ENTITLEMENT_VIOLATION", "score": 120, "severity": "HIGH"},
-    {"name": "PRIVILEGE_ESCALATION", "score": 200, "severity": "CRITICAL"},
-    {"name": "VEHICLE_ENUMERATION", "score": 150, "severity": "HIGH"},
-    {"name": "EXCESSIVE_REQUESTS", "score": 90, "severity": "MEDIUM"},
-]
-
-# ============================================================
-# MITRE MAPPING
-# ============================================================
-
-MITRE = {
-    "ENTITLEMENT_VIOLATION": "T1078",
-    "PRIVILEGE_ESCALATION": "T1068",
-    "VEHICLE_ENUMERATION": "T1087",
-    "EXCESSIVE_REQUESTS": "T1499",
-}
-
-# ============================================================
-# STATE
-# ============================================================
-
-request_log = defaultdict(lambda: deque(maxlen=60))
-vehicle_log = defaultdict(lambda: deque(maxlen=20))
-failed_auth = defaultdict(int)
 
 EVENTS = []
+
+# ============================================================
+# STATE TRACKING
+# ============================================================
+
+failed_auth = defaultdict(int)
+request_log = defaultdict(lambda: deque(maxlen=60))
+vehicle_log = defaultdict(lambda: deque(maxlen=20))
+
+# ============================================================
+# ATTACK GRAPH (FIXED)
+# ============================================================
+
+ATTACK_GRAPH = defaultdict(list)
+
+def update_graph(user, alert):
+    ATTACK_GRAPH[user].append(alert)
+    if len(ATTACK_GRAPH[user]) > 25:
+        ATTACK_GRAPH[user].pop(0)
+
+def correlate(user, alert):
+
+    update_graph(user, alert)
+    chain = ATTACK_GRAPH[user]
+
+    if "ENTITLEMENT_VIOLATION" in chain and "VEHICLE_ENUMERATION" in chain:
+        return "COORDINATED_ACCESS_ATTACK"
+
+    if chain.count("ENTITLEMENT_VIOLATION") >= 2:
+        return "PERSISTENT_ACCESS_ABUSE"
+
+    return None
 
 # ============================================================
 # RISK ENGINE
@@ -121,31 +74,19 @@ def status(score):
     return "CRITICAL", "LOCKDOWN"
 
 # ============================================================
-# CORRELATION ENGINE (ATTACK CHAINS)
-# ============================================================
-
-def correlate(user, alert):
-    ATTACK_GRAPH[user].add(alert)
-
-    chain = ATTACK_GRAPH[user]
-
-    if "ENTITLEMENT_VIOLATION" in chain and "VEHICLE_ENUMERATION" in chain:
-        return "COORDINATED_ACCESS_ATTACK"
-
-    if chain.count("ENTITLEMENT_VIOLATION") >= 2:
-        return "PERSISTENT_ACCESS_ABUSE"
-
-    return None
-
-# ============================================================
-# EVENT EMITTER
+# ALERT EMITTER
 # ============================================================
 
 def emit(user, vehicle, alert):
 
-    rule = next((r for r in RULES if r["name"] == alert), None)
+    scores = {
+        "ENTITLEMENT_VIOLATION": 120,
+        "PRIVILEGE_ESCALATION": 200,
+        "VEHICLE_ENUMERATION": 150,
+        "EXCESSIVE_REQUESTS": 90,
+    }
 
-    score = rule["score"] if rule else 50
+    score = scores.get(alert, 50)
     sev, action = status(score)
 
     event = {
@@ -154,18 +95,18 @@ def emit(user, vehicle, alert):
         "vehicle": vehicle,
         "alert": alert,
         "severity": sev,
+        "action": action,
         "score": score,
-        "mitre": MITRE.get(alert, "UNKNOWN"),
+        "mitre": {
+            "ENTITLEMENT_VIOLATION": "T1078",
+            "PRIVILEGE_ESCALATION": "T1068",
+            "VEHICLE_ENUMERATION": "T1087",
+            "EXCESSIVE_REQUESTS": "T1499",
+        }.get(alert, "UNKNOWN"),
         "correlation": correlate(user, alert)
     }
 
     EVENTS.append(event)
-    TOPIC.append(event)
-
-    persist(event)
-    update_graph(user, alert)
-
-    print(f"[SIEM] {user} | {vehicle} | {alert} | {sev} | {event['mitre']}")
 
 # ============================================================
 # DETECTION ENGINE
@@ -180,14 +121,11 @@ def detect(user, vehicle):
         failed_auth[user] += 1
         emit(user, vehicle, "ENTITLEMENT_VIOLATION")
 
-        if failed_auth[user] >= 3:
-            emit(user, vehicle, "ENTITLEMENT_VIOLATION")
-
     # Privilege escalation simulation
     if vehicle == "CAR104":
         emit(user, vehicle, "PRIVILEGE_ESCALATION")
 
-    # Behavioral tracking
+    # Behavior tracking
     request_log[user].append(time.time())
     vehicle_log[user].append(vehicle)
 
@@ -218,22 +156,7 @@ def simulate():
 
         detect(user, vehicle)
 
-        time.sleep(random.uniform(0.8, 1.3))
-
-# ============================================================
-# SPLUNK-LIKE QUERY ENGINE
-# ============================================================
-
-def query(filters):
-
-    results = EVENTS
-
-    for f in filters:
-        if "=" in f:
-            k, v = f.split("=")
-            results = [e for e in results if str(e.get(k)) == v]
-
-    return results
+        time.sleep(random.uniform(0.8, 1.2))
 
 # ============================================================
 # SSE STREAM
@@ -243,7 +166,6 @@ def query(filters):
 def stream():
 
     def gen():
-
         last = 0
 
         while True:
@@ -276,23 +198,24 @@ DASHBOARD_HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-<title>Phase 10 Enterprise SIEM</title>
+<title>Phase 10 SOC Dashboard</title>
 
 <style>
-body { background:#111; color:#eee; font-family:Arial; }
+body { background:#0b0f14; color:#e6e6e6; font-family:Arial; }
 table { width:100%; border-collapse:collapse; }
-th, td { padding:10px; border-bottom:1px solid #333; }
-th { background:#222; }
+th, td { padding:10px; border-bottom:1px solid #222; }
+th { background:#111; }
 
-.critical { color:red; font-weight:bold; }
-.high { color:orange; }
-.medium { color:yellow; }
+.low { color:#2dd4bf; }
+.medium { color:#ffd60a; }
+.high { color:#ff9f1a; }
+.critical { color:#ff4d4d; font-weight:bold; }
 </style>
 </head>
 
 <body>
 
-<h2>🚨 Phase 10 Enterprise SIEM (FINAL)</h2>
+<h2>🚨 Phase 10 SOC Dashboard (LIVE)</h2>
 
 <table>
 <thead>
@@ -312,10 +235,10 @@ th { background:#222; }
 
 <script>
 
-const s = new EventSource("/api/events");
+const source = new EventSource("/api/events");
 const log = document.getElementById("log");
 
-s.onmessage = function(e){
+source.onmessage = function(e){
 
     const d = e.data.split("|");
 
@@ -326,14 +249,14 @@ s.onmessage = function(e){
         <td>${d[1]}</td>
         <td>${d[2]}</td>
         <td>${d[3]}</td>
-        <td>${d[4]}</td>
+        <td class="${d[4].toLowerCase()}">${d[4]}</td>
         <td>${d[5]}</td>
         <td>${d[6]}</td>
     `;
 
     log.prepend(row);
 
-    if(log.children.length > 50){
+    if(log.children.length > 60){
         log.removeChild(log.lastChild);
     }
 };
@@ -355,8 +278,8 @@ def dashboard():
 if __name__ == "__main__":
 
     print("===================================")
-    print("PHASE 10 FINAL ENTERPRISE SIEM")
-    print("Kafka + YAML + MITRE + Correlation + SQLite")
+    print("PHASE 10 DETECTION ENGINE ONLINE")
+    print("SOC STREAM + CORRELATION + MITRE")
     print("===================================")
 
     threading.Thread(target=simulate, daemon=True).start()

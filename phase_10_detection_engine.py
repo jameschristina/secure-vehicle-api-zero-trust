@@ -1,16 +1,18 @@
-# phase_10_detection_engine.py
+# phase_10_detection_engine.py (FINAL ENTERPRISE SIEM VERSION)
 
-from flask import Flask, render_template_string, Response
+from flask import Flask, render_template_string, Response, request
 from datetime import datetime, timezone
 from collections import defaultdict, deque
 import threading
 import random
 import time
+import sqlite3
+import json
 
 app = Flask(__name__)
 
 # ============================================================
-# Identity & Authorization Model
+# IDENTITY MODEL
 # ============================================================
 
 USER_VEHICLE_MAP = {
@@ -19,336 +21,320 @@ USER_VEHICLE_MAP = {
     "user3": ["CAR102"],
 }
 
-ALL_VEHICLES = [
-    "CAR100",
-    "CAR101",
-    "CAR102",
-    "CAR103",
-    "CAR104"
-]
-
+VEHICLES = ["CAR100", "CAR101", "CAR102", "CAR103", "CAR104"]
 USERS = list(USER_VEHICLE_MAP.keys())
 
 # ============================================================
-# Detection State
+# KAFKA-STYLE EVENT STREAM (IN-MEMORY TOPIC)
 # ============================================================
+
+TOPIC = deque(maxlen=500)
+
+# ============================================================
+# SQLITE PERSISTENCE LAYER (SIEM INDEX)
+# ============================================================
+
+conn = sqlite3.connect("siem_phase10.db", check_same_thread=False)
+cursor = conn.cursor()
+
+cursor.execute("""
+CREATE TABLE IF NOT EXISTS events (
+    timestamp TEXT,
+    user TEXT,
+    vehicle TEXT,
+    alert TEXT,
+    severity TEXT,
+    score INTEGER,
+    mitre TEXT,
+    correlation TEXT
+)
+""")
+conn.commit()
+
+def persist(event):
+    cursor.execute("""
+        INSERT INTO events VALUES (?,?,?,?,?,?,?,?)
+    """, (
+        event["timestamp"],
+        event["user"],
+        event["vehicle"],
+        event["alert"],
+        event["severity"],
+        event["score"],
+        event["mitre"],
+        event["correlation"]
+    ))
+    conn.commit()
+
+# ============================================================
+# ATTACK GRAPH (RELATIONSHIP MAP)
+# ============================================================
+
+ATTACK_GRAPH = defaultdict(set)
+
+def update_graph(user, alert):
+    ATTACK_GRAPH[user].add(alert)
+
+# ============================================================
+# YAML RULE ENGINE (SIMULATED)
+# ============================================================
+
+RULES = [
+    {"name": "ENTITLEMENT_VIOLATION", "score": 120, "severity": "HIGH"},
+    {"name": "PRIVILEGE_ESCALATION", "score": 200, "severity": "CRITICAL"},
+    {"name": "VEHICLE_ENUMERATION", "score": 150, "severity": "HIGH"},
+    {"name": "EXCESSIVE_REQUESTS", "score": 90, "severity": "MEDIUM"},
+]
+
+# ============================================================
+# MITRE MAPPING
+# ============================================================
+
+MITRE = {
+    "ENTITLEMENT_VIOLATION": "T1078",
+    "PRIVILEGE_ESCALATION": "T1068",
+    "VEHICLE_ENUMERATION": "T1087",
+    "EXCESSIVE_REQUESTS": "T1499",
+}
+
+# ============================================================
+# STATE
+# ============================================================
+
+request_log = defaultdict(lambda: deque(maxlen=60))
+vehicle_log = defaultdict(lambda: deque(maxlen=20))
+failed_auth = defaultdict(int)
 
 EVENTS = []
 
-failed_auth_tracker = defaultdict(int)
-request_tracker = defaultdict(lambda: deque(maxlen=60))
-vehicle_tracker = defaultdict(lambda: deque(maxlen=20))
-
-MAX_EVENTS = 100
-
 # ============================================================
-# Risk Engine
+# RISK ENGINE
 # ============================================================
 
-def get_status_action(risk):
-    if risk < 30:
+def status(score):
+    if score < 70:
         return "LOW", "MONITOR"
-    elif risk < 70:
-        return "MEDIUM", "MONITOR"
-    elif risk < 130:
-        return "HIGH", "SOC INVESTIGATION"
-    else:
-        return "CRITICAL", "IMMEDIATE LOCKDOWN"
+    elif score < 130:
+        return "MEDIUM", "INVESTIGATE"
+    elif score < 180:
+        return "HIGH", "ESCALATE"
+    return "CRITICAL", "LOCKDOWN"
 
+# ============================================================
+# CORRELATION ENGINE (ATTACK CHAINS)
+# ============================================================
 
-def create_alert(user, vehicle, alert_type, risk):
+def correlate(user, alert):
+    ATTACK_GRAPH[user].add(alert)
 
-    status, action = get_status_action(risk)
+    chain = ATTACK_GRAPH[user]
+
+    if "ENTITLEMENT_VIOLATION" in chain and "VEHICLE_ENUMERATION" in chain:
+        return "COORDINATED_ACCESS_ATTACK"
+
+    if chain.count("ENTITLEMENT_VIOLATION") >= 2:
+        return "PERSISTENT_ACCESS_ABUSE"
+
+    return None
+
+# ============================================================
+# EVENT EMITTER
+# ============================================================
+
+def emit(user, vehicle, alert):
+
+    rule = next((r for r in RULES if r["name"] == alert), None)
+
+    score = rule["score"] if rule else 50
+    sev, action = status(score)
 
     event = {
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "user": user,
         "vehicle": vehicle,
-        "alert_type": alert_type,
-        "risk": risk,
-        "status": status,
-        "action": action
+        "alert": alert,
+        "severity": sev,
+        "score": score,
+        "mitre": MITRE.get(alert, "UNKNOWN"),
+        "correlation": correlate(user, alert)
     }
 
     EVENTS.append(event)
+    TOPIC.append(event)
 
-    if len(EVENTS) > MAX_EVENTS:
-        EVENTS.pop(0)
+    persist(event)
+    update_graph(user, alert)
 
-    print(
-        f"[ALERT] "
-        f"{user} | {vehicle} | "
-        f"{alert_type} | "
-        f"RISK={risk} | "
-        f"{status} | "
-        f"{action}"
-    )
-
+    print(f"[SIEM] {user} | {vehicle} | {alert} | {sev} | {event['mitre']}")
 
 # ============================================================
-# Detection Logic
+# DETECTION ENGINE
 # ============================================================
 
-def detect_unauthorized_access(user, vehicle):
+def detect(user, vehicle):
 
     allowed = USER_VEHICLE_MAP.get(user, [])
 
+    # Entitlement violation
     if vehicle not in allowed:
+        failed_auth[user] += 1
+        emit(user, vehicle, "ENTITLEMENT_VIOLATION")
 
-        failed_auth_tracker[user] += 1
+        if failed_auth[user] >= 3:
+            emit(user, vehicle, "ENTITLEMENT_VIOLATION")
 
-        create_alert(
-            user,
-            vehicle,
-            "UNAUTHORIZED_ACCESS",
-            120
-        )
+    # Privilege escalation simulation
+    if vehicle == "CAR104":
+        emit(user, vehicle, "PRIVILEGE_ESCALATION")
 
-        if failed_auth_tracker[user] >= 3:
-            create_alert(
-                user,
-                vehicle,
-                "REPEATED_AUTHORIZATION_FAILURES",
-                180
-            )
-
-        return False
-
-    return True
-
-
-def detect_vehicle_enumeration(user):
-
-    recent = list(vehicle_tracker[user])
-
-    unique_vehicles = len(set(recent))
-
-    if unique_vehicles >= 3:
-
-        create_alert(
-            user,
-            recent[-1],
-            "VEHICLE_ENUMERATION",
-            150
-        )
-
-
-def detect_excessive_requests(user):
+    # Behavioral tracking
+    request_log[user].append(time.time())
+    vehicle_log[user].append(vehicle)
 
     now = time.time()
 
-    recent_requests = [
-        t for t in request_tracker[user]
-        if now - t < 15
-    ]
+    # Excessive requests
+    if len([t for t in request_log[user] if now - t < 10]) > 7:
+        emit(user, vehicle, "EXCESSIVE_REQUESTS")
 
-    if len(recent_requests) >= 8:
-
-        create_alert(
-            user,
-            USER_VEHICLE_MAP[user][0],
-            "EXCESSIVE_REQUEST_RATE",
-            90
-        )
-
+    # Vehicle enumeration
+    if len(set(vehicle_log[user])) >= 3:
+        emit(user, vehicle, "VEHICLE_ENUMERATION")
 
 # ============================================================
-# Simulated Activity Generator
+# SIMULATION ENGINE
 # ============================================================
 
-def simulate_requests():
+def simulate():
 
     while True:
 
         user = random.choice(USERS)
 
-        # 75% normal behavior
-        if random.random() < 0.75:
-
+        if random.random() < 0.7:
             vehicle = USER_VEHICLE_MAP[user][0]
-
         else:
+            vehicle = random.choice(VEHICLES)
 
-            vehicle = random.choice(ALL_VEHICLES)
+        detect(user, vehicle)
 
-        request_tracker[user].append(time.time())
-        vehicle_tracker[user].append(vehicle)
-
-        authorized = detect_unauthorized_access(
-            user,
-            vehicle
-        )
-
-        detect_vehicle_enumeration(user)
-
-        detect_excessive_requests(user)
-
-        # occasional burst activity
-        if random.random() < 0.15:
-
-            for _ in range(random.randint(3, 6)):
-                request_tracker[user].append(time.time())
-
-        if authorized:
-            print(
-                f"[ACCESS] "
-                f"{user} -> {vehicle} "
-                f"(AUTHORIZED)"
-            )
-
-        time.sleep(random.uniform(0.8, 2.0))
-
+        time.sleep(random.uniform(0.8, 1.3))
 
 # ============================================================
-# Server Sent Events Stream
+# SPLUNK-LIKE QUERY ENGINE
+# ============================================================
+
+def query(filters):
+
+    results = EVENTS
+
+    for f in filters:
+        if "=" in f:
+            k, v = f.split("=")
+            results = [e for e in results if str(e.get(k)) == v]
+
+    return results
+
+# ============================================================
+# SSE STREAM
 # ============================================================
 
 @app.route("/api/events")
 def stream():
 
-    def event_stream():
+    def gen():
 
-        last_idx = 0
+        last = 0
 
         while True:
 
-            if len(EVENTS) > last_idx:
+            if len(EVENTS) > last:
 
-                for e in EVENTS[last_idx:]:
+                for e in EVENTS[last:]:
 
-                    payload = "|".join([
+                    yield "data: " + "|".join([
                         e["timestamp"],
                         e["user"],
                         e["vehicle"],
-                        e["alert_type"],
-                        str(e["risk"]),
-                        e["status"],
-                        e["action"]
-                    ])
+                        e["alert"],
+                        e["severity"],
+                        e["mitre"],
+                        str(e["correlation"])
+                    ]) + "\n\n"
 
-                    yield f"data: {payload}\n\n"
-
-                last_idx = len(EVENTS)
+                last = len(EVENTS)
 
             time.sleep(0.5)
 
-    return Response(
-        event_stream(),
-        mimetype="text/event-stream"
-    )
-
+    return Response(gen(), mimetype="text/event-stream")
 
 # ============================================================
-# Dashboard
+# DASHBOARD
 # ============================================================
 
 DASHBOARD_HTML = """
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-
-<title>Phase 10 SOC Command Center</title>
+<title>Phase 10 Enterprise SIEM</title>
 
 <style>
+body { background:#111; color:#eee; font-family:Arial; }
+table { width:100%; border-collapse:collapse; }
+th, td { padding:10px; border-bottom:1px solid #333; }
+th { background:#222; }
 
-body{
-    background:#121212;
-    color:#eeeeee;
-    font-family:Arial, sans-serif;
-    margin:20px;
-}
-
-h2{
-    color:#00d4ff;
-}
-
-table{
-    width:100%;
-    border-collapse:collapse;
-}
-
-th,td{
-    padding:10px;
-    border-bottom:1px solid #333;
-}
-
-th{
-    background:#1f1f1f;
-}
-
-tr:nth-child(even){
-    background:#181818;
-}
-
-.low{
-    color:#00ff88;
-}
-
-.medium{
-    color:#ffeb3b;
-}
-
-.high{
-    color:#ff9800;
-}
-
-.critical{
-    color:#ff4444;
-    font-weight:bold;
-}
-
+.critical { color:red; font-weight:bold; }
+.high { color:orange; }
+.medium { color:yellow; }
 </style>
 </head>
 
 <body>
 
-<h2>🚨 Phase 10 SOC Command Center</h2>
+<h2>🚨 Phase 10 Enterprise SIEM (FINAL)</h2>
 
-<table id="events">
-
+<table>
 <thead>
 <tr>
-<th>Timestamp</th>
+<th>Time</th>
 <th>User</th>
 <th>Vehicle</th>
-<th>Alert Type</th>
-<th>Risk</th>
-<th>Status</th>
-<th>Action</th>
+<th>Alert</th>
+<th>Severity</th>
+<th>MITRE</th>
+<th>Correlation</th>
 </tr>
 </thead>
 
-<tbody></tbody>
-
+<tbody id="log"></tbody>
 </table>
 
 <script>
 
-const source = new EventSource("/api/events");
+const s = new EventSource("/api/events");
+const log = document.getElementById("log");
 
-const tbody = document.querySelector("#events tbody");
+s.onmessage = function(e){
 
-source.onmessage = function(event){
-
-    const fields = event.data.split("|");
+    const d = e.data.split("|");
 
     const row = document.createElement("tr");
 
     row.innerHTML = `
-        <td>${fields[0]}</td>
-        <td>${fields[1]}</td>
-        <td>${fields[2]}</td>
-        <td>${fields[3]}</td>
-        <td>${fields[4]}</td>
-        <td class="${fields[5].toLowerCase()}">${fields[5]}</td>
-        <td>${fields[6]}</td>
+        <td>${d[0]}</td>
+        <td>${d[1]}</td>
+        <td>${d[2]}</td>
+        <td>${d[3]}</td>
+        <td>${d[4]}</td>
+        <td>${d[5]}</td>
+        <td>${d[6]}</td>
     `;
 
-    tbody.prepend(row);
+    log.prepend(row);
 
-    if(tbody.children.length > 50){
-        tbody.removeChild(tbody.lastChild);
+    if(log.children.length > 50){
+        log.removeChild(log.lastChild);
     }
 };
 
@@ -358,30 +344,21 @@ source.onmessage = function(event){
 </html>
 """
 
-
 @app.route("/")
 def dashboard():
     return render_template_string(DASHBOARD_HTML)
 
-
 # ============================================================
-# Main
+# MAIN
 # ============================================================
 
 if __name__ == "__main__":
 
     print("===================================")
-    print("PHASE 10 DETECTION ENGINE ONLINE")
-    print("Behavior-Based SOC Monitoring")
+    print("PHASE 10 FINAL ENTERPRISE SIEM")
+    print("Kafka + YAML + MITRE + Correlation + SQLite")
     print("===================================")
 
-    threading.Thread(
-        target=simulate_requests,
-        daemon=True
-    ).start()
+    threading.Thread(target=simulate, daemon=True).start()
 
-    app.run(
-        host="0.0.0.0",
-        port=5000,
-        debug=False
-    )
+    app.run(host="0.0.0.0", port=5000, debug=False)

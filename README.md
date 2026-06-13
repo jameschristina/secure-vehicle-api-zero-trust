@@ -79,6 +79,36 @@ J --> F
 
 ---
 
+## Zero Trust Validation
+
+| Capability | Status |
+|------------|---------|
+| Authentication | Complete |
+| Authorization | Complete |
+| Least Privilege | Complete |
+| Threat Detection | Complete |
+| Threat Hunting | Complete |
+| Incident Response | Complete |
+| Identity Federation | Complete |
+| Continuous Verification | Partial |
+| Device Trust | Partial |
+| MFA | Planned |
+| OAuth2/OIDC | Planned |
+
+---
+
+## MITRE ATT&CK Coverage
+
+| Detection | ATT&CK Technique |
+|------------|------------|
+| Brute Force | T1110 |
+| Valid Accounts | T1078 |
+| Account Discovery | T1087 |
+| Privilege Abuse | T1068 |
+| Credential Access | T1003 |
+
+---
+
 ## Key Features
 
 ### Zero Trust Security Controls
@@ -128,7 +158,7 @@ J --> F
 | Phase 07 | Incident Response |
 | Phase 08 | Threat Intelligence |
 | Phase 09 | SOAR Automation |
-| Phase 10 | Detection Engine |
+| Phase 10 | SOC Detection Platform |
 | Phase 11 | ML Anomaly Detection |
 | Phase 12 | Cloud Security |
 | Phase 13 | Attack Path Analysis |
@@ -237,7 +267,9 @@ cd secure-vehicle-api-zero-trust
 
 python -m venv venv
 
-source venv/bin/activate
+Linux / macOS : source venv/bin/activate
+
+Windows: venv\Scripts\activate
 
 pip install -r requirements.txt
 ```

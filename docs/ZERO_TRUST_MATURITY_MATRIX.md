@@ -19,8 +19,8 @@ This document maps Secure Vehicle API Zero Trust capabilities to implemented pro
 | SOAR Automation | Phase 9 | Complete | Automated response workflows |
 | Detection Engine | Phase 10 | Complete | SOC event generation and scoring |
 | Identity Federation | Phase 16 | Complete | Federated identity simulation |
-| Continuous Verification | Future Enhancement | Partial | Device and session revalidation planned |
-| Device Trust | Future Enhancement | Partial | Endpoint trust evaluation planned |
+| Continuous Verification | Future Enhancement | Planned  | Device and session revalidation planned |
+| Device Trust | Future Enhancement | Planned  | Endpoint trust evaluation planned |
 | Multi-Factor Authentication (MFA) | Future Enhancement | Planned | MFA workflow not yet implemented |
 | OAuth2 / OpenID Connect | Future Enhancement | Planned | Modern identity federation enhancement |
 | Policy-Based Access Control | Future Enhancement | Planned | Attribute-driven authorization |

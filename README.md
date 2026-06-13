@@ -12,26 +12,11 @@
 
 Secure Vehicle API: Zero Trust Security Operations Platform is a cybersecurity engineering project that demonstrates the evolution of a vulnerable vehicle control API into a Zero Trust–aligned Security Operations ecosystem.
 
-The project progresses through twenty security phases covering:
+The project progresses through twenty security phases covering Zero Trust Architecture, Detection Engineering, Threat Hunting, Incident Response, Threat Intelligence, SOAR Automation, Identity Security, Cloud Security, Kubernetes Security, Endpoint Detection and Response (EDR), Purple Team Operations, and AI-assisted SOC workflows.
 
-- Authentication
-- Authorization
-- Detection Engineering
-- Threat Hunting
-- Incident Response
-- Threat Intelligence
-- SOAR Automation
-- Machine Learning Detection
-- Cloud Security
-- Identity Federation
-- Kubernetes Security
-- EDR Simulation
-- Purple Team Operations
-- AI-Assisted SOC Analysis
+Using a vehicle API as the attack surface, the platform demonstrates how modern security teams implement layered defensive controls, continuous monitoring, threat detection, automated response, and security analytics across an evolving enterprise environment.
 
-The vehicle API serves as the attack surface while the Security Operations Center (SOC) components provide visibility, detection, investigation, response, and reporting capabilities.
-
-This repository is intended as a cybersecurity engineering and SOC simulation platform for demonstrating modern defensive security concepts rather than a production vehicle control system.
+This repository serves as a cybersecurity engineering and SOC simulation platform for demonstrating modern defensive security operations, security architecture, and Zero Trust principles rather than a production vehicle control system.
 
 ---
 

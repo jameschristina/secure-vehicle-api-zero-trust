@@ -90,8 +90,8 @@ J --> F
 | Threat Hunting | Complete |
 | Incident Response | Complete |
 | Identity Federation | Complete |
-| Continuous Verification | Partial |
-| Device Trust | Partial |
+| Continuous Verification | Planned |
+| Device Trust | Planned |
 | MFA | Planned |
 | OAuth2/OIDC | Planned |
 

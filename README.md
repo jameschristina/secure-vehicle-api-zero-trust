@@ -158,7 +158,7 @@ J --> F
 | Phase 07 | Incident Response |
 | Phase 08 | Threat Intelligence |
 | Phase 09 | SOAR Automation |
-| Phase 10 | SOC Detection Platform |
+| Phase 10 | Detection Engine |
 | Phase 11 | ML Anomaly Detection |
 | Phase 12 | Cloud Security |
 | Phase 13 | Attack Path Analysis |

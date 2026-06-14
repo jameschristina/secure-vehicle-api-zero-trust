@@ -64,6 +64,15 @@ J --> F
 
 ---
 
+## Documentation Structure
+
+docs/
+├── SECURITY_ENGINEERING_REPORT.md
+├── ZERO_TRUST_MATURITY_MATRIX.md
+└── MITRE_MAPPING.md
+
+---
+
 ## Zero Trust Validation
 
 | Capability | Status |
@@ -303,7 +312,7 @@ MIT License
 
 | Contributor            | Focus Area                                                                            | LinkedIn                                           | GitHub                           |
 | ---------------------- | ------------------------------------------------------------------------------------- | -------------------------------------------------- | -------------------------------- |
-| Chukwuemeke Ikpeasonim | Cybersecurity Engineering, SOC Operations, Detection Engineering, Zero Trust Security | https://www.linkedin.com/in/chukwuemeke-ikpeasonim | https://github.com/ikpeasonim       |
+| Chukwuemeke Ikpeasonim | Cybersecurity Engineering, SOC Operations, Detection Engineering, Zero Trust Security | https://www.linkedin.com/in/chukwuemeke-ikpeasonim | https://github.com/ikpeasonim |
 | Christina James        | Security Architecture, Identity & Access Management                                   | https://www.linkedin.com/in/christinanjames        | https://github.com/phoenyxcipher |
 
 ## Collaboration Acknowledgment

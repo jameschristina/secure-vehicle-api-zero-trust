@@ -234,7 +234,7 @@ This section visualizes SOC telemetry, detection engineering outputs, behavioral
 ## Installation
 
 ```bash
-git clone https://github.com/switice/secure-vehicle-api-zero-trust.git
+git clone https://github.com/ikpeasonim/secure-vehicle-api-zero-trust.git
 
 cd secure-vehicle-api-zero-trust
 

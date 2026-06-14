@@ -66,19 +66,12 @@ J --> F
 
 ## Documentation Structure
 
-docs/
-├── SECURITY_ENGINEERING_REPORT.md
-├── ZERO_TRUST_MATURITY_MATRIX.md
-└── MITRE_MAPPING.md
-
-## Documentation Structure
-
 ```mermaid
 flowchart TD
     A[docs/] --> B[SECURITY_ENGINEERING_REPORT.md]
     A --> C[ZERO_TRUST_MATURITY_MATRIX.md]
     A --> D[MITRE_MAPPING.md]
-
+```
 ---
 
 ## Zero Trust Validation

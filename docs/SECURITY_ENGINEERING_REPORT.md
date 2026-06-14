@@ -439,6 +439,6 @@ Potential future improvements include:
 
 # Conclusion
 
-The Secure Vehicle API – Zero Trust project demonstrates the evolution of a connected vehicle platform from an insecure API into a layered security architecture incorporating Zero Trust concepts, detection engineering, SOC operations, incident response, threat hunting, automation, cloud security, identity security, and AI-assisted analysis.
+The Secure Vehicle API – Zero Trust project demonstrates the evolution of a connected vehicle platform from an insecure API into a layered security architecture incorporating Zero Trust concepts, detection engineering, SOC operations, incident response, threat hunting, automation, cloud security, identity security, and AI-assisted SOC analysis.
 
 The project serves as a practical demonstration of modern cybersecurity engineering principles and reflects the security lifecycle used across enterprise and public-sector environments.

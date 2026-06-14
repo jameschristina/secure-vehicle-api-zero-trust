@@ -82,18 +82,6 @@ J --> F
 
 ---
 
-## MITRE ATT&CK Coverage
-
-| Detection | ATT&CK Technique |
-|------------|------------|
-| Brute Force | T1110 |
-| Valid Accounts | T1078 |
-| Account Discovery | T1087 |
-| Privilege Abuse | T1068 |
-| Credential Access | T1003 |
-
----
-
 ## Key Features
 
 ### Zero Trust Security Controls

@@ -427,7 +427,7 @@ Potential future improvements include:
 1. OAuth2 Integration
 2. OpenID Connect Federation
 3. Real Threat Intelligence Feeds
-4. MITRE ATT&CK Mapping
+4. Expanded MITRE ATT&CK Coverage
 5. Kubernetes Admission Controls
 6. Detection-as-Code Framework
 7. Security Data Lake Integration

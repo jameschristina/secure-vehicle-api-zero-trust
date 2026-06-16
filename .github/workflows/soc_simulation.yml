@@ -48,7 +48,7 @@ jobs:
         run: python soc_dashboard.py
 
       # -----------------------------
-      # 6. Upload Dashboards as Artifacts
+      # 6. Archive Dashboards
       # -----------------------------
       - name: Archive Dashboards
         uses: actions/upload-artifact@v4
@@ -59,6 +59,8 @@ jobs:
             dashboard_events.html
             dashboard_attack_vectors.html
 
-- name: Fail CI on LOW SOC Health
-  run: |
-    python -c "import json; exit(1) if json.load(open('soc_metrics.json'))['soc_health_score'] < 40 else print('SOC Health OK')"
+      # -----------------------------
+      # 7. Fail CI on LOW SOC Health
+      # -----------------------------
+      - name: Fail CI on LOW SOC Health
+        run: python -c "import json; import sys; data=json.load(open('soc_metrics.json')); score=data.get('soc_health_score',0); print(f'SOC Health Score: {score}'); sys.exit(1) if score < 40 else print('SOC Health OK')"

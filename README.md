@@ -1,3 +1,11 @@
+# 🛡️ Collaboration Acknowledgement
+*This repository is based on an original project idea and has been extended to phase 20 through collaborative development between myself and [Chukwuemeke Ikpeasonim](https://github.com/ikpeasonim), including shared contributions, enhancements, and ongoing improvement.*
+
+The project was inspired by a real-world event, surviving a severe car accident caused by a stolen Kia, which highlighted the critical, real-world consequences of weak trust assumptions in automotive security. By combining our shared backgrounds as Cybersecurity M.S. graduates, we turned a personal trial into a comprehensive defensive blueprint. 
+
+---
+*(Original project documentation continues below)*
+
 # 🚗 Secure Vehicle API: Zero Trust Security Operations Platform
 
 ![Python](https://img.shields.io/badge/Python-3.12-blue)
